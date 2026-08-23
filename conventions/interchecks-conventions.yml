@@ -1,0 +1,259 @@
+generated: '2026-08-23'
+method: searched
+source: https://docs-v2.interchecks.com/docs/http-status-codes
+docs:
+- https://docs-v2.interchecks.com/docs/getting-started
+- https://docs-v2.interchecks.com/docs/http-status-codes
+- https://docs-v2.interchecks.com/reference/about-transactions
+- https://docs-v2.interchecks.com/reference/update-transaction
+- https://docs-v2.interchecks.com/docs/webhooks
+- https://docs-v2.interchecks.com/docs/encrypted-requests
+derived_from:
+- openapi/interchecks-payments-api-v2.json
+
+media_type:
+  request: application/json
+  response: application/json
+  exceptions:
+  - operation: get-access-token
+    request: application/x-www-form-urlencoded
+  - operation: get-user-activity-report
+    response: application/csv
+
+auth:
+  style: oauth2-client-credentials
+  presentation: Authorization Bearer <JWT>
+  token_ttl_seconds: 900
+  see: authentication/interchecks-authentication.yml
+
+idempotency:
+  supported: true
+  header: Idempotency-Key
+  value: caller-generated unique key
+  scope: >-
+    Applied to the create/write operations that move money or create durable records — notably
+    create-payment (POST /api/v2/{payer_id}/payments) and create-transaction
+    (POST /api/v2/{payer_id}/transactions), where the header is declared as an explicit
+    OpenAPI parameter.
+  semantics:
+  - status: 102
+    meaning: Idempotent matched request is currently processing
+  - status: 409
+    meaning: >-
+      Request conflict — either the Idempotency-Key matched a request that has already been
+      processed, or an active record was found
+  retention: >-
+    not stated in the published documentation
+  operations:
+  - create-payment
+  - create-transaction
+  docs: https://docs-v2.interchecks.com/reference/create-transaction
+  note: >-
+    Interchecks is unusual in returning 102 for an in-flight idempotent replay rather than
+    blocking or replaying the stored response; a caller must handle 102 as "retry later, do not
+    re-submit with a new key".
+
+reference_ids:
+  supported: true
+  field: reference_id
+  description: >-
+    Recipients, payments and transactions all accept a caller-supplied reference_id and can be
+    read back by it (get-recipient-by-reference-id, get-payment-by-reference-id,
+    get-transaction-by-reference-id, get-transactions-by-payment-reference-id). This is the
+    provider's correlation mechanism alongside Idempotency-Key.
+
+pagination:
+  supported: false
+  note: >-
+    No pagination parameters, cursors, page/limit query parameters or link headers appear in the
+    published OpenAPI or the documentation. Collection reads are scoped to a single recipient
+    (for example get-bank-accounts, get-card-accounts) and reports are bounded by a date range
+    rather than paged — get-user-activity-report enforces a maximum 31-day range.
+
+filtering:
+  supported: partial
+  note: >-
+    Reporting operations accept start/end date query parameters. There is no general filter,
+    sort, field-expansion or sparse-fieldset facility.
+
+metadata:
+  supported: true
+  field: meta_params
+  description: >-
+    Transactions accept meta_params, a JSON string of caller values carried through to
+    reporting. The documentation directs callers to agree usage with the Interchecks technical
+    team.
+
+request_tracing:
+  request_id_header: Aws-Api-Gateway-Requestid
+  description: >-
+    Create responses return an AWS API Gateway request id. The matching webhook carries the same
+    value in the x-webhook-id header, which is the documented way to tie a webhook back to the
+    originating request.
+  docs: https://docs-v2.interchecks.com/docs/webhooks
+
+location_header:
+  supported: true
+  note: 201 Created responses on create-payment and create-transaction include a Location header.
+
+versioning:
+  style: uri-path
+  current: v2
+  path_prefix: /api/v2
+  previous: v1
+  previous_docs: https://docs-v1.interchecks.com
+  note: >-
+    Two published OpenAPI documents describe v2 — an OpenAPI 3.1.0 document (68 operations,
+    servers https://test.api.interchecks.io) and an older OpenAPI 3.0.0 document (31 operations,
+    servers http://example.com, a placeholder). Both are served from the provider's own ReadMe
+    project; see lifecycle/interchecks-lifecycle.yml.
+
+error_envelope:
+  format: custom-json
+  rfc9457: false
+  shape:
+    http_status: integer
+    error_code: string
+    error_message: string
+  example:
+    http_status: 422
+    error_code: ERR_ACCOUNT_BALANCE_THRESHOLD
+    error_message: Account balance insufficient
+  variants:
+  - note: >-
+      Transaction errors may additionally carry transaction_id and, for ACH Funding, a
+      funding_options_response object with configured threshold values and actual values.
+  - note: >-
+      Card declines return the network action code inside error_message as
+      "<action code>:<message>" with error_code ERR_OCT_DECLINE or ERR_AFT_DECLINE, and are
+      returned with HTTP 200, not a 4xx.
+  see:
+  - errors/interchecks-error-codes.yml
+  - errors/interchecks-decline-codes.yml
+
+rate_limit_signaling:
+  documented_headers: []
+  exhaustion_status: 429
+  note: >-
+    HTTP 429 "Too many requests in a given amount of time" is documented as a possible status,
+    but no numeric limit, window, or RateLimit/Retry-After response header is published.
+  see: rate-limits/interchecks-rate-limits.yml
+
+retries:
+  guidance: >-
+    The documentation warns that a 5xx does not necessarily mean the request failed — a
+    downstream provider error or timeout can surface as 5xx — and instructs callers to confirm
+    whether the transaction has processed before retrying.
+  docs: https://docs-v2.interchecks.com/docs/http-status-codes
+
+dry_run_mode:
+  supported: false
+  substitute: >-
+    No dry-run/preview flag exists on any write operation. The provider substitutes a sandbox
+    with deterministic amount-based triggers and a test harness that forces terminal statuses;
+    see sandbox/interchecks-sandbox.yml.
+
+reversibility:
+  applicable: true
+  grade: verified
+  summary: >-
+    Interchecks documents a distinct reversal path per transaction method, and states the
+    boundary for each. The general rule is stated in the update-transaction reference: a 422 is
+    returned when the transaction is "in an immutable status or already sent to the financial
+    institution for processing".
+  write_surfaces:
+  - surface: ACH Funding Plus transaction (debit / pull)
+    create: create-transaction
+    reversal: cancel
+    operation_id: update-transaction
+    http: PATCH /api/v2/{payer_id}/transactions/{transaction_id}
+    target_status: CANCELLED
+    window: >-
+      Only while the transaction is in PROCESSING or RETRY status. Once it has been sent to the
+      financial institution for processing, or is otherwise in an immutable status, the call
+      returns 422.
+    window_stated: true
+    docs: https://docs-v2.interchecks.com/reference/update-transaction
+  - surface: Instant Funding transaction (AFT, card pull)
+    create: create-transaction
+    reversal: reverse
+    operation_id: update-transaction
+    http: PATCH /api/v2/{payer_id}/transactions/{transaction_id}
+    target_status: REVERSED
+    window: >-
+      Only while the transaction is in PAID status; an immutable status returns 422. The docs
+      also describe an automatic reversal path for partial authorizations, and note that a
+      failed Visa reversal leaves the transaction PAID.
+    window_stated: true
+    docs: https://docs-v2.interchecks.com/reference/update-transaction
+  - surface: ACH funding already settled
+    create: create-transaction
+    reversal: refund
+    operation_id: create-transaction
+    http: POST /api/v2/{payer_id}/transactions
+    mechanism: >-
+      A new transaction with method ACH_REFUND and type CREDIT that must carry
+      originating_transaction_id referencing the original transaction. Terminal states
+      REFUNDED and REFUNDED_PARTIAL are exposed on the original transaction.
+    window: >-
+      Processed same day if submitted before 2:45PM Eastern on a business day. The
+      documentation does not state an outer limit for how long after settlement a refund may be
+      raised.
+    window_stated: partial
+    docs: https://docs-v2.interchecks.com/reference/about-transactions
+  - surface: Destination payment accounts (bank, card, PayPal, Venmo, prepaid)
+    create: add-bank-account / add-card-account / add-paypal-account / add-venmo-account / create-prepaid-account
+    reversal: delete
+    operation_id: delete-bank-account / delete-card-account / delete-paypal-account / delete-venmo-account / delete-prepaid-account
+    window: >-
+      Deletes are available at any time; the documentation states no restore path and no
+      restore window, so account removal should be treated as irreversible.
+    window_stated: true
+    reversible: false
+  - surface: Recipients
+    create: create-recipient
+    reversal: none
+    note: >-
+      There is no delete-recipient operation. Recipients can be updated (update-recipient,
+      patch-recipient) but not removed through the API.
+  non_reversible:
+  - method: ACH_SAME_DAY
+    note: No cancel or void operation is documented for outbound same-day ACH credits.
+  - method: ACH_STANDARD
+    note: No cancel or void operation is documented for outbound standard ACH credits.
+  - method: RTP
+    note: >-
+      Real-time payments are irrevocable by design; no reversal operation is documented.
+  - method: INSTANT_DEPOSIT
+    note: >-
+      No reversal operation is documented for outbound card OCT credits. REVERSED and
+      REVERSAL_PENDING statuses exist but the documentation does not expose an API to request
+      them for this method.
+  - method: CHECK
+    note: No void-check operation is documented.
+  - method: PAYPAL
+    note: No reversal operation is documented.
+  - method: VENMO
+    note: No reversal operation is documented.
+  agent_guidance: >-
+    Before calling create-transaction an agent should treat CREDIT methods (ACH_SAME_DAY,
+    ACH_STANDARD, RTP, INSTANT_DEPOSIT, CHECK, ECHECK, PAYPAL, PREPAID, VENMO) as one-way:
+    once accepted there is no documented API to take them back. Only the two DEBIT/pull methods
+    — ACH_FUNDING_PLUS and INSTANT_FUNDING — have a documented reversal operation, and both
+    close as soon as the funds reach the financial institution.
+
+security_headers:
+  X-ENCRYPTED: per-payer envelope encryption of request/response bodies
+  X-AES-MODE: 'CBC_PKCS5PADDING or GCM_NOPADDING; selects the AES mode'
+  x-verification: 'inbound only — RS256 JWT signing each webhook body'
+  x-webhook-id: 'inbound only — matches Aws-Api-Gateway-Requestid from the originating request'
+
+cross_links:
+  errors: errors/interchecks-error-codes.yml
+  decline_codes: errors/interchecks-decline-codes.yml
+  problem_types: errors/interchecks-problem-types.yml
+  lifecycle: lifecycle/interchecks-lifecycle.yml
+  authentication: authentication/interchecks-authentication.yml
+  rate_limits: rate-limits/interchecks-rate-limits.yml
+  sandbox: sandbox/interchecks-sandbox.yml
+  webhooks: asyncapi/interchecks-webhooks.yml

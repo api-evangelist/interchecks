@@ -1,0 +1,24 @@
+generated: '2026-08-23'
+method: searched
+source: https://home.interchecks.com/
+plan_count: 0
+plans: []
+public_pricing: false
+note: >-
+  Interchecks publishes no pricing. There is no /pricing page (https://home.interchecks.com/pricing
+  returns 404), no plan or tier table anywhere on the marketing site, developer page or
+  documentation, and no rate card for any rail. Commercial terms are set through the sales and
+  onboarding process — the site's only conversion path is a "Contact Us" form and a portal login,
+  and the documentation repeatedly refers integrators to the onboarding team for configuration.
+  This is an enterprise contact-us model, recorded as an honest zero rather than omitted.
+probed:
+- url: https://home.interchecks.com/pricing
+  status: 404
+- url: https://home.interchecks.com/
+  status: 200
+- url: https://home.interchecks.com/developers
+  status: 200
+- url: https://docs-v2.interchecks.com/llms.txt
+  status: 200
+  note: the published documentation index lists no pricing page
+sales_contact: https://home.interchecks.com/#contact

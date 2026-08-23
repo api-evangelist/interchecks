@@ -64,5 +64,9 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Interchecks is a company surfaced via the API Evangelist harvest backlog (source: secondary-market) and added to the network as a stub for full-pipeline profiling.
-- https://forgeglobal.com/interchecks_stock/
+Interchecks Technologies, Inc. is a US instant-payments platform that moves money in both directions for payers who need to fund accounts and pay out to consumers at scale. Its Payments API v2 is a REST contract covering recipient onboarding and TIN verification, destination account management across bank (Plaid-linked), debit card, PayPal, Venmo and prepaid rails, immediate disbursement transactions across ACH standard/same-day, ACH Funding Plus, RTP, Instant Deposit (Visa/Mastercard OCT), Instant Funding (AFT), paper check, eCheck and prepaid, plus embeddable widgets, settlement and activity reporting, envelope-encrypted payloads and signed webhooks.
+
+- Website: https://home.interchecks.com/
+- Developers: https://home.interchecks.com/developers
+- Documentation: https://docs-v2.interchecks.com/docs/getting-started
+- API base: https://prod.api.interchecks.io (sandbox https://test.api.interchecks.io)

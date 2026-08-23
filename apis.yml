@@ -1,23 +1,127 @@
 aid: interchecks
 name: Interchecks
-description: 'Interchecks is a company surfaced via the API Evangelist harvest backlog (source: secondary-market)
-  and added to the network as a stub for full-pipeline profiling.'
+description: >-
+  Interchecks Technologies, Inc. is a US instant-payments platform that moves money in both
+  directions for payers who need to fund accounts and pay out to consumers at scale. Its Payments
+  API v2 is a REST contract covering recipient onboarding and TIN verification, destination account
+  management across bank (Plaid-linked), debit card, PayPal, Venmo and prepaid rails, immediate
+  disbursement transactions across ACH standard/same-day, ACH Funding Plus, RTP, Instant Deposit
+  (Visa/Mastercard OCT), Instant Funding (AFT), paper check, eCheck and prepaid, plus embeddable
+  widgets, settlement and activity reporting, envelope-encrypted payloads and signed webhooks. The
+  company reports more than $50 billion processed over ten years for online gaming and prediction
+  markets, on-demand payroll, lending and digital banking clients, and publishes PCI DSS Level 1
+  Service Provider and SOC 2 Type 2 attestations.
+image: https://home.interchecks.com/images/interchecks-logo-white.svg
 url: https://raw.githubusercontent.com/api-evangelist/interchecks/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
 specificationVersion: '0.20'
 created: '2026-08-23'
 modified: '2026-08-23'
 tags:
-- Company
-apis: []
+- Payments
+- Payouts
+- ACH
+- Real-Time Payments
+- Instant Payments
+- Disbursements
+- Cards
+- Financial Services
+- Fintech
+- Webhooks
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
+apis:
+- name: Interchecks Payments API v2
+  description: >-
+    REST API for creating and managing recipients, destination payment accounts (bank, card,
+    PayPal, Venmo, prepaid), payments accepted in the Recipient Portal or a hosted widget, and
+    transactions for immediate disbursement or funding across ACH, RTP, card OCT/AFT, check,
+    eCheck and prepaid rails. Authentication is OAuth 2.0 client_credentials returning a
+    short-lived JWT bearer token; writes accept an Idempotency-Key header.
+  humanURL: https://docs-v2.interchecks.com/docs/getting-started
+  baseURL: https://prod.api.interchecks.io
+  tags:
+  - Payments
+  - Payouts
+  - Transactions
+  - Recipients
+  - Webhooks
+  properties:
+  - type: OpenAPI
+    url: openapi/interchecks-payments-api-v2.json
+  - type: OpenAPI
+    url: openapi/interchecks-payments-api-v2-registry.json
+  - type: Overlay
+    url: overlays/interchecks-payments-api-v2-overlay.yaml
+  - type: Documentation
+    url: https://docs-v2.interchecks.com/docs/getting-started
+  - type: APIReference
+    url: https://docs-v2.interchecks.com/reference/about-recipients
+  - type: Webhooks
+    url: asyncapi/interchecks-webhooks.yml
 common:
+- type: DomainSecurity
+  url: security/interchecks-domain-security.yml
 - type: Website
-  url: https://forgeglobal.com/interchecks_stock/
+  url: https://home.interchecks.com/
+- type: DeveloperPortal
+  url: https://home.interchecks.com/developers
+- type: Documentation
+  url: https://docs-v2.interchecks.com/docs/getting-started
+- type: APIReference
+  url: https://docs-v2.interchecks.com/reference/about-recipients
+- type: GettingStarted
+  url: https://docs-v2.interchecks.com/docs/getting-started
+- type: GitHubOrganization
+  url: https://github.com/interchecks
+- type: SignUp
+  url: https://interchecks.com/login
+- type: Support
+  url: mailto:tech@interchecks.com
+- type: LinkedIn
+  url: https://www.linkedin.com/company/gointerchecks/
+- type: Authentication
+  url: authentication/interchecks-authentication.yml
+- type: Conventions
+  url: conventions/interchecks-conventions.yml
+- type: Idempotency
+  url: conventions/interchecks-conventions.yml
+- type: ErrorCatalog
+  url: errors/interchecks-error-codes.yml
+- type: DeclineCodes
+  url: errors/interchecks-decline-codes.yml
+- type: Lifecycle
+  url: lifecycle/interchecks-lifecycle.yml
+- type: ChangeLog
+  url: changelog/interchecks-changelog.yml
+- type: Sandbox
+  url: sandbox/interchecks-sandbox.yml
+- type: Components
+  url: components/interchecks-components.yml
+- type: DataModel
+  url: data-model/interchecks-data-model.yml
+- type: Conformance
+  url: conformance/interchecks-conformance.yml
+- type: Compliance
+  url: conformance/interchecks-conformance.yml
+- type: Webhooks
+  url: asyncapi/interchecks-webhooks.yml
+- type: LLMsTxt
+  url: llms/interchecks-llms.txt
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Plans
+  url: plans/interchecks-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/interchecks-rate-limits.yml
+- type: Packages
+  url: packages/interchecks-packages.yml
+x-enrichment:
+  date: '2026-08-23'
+  status: enriched
+  artifacts_added: 32
+  pass: local-v1

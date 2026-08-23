@@ -1,0 +1,83 @@
+generated: '2026-08-23'
+method: searched
+source: https://docs-v2.interchecks.com/docs/documentation-updates
+title: Documentation Updates
+scope: documentation
+scope_note: >-
+  This is a documentation changelog, not an API release log. Interchecks publishes no versioned
+  API release notes, no RSS/Atom feed and no per-release version numbers; entries are dated to
+  the month and describe what changed in the reference material, which in practice tracks when
+  capabilities shipped.
+scheme: year-month
+current_version: v2
+entry_count: 10
+entries:
+- date: '2026-01'
+  highlights:
+  - Added Test Data scenarios for INSTANT_FUNDING transactions
+  breaking: false
+  additions: true
+- date: '2024-05'
+  highlights:
+  - API Test Harness calls updated to include Account status workflows
+  - Auto-linking of a Plaid account bypassing the Plaid Link UI
+  breaking: false
+  additions: true
+- date: '2024-01'
+  highlights:
+  - Card Account workflows for API and Widget now include Payment Account Validation based on client configuration
+  breaking: false
+  additions: true
+- date: '2023-09'
+  highlights:
+  - ACH Funding updates for ACH Funding Plus, Retries, Refunds
+  - About Transactions lists specific error codes for ACH Funding and Refunds
+  - Added Update Transaction endpoint to cancel ACH Funding transactions in Processing or Retry status
+  - Transaction Webhook schema updated to reflect latest payload details
+  breaking: false
+  additions: true
+- date: '2023-08'
+  highlights:
+  - ACH Funding Guide published
+  - Webhook Guide updated for Bank Account and Card Account notifications
+  - Create Transaction page updated with ACH Funding samples
+  - Create Transaction page updated with transaction_id parameter in certain error response scenarios
+  - Create Bank Widget page added with request and response samples
+  - ACH Return Codes page added
+  - API Error Codes updated with latest error codes
+  breaking: false
+  additions: true
+- date: '2022-12'
+  highlights:
+  - Webhook payload documentation update for the webhook_type value
+  breaking: false
+  additions: false
+- date: '2022-10'
+  highlights:
+  - Reporting endpoints for OCT (Instant Deposit)
+  - Prepaid account creation and management
+  - Widget endpoints
+  breaking: false
+  additions: true
+- date: '2022-04'
+  highlights:
+  - Card account conflict added
+  - Webhook origin IPs added
+  - API Error Codes updated
+  breaking: false
+  additions: true
+- date: '2021-11'
+  highlights:
+  - Documentation published
+  breaking: false
+  additions: true
+recent_spec_activity:
+- observed: '2026-08-18'
+  detail: >-
+    The published OpenAPI document payments-api-v2-1.json carries updated_at 2026-08-18 and the
+    About Transactions / Update Transaction reference pages carry updatedAt 2026-08-18, so the
+    contract is being actively maintained even though no release entry was written for it.
+  source: https://docs-v2.interchecks.com/reference/update-transaction
+- observed: '2026-08-19'
+  detail: The API Error Codes page carries updatedAt 2026-08-19.
+  source: https://docs-v2.interchecks.com/docs/api-error-codes

@@ -1,0 +1,82 @@
+generated: '2026-08-23'
+method: searched
+source: https://docs-v2.interchecks.com/docs/getting-started
+versioning:
+  scheme: uri-path
+  current: v2
+  path_prefix: /api/v2
+  docs: https://docs-v2.interchecks.com/docs/getting-started
+  versions:
+  - version: v2
+    status: current
+    docs: https://docs-v2.interchecks.com/docs/getting-started
+    first_published: '2021-10-11'
+    note: >-
+      Introduced simplified payment and transaction processing, aggregator-level recipient and
+      account management, self-managed account keys/secrets, and webhook verification.
+  - version: v1
+    status: superseded
+    docs: https://docs-v1.interchecks.com
+    note: >-
+      The v1 documentation site is still served (HTTP 200). Interchecks states only that "API v1
+      documentation can be found at https://docs-v1.interchecks.com" — it publishes no sunset
+      date, no deprecation notice and no migration deadline for v1.
+deprecation_policy:
+  published: false
+  sunset_header: not observed
+  deprecation_header: not observed
+  rfc8594: false
+  note: >-
+    No deprecation or sunset policy is published. No operation in the current OpenAPI carries
+    deprecated: true. v1 remains documented and reachable with no stated end date, so consumers
+    have no published signal for when a version or an operation will be withdrawn.
+  deprecated_operations: []
+status_page:
+  published: false
+  probed:
+  - url: https://status.interchecks.com/
+    status: 000
+    note: host does not resolve
+  note: >-
+    No public status page, uptime history or incident feed was found on any Interchecks host or
+    on the common third-party status providers. The documentation does describe HTTP 503 as
+    "Service unavailable, request timed out, or maintenance is underway", but there is no page
+    that announces maintenance in advance.
+sla:
+  published: false
+  note: >-
+    No public SLA, uptime commitment or support-response target is published. Processing
+    timelines are published per rail rather than as an availability commitment.
+processing_timelines:
+- rail: ACH_SAME_DAY / ACH_FUNDING_PLUS / ACH_REFUND
+  commitment: Processed the same day when submitted before 2:45PM Eastern on a business day.
+- rail: ACH_STANDARD
+  commitment: Processed in 3-5 business days.
+- rail: RTP
+  commitment: Round trip may take up to 30 seconds; a webhook is sent when a definitive status is known.
+- rail: INSTANT_DEPOSIT / INSTANT_FUNDING
+  commitment: Immediate authorization; UNKNOWN or PROCESSING status may be returned on a network timeout.
+support:
+  email: tech@interchecks.com
+  note: >-
+    tech@interchecks.com is the support address the provider sets as a documentation variable and
+    repeats on the introduction page. There is no public ticketing system, community forum or
+    help centre.
+change_communication:
+  changelog: changelog/interchecks-changelog.yml
+  note: >-
+    The only dated change record Interchecks publishes is a Documentation Updates page. There is
+    no API release-notes feed, no RSS, and no version history for the OpenAPI itself.
+contract_publication:
+  ownership_check: >-
+    The saved OpenAPI belongs to Interchecks. servers[] names https://test.api.interchecks.io and
+    the provider's own documentation project publishes productionUrl =
+    https://prod.api.interchecks.io / testSandboxUrl = https://test.api.interchecks.io alongside
+    support = tech@interchecks.com and companyName = Interchecks. interchecks.io is the company's
+    API domain and interchecks.com its corporate domain; the docs at docs-v2.interchecks.com name
+    both. No sibling brand, parent company or third-party product appears in the document.
+  note: >-
+    The OpenAPI is published through the provider's ReadMe project (docs-v2.interchecks.com) and
+    is retrievable from the ReadMe API registry, but Interchecks serves no spec from its own API
+    or docs host root — /openapi.json, /openapi.yaml and /swagger.json all 404 on the docs host,
+    and the API hosts answer 401 to every unauthenticated path.

@@ -1,0 +1,49 @@
+# Interchecks Payments API V2 Documentation
+
+> Documentation for Interchecks Payments API V2
+
+Append .md to any documentation page URL to get its markdown version.
+
+## Guides
+- [Documentation Updates](https://docs-v2.interchecks.com/docs/documentation-updates.md): Changelog of documentation updates
+- [Glossary](https://docs-v2.interchecks.com/docs/glossary.md): Terms referenced throughout the documentation
+- [HTTP Status Codes](https://docs-v2.interchecks.com/docs/http-status-codes.md): API Status Codes
+- [Encrypted Requests](https://docs-v2.interchecks.com/docs/encrypted-requests.md)
+- [API Error Codes](https://docs-v2.interchecks.com/docs/api-error-codes.md)
+- [ACH Return Codes](https://docs-v2.interchecks.com/docs/ach-return-code.md): ACH Funding and Payout Transactions are processed by the Automated Clearing House and can be returned for a variety of reasons.  Below are common Return Codes that could be encountered during ACH processing.
+- [Card Processing Failure Codes](https://docs-v2.interchecks.com/docs/instant-deposit-failure-codes.md)
+- [Test Data](https://docs-v2.interchecks.com/docs/test-data.md): Sandbox testing guidelines
+- [Webhooks](https://docs-v2.interchecks.com/docs/webhooks.md): Don't call us, we'll call you
+- [ACH Funding Transactions](https://docs-v2.interchecks.com/docs/funding-transactions.md)
+- [AFT Funding Transactions](https://docs-v2.interchecks.com/docs/aft-funding-transactions.md)
+
+## API Reference
+- [About Recipients](https://docs-v2.interchecks.com/reference/about-recipients.md): A Recipient can be an individual or company which is assigned to the payer_id in the URL. Recipients are identified by their primary email address or the `recipient_id` in the Create Recipient response.
+- [Get Bank Account](https://docs-v2.interchecks.com/reference/get-bank-account.md): Get Bank Account for Recipient.  `200` - Request Succeeded `404` - Recipient ID or Account ID not found
+- [Plaid Processing Partner](https://docs-v2.interchecks.com/reference/plaid-processing-partner.md): Interchecks is a supported Plaid Processor Partner.
+- [Add Bank Account](https://docs-v2.interchecks.com/reference/add-bank-account-for-processor.md): Add a Plaid Linked Bank Account using a Plaid Processor Token.
+- [Update Bank Account Status](https://docs-v2.interchecks.com/reference/update-bank-account-status.md): Update Plaid linked account status
+- [Add Card Account](https://docs-v2.interchecks.com/reference/add-card-account.md): Add a Card Account for a Recipient.
+- [Get Card Account](https://docs-v2.interchecks.com/reference/get-card-account.md): Get Card Account for Recipient.  `200` - Request Succeeded `404` - Recipient ID or Account ID not found
+- [Verify Card Account](https://docs-v2.interchecks.com/reference/verify-card-account.md): Card Account Verification for Account Name and/or Address on an existing active Card account
+- [Get Card Account Verification](https://docs-v2.interchecks.com/reference/get-card-account-verify.md): Get Card Account Verification response
+- [Get Card Account Verifications](https://docs-v2.interchecks.com/reference/get-card-account-verifications.md): Get Account Verifications for Card account
+- [About Transactions](https://docs-v2.interchecks.com/reference/about-transactions.md): Transactions are funds transfers processed immediately, without Recipient interaction.
+- [Create Transaction](https://docs-v2.interchecks.com/reference/create-transaction.md): Create Transaction for immediate disbursement.
+- [Update Transaction](https://docs-v2.interchecks.com/reference/update-transaction.md)
+- [Get Transaction](https://docs-v2.interchecks.com/reference/get-transaction.md): Get Transaction by Transaction ID  `200` - Request Succeeded `404` - Transaction ID not found
+- [About Reports](https://docs-v2.interchecks.com/reference/about-reports.md): Download OCT Reports for an Aggregator or Payer.
+- [Get ACH Settlement Report](https://docs-v2.interchecks.com/reference/get-ach-settlement-report.md)
+- [Get Bank Transactions Report](https://docs-v2.interchecks.com/reference/get-bank-transactions-report.md)
+- [Get User Activity Report](https://docs-v2.interchecks.com/reference/get-user-activity-report.md): Get Payer user activity Report for a date range.  The `payer_id` value passed in should reflect the requested Aggregator or Payer.  There is a maximum date range of 31 days enforced.** Report returns a `Content-Type` of `application/csv``200` - Request succeeded`400` - Bad Request, missing or invalid parameters
+- [About Encrypted Payloads](https://docs-v2.interchecks.com/reference/about-encrypted-payloads.md)
+- [Payload Encryption Test](https://docs-v2.interchecks.com/reference/payload-encryption-test.md): Sandbox Only
+- [Post Payload Encryption Test Decryption](https://docs-v2.interchecks.com/reference/post-payload-encryption-test-decryption.md): Return plaintext when sent an encrypted payload
+- [Post Payload Encryption Test Encryption](https://docs-v2.interchecks.com/reference/post-payload-encryption-test-encryption.md): Returns encrypted response when sent plaintext JSON
+- [Post Payload Encryption Test End to End](https://docs-v2.interchecks.com/reference/post-payload-encryption-test-end-to-end.md): Fully test payload encryption by sending an encrypted request and receiving an encrypted response with no business logic
+- [Get Encryption Public Key](https://docs-v2.interchecks.com/reference/get-encryption-public-key.md)
+- [Create Account with Plaid Link](https://docs-v2.interchecks.com/reference/create-account-plaid.md)
+- [Update Account Status](https://docs-v2.interchecks.com/reference/update-account-status.md)
+- [Update Transaction Status](https://docs-v2.interchecks.com/reference/update-transaction-status.md): Update Transaction Status.  `200` - Request Succeeded`400` - Bad Request, missing or invalid parameters`422` - Transaction not undateable
+- [About Widgets](https://docs-v2.interchecks.com/reference/about-widgets.md): Widgets are user interfaces to embed in an iFrame or modal window.  We offer widgets for banks account linking with Plaid, debit card capture, payment acceptance, and prepaid account dashboards.  The response contains a short-lived URL with a defined expiration date.
+- [Create Bank Widget](https://docs-v2.interchecks.com/reference/create-bank-widget.md): Create a Widget URL to add a Bank Account using Plaid Link.  <br>View the [About Widgets](ref:about-widgets) page to learn about optional `widget_params`.<br>`201` - Created<br>`400` - Bad Request, missing or invalid parameters.  Upon completion of bank account link, Interchecks will utilize the `redirect_url` parameter in the `widget_params` to redirect control back to the client's browser.  The completion page should provide the appropriate messaging to the user to indicate next steps or action required.

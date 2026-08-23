@@ -1,0 +1,185 @@
+generated: '2026-08-23'
+method: searched
+source: https://docs-v2.interchecks.com/docs/webhooks
+asyncapi_published: false
+asyncapi_note: >-
+  Interchecks publishes no AsyncAPI, EventBridge schema, or machine-readable event catalog. It
+  documents an HTTP webhook surface in prose with JSON payload samples, captured verbatim below.
+  No AsyncAPI document has been authored on the provider's behalf.
+transport: https-webhook
+configuration: >-
+  Webhook destination URLs are configured in the Developer area of the Interchecks Portal at the
+  aggregator or the payer level. When the API account is created at the aggregator level, webhooks
+  fire against the aggregator's webhook settings.
+delivery:
+  retry_policy: >-
+    A non-2xx response triggers 2 additional retries within 15 seconds, then the whole cycle
+    repeats again within the next 2 hours.
+  ordering: not stated
+  idempotency:
+    header: x-webhook-id
+    description: >-
+      Every webhook carries an x-webhook-id whose value matches the Aws-Api-Gateway-Requestid
+      response header from the originating create request, giving the consumer a dedupe key that
+      also correlates back to the API call.
+security:
+  signature:
+    header: x-verification
+    format: JWT
+    algorithm: RS256
+    payload_claims:
+    - name: iat
+      description: issue time in seconds; reject webhooks older than 5 minutes
+    - name: request_body_sha256_hash
+      description: SHA-256 hash of the webhook body, case insensitive
+    key_discovery: >-
+      GET https://{env}.api.interchecks.io/api/v2/{payer_id}/webhooks/get_validation_key/{kid}
+      returns the RSA public key as a JWK (kty, e, n). The kid comes from the JWT header.
+    verification_steps:
+    - Decode the x-verification header JWT and read its kid.
+    - Fetch the validation key for that kid.
+    - Verify the JWT signature; if invalid, do not process the webhook.
+    - Compare request_body_sha256_hash to the SHA-256 of the received body; if they differ, do not process.
+    - Reject if iat is more than 5 minutes old.
+  origin_ips: >-
+    The documentation states webhook origin IPs were published in the 2022-04 documentation
+    update; the current values are held in the reference area rather than in this page.
+event_count: 3
+events:
+- name: PAYMENT
+  discriminator: webhook_type
+  trigger: Payment status updates
+  payload:
+    webhook_type: 'PAYMENT'
+    payment_id: 'String : Payment ID'
+    payment_status: 'Enum : Payment Status'
+    reference_id: 'String (optional) : Reference ID if included'
+  related_operations:
+  - create-payment
+  - update-payment
+  - get-payment-by-id
+- name: TRANSACTION
+  discriminator: webhook_type
+  trigger: >-
+    Transaction status updates. A transaction webhook is sent on the initial request and on every
+    subsequent status change, which is how ACH, RTP and card settlement outcomes are learned.
+  payload:
+    webhook_type: 'TRANSACTION'
+    type: 'Enum : Transaction Type'
+    method: 'Enum: Transaction Method'
+    transaction_id: 'String : Transaction ID'
+    transaction_status: 'Enum : Transaction Status'
+    reference_id: 'String (optional) : Reference ID if included'
+    webhook_created_date: 'Timestamp'
+    network_approval_code: 'String : Approval code for Instant Deposit'
+  error_variant:
+    webhook_type: 'TRANSACTION'
+    transaction_id: 'String : Transaction ID'
+    transaction_status: 'Enum : Transaction Status'
+    reference_id: 'String (optional) : Reference ID if included'
+    error_code: 'String: error code'
+    error_message: 'String: error detail'
+  statuses:
+  - APPROVAL_REQUIRED
+  - CANCELLED
+  - FAILED
+  - PAID
+  - PENDING_KYC
+  - PROCESSING
+  - RETRY
+  - REFUNDED
+  - REFUNDED_PARTIAL
+  - REVERSED
+  - REVERSAL_PENDING
+  - UNKNOWN
+  related_operations:
+  - create-transaction
+  - update-transaction
+  - get-transaction
+- name: PAYMENT_ACCOUNT
+  discriminator: webhook_type
+  trigger: >-
+    Destination account lifecycle — prepaid account created via API, card account added via the
+    widget UI, bank account added via the widget UI, and bank account status change on a
+    chargeback or reversal request.
+  variants:
+  - subject: bank-account-created
+    payload:
+      widget_id: 'String: Widget ID'
+      webhook_type: 'PAYMENT_ACCOUNT'
+      account_id: 'String : Account ID'
+      recipient_id: 'String : Recipient ID'
+      account_number: 'String : Last 4 of Account Number'
+      account_type: 'String: CHECKING or SAVINGS'
+      bank_name: 'String'
+  - subject: bank-account-status-update
+    payload:
+      widget_id: 'String: Widget ID'
+      webhook_type: 'PAYMENT_ACCOUNT'
+      account_id: 'String : Account ID'
+      recipient_id: 'String : Recipient ID'
+      account_status: 'String : Status of Bank Account'
+    account_statuses:
+    - code: BANK_ACCOUNT_BLOCKED
+      meaning: Account is blocked due to fraud controls
+    - code: PLAID_REAUTH_REQUIRED
+      meaning: >-
+        Plaid authorization is due to expire or will expire; a Bank Account Widget request to
+        reauthorize is required before transacting once it does
+    - code: PLAID_PERMISSION_REVOKED
+      meaning: >-
+        The user explicitly revoked Plaid permission; a new Bank Account Widget request is
+        required before transacting
+  - subject: bank-account-failure
+    payload:
+      widget_id: 'String: Widget ID'
+      webhook_type: 'PAYMENT_ACCOUNT'
+      account_id: 'String : Account ID'
+      recipient_id: 'String : Recipient ID'
+      error_code: 'String: error code'
+      error_message: 'String: error detail'
+  - subject: card-account-created
+    payload:
+      widget_id: 'String: Widget ID'
+      webhook_type: 'PAYMENT_ACCOUNT'
+      account_id: 'String : Account ID'
+      recipient_id: 'String : Recipient ID'
+      card_number: 'String Masked card number'
+  - subject: card-account-fraud-failure
+    payload:
+      widget_id: 'String: Widget ID'
+      webhook_type: 'PAYMENT_ACCOUNT'
+      account_id: 'String : Account ID'
+      recipient_id: 'String : Recipient ID'
+      card_number: 'String : Masked card number'
+      error_code: 'ERR_ACCOUNT_SHARING_LIMIT_EXCEEDED'
+  - subject: card-account-created-with-verification
+    payload:
+      widget_id: 'String: Widget ID'
+      webhook_type: 'PAYMENT_ACCOUNT'
+      account_id: 'String : Account ID'
+      recipient_id: 'String : Recipient ID'
+      card_number: 'String Masked card number'
+      verification_result:
+        network: 'String: VISA/MASTERCARD'
+        pan: 'String: Match result'
+        cvv: 'String: Match result'
+        avs:
+          street: 'String: Match result'
+          zip: 'String Match result'
+        ani:
+          first_name: 'String: Match result'
+          last_name: 'String: Match result'
+  - subject: prepaid-account
+    payload:
+      widget_id: 'String: Widget ID'
+      webhook_type: 'PAYMENT_ACCOUNT'
+      account_id: 'String : Account ID'
+      recipient_id: 'String : Recipient ID'
+      prepaid_account_status: 'String : Account Status'
+      prepaid_account_error: 'String : Account Error Detail'
+  related_operations:
+  - create-bank-widget
+  - create-card-widget
+  - create-prepaid-dashboard-widget
+  - create-prepaid-account

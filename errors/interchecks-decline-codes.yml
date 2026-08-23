@@ -1,0 +1,308 @@
+generated: '2026-08-23'
+method: searched
+source: https://docs-v2.interchecks.com/docs/instant-deposit-failure-codes
+docs:
+- https://docs-v2.interchecks.com/docs/instant-deposit-failure-codes
+- https://docs-v2.interchecks.com/docs/ach-return-code
+applies_to:
+- INSTANT_DEPOSIT (Visa/Mastercard OCT)
+- INSTANT_FUNDING (AFT)
+- ACH_FUNDING_PLUS
+- ACH_SAME_DAY
+- ACH_STANDARD
+- ACH_REFUND
+card_declines:
+  envelope_field: error_message
+  envelope_format: '"<action code>:<message>"'
+  error_codes:
+  - ERR_OCT_DECLINE (Instant Deposit / payout)
+  - ERR_AFT_DECLINE (Instant Funding / pull)
+  http_status: 200
+  note: Card declines are returned with HTTP 200, not a 4xx — the API call succeeded, the authorization
+    did not. The network action code is embedded in error_message before the colon. Visa and Mastercard
+    may return different text for the same action code; apart from codes 76-89 the response can be treated
+    identically regardless of message.
+  standard: ISO 8583 style network action/response codes as published by Visa and Mastercard
+  masked_to_buyers: Not stated. The documentation does not say which codes are surfaced to the end recipient
+    versus held for the payer.
+  action_code_count: 67
+  action_codes:
+  - code: '00'
+    message: Approved and completed successful
+  - code: '01'
+    message: Refer to card issuer
+  - code: '02'
+    message: Refer to card issuer, special condition
+  - code: '03'
+    message: Invalid merchant
+  - code: '04'
+    message: Pick up card (no fraud)
+  - code: '05'
+    message: Do not honor
+  - code: '06'
+    message: Error
+  - code: '07'
+    message: Pick up card, special condition (fraud account)
+  - code: 08
+    message: Honor with ID
+  - code: '10'
+    message: Partial approval
+  - code: '11'
+    message: Approved (V.I.P)
+  - code: '12'
+    message: Invalid transaction
+  - code: '13'
+    message: Invalid amount or currency conversion field overflow
+  - code: '14'
+    message: Invalid account number (no such number)
+  - code: '15'
+    message: No such issuer
+  - code: '19'
+    message: Re-enter transaction
+  - code: '21'
+    message: No action taken
+  - code: '25'
+    message: Unable to locate record in file
+  - code: '28'
+    message: File temporarily not available for update or inquiry
+  - code: '30'
+    message: Format error
+  - code: '39'
+    message: No credit account
+  - code: '41'
+    message: Lost card, pick up (fraud account)
+  - code: '43'
+    message: Stolen card, pick up (fraud account)
+  - code: '46'
+    message: Closed account
+  - code: '51'
+    message: Not sufficient funds
+  - code: '52'
+    message: No checking account
+  - code: '53'
+    message: No savings account
+  - code: '54'
+    message: Expired card or expiration date is missing
+  - code: '55'
+    message: Incorrect PIN or PIN missing
+  - code: '57'
+    message: Transaction not permitted to cardholder
+  - code: '58'
+    message: Transaction not allowed at terminal
+  - code: '59'
+    message: Suspected fraud
+  - code: '61'
+    message: Exceeds approval amount limit
+  - code: '62'
+    message: Restricted card (card invalid in this region or country)
+  - code: '63'
+    message: Security violation (source is not correct issuer)
+  - code: '64'
+    message: Transaction does not fulfill AML requirement
+  - code: '65'
+    message: Exceeds withdrawal frequency limit
+  - code: '70'
+    message: PIN data required
+  - code: '71'
+    message: PIN Not Changed
+  - code: '74'
+    message: Different value than that used for PIN encryption errors
+  - code: '75'
+    message: Allowable number of PIN entry tries exceeded
+  - code: 76-89
+    message: '[Visa Codes](#visa-codes)\ [Mastercard Codes](#mastercard-codes)'
+  - code: '90'
+    message: Cutoff is in progress
+  - code: '91'
+    message: Issuer or switch inoperative and STIP not applicable or not available for this transaction
+  - code: '92'
+    message: Financial institution or intermediate network facility cannot be found for routing (receiving
+      institution ID is invalid)
+  - code: '93'
+    message: Transaction cannot be completed - violation of law
+  - code: '94'
+    message: Duplication transaction detected
+  - code: 1A
+    message: Additional customer authentication required
+  - code: 1Z
+    message: Authorization System or issuer system inoperative
+  - code: 5C
+    message: Transaction non supported/blocked by issuer
+  - code: 6P
+    message: Verification data failed
+  - code: 9G
+    message: Blocked by cardholder/contact cardholder
+  - code: B1
+    message: Surcharge amount not permitted on Visa cards or EBT food stamps (U.S. acquirers only)
+  - code: B2
+    message: Surcharge amount not supported by debit network issuer
+  - code: N0
+    message: Force STIP
+  - code: N3
+    message: Cash service not available
+  - code: N4
+    message: Cash request exceeds issuer or approved limit
+  - code: N5
+    message: Ineligible for resubmission
+  - code: N7
+    message: Decline for CVV2 failure
+  - code: N8
+    message: Transaction amount exceeds preauthorized approval amount
+  - code: P5
+    message: Denied PIN unblock—PIN change or unblock request declined by issuer
+  - code: P6
+    message: Denied PIN change—requested PIN unsafe
+  - code: Q1
+    message: Card Authentication failed
+  - code: R0
+    message: Stop Payment Order
+  - code: R2
+    message: Transaction does not qualify for Visa PIN
+  - code: R3
+    message: Revocation of all authorizations order
+  - code: Z4
+    message: Unable to go online; offline-declined
+  private_use_76_89:
+    note: Action codes 76-89 are reserved for private use and differ by network.
+    visa:
+    - code: '76'
+      message: Unsolicited reversal
+    - code: '78'
+      message: Blocked, first used — Transaction from new cardholder, and card not properly unblocked
+    - code: '79'
+      message: Already reversed (by Switch)
+    - code: '80'
+      message: No financial impact
+    - code: '81'
+      message: Cryptographic error found in PIN
+    - code: '82'
+      message: Negative CAM, dCVV, iCVV, or CVV results
+    - code: '85'
+      message: No reason to decline a request for address verification, CVV2 verification, or a credit
+        voucher or merchandise return
+    - code: '86'
+      message: Cannot verify PIN; for example, no PVV
+    - code: '89'
+      message: Ineligible to receive financial position information (GIV)
+    mastercard:
+    - code: '76'
+      message: Invalid/nonexistent “To Account” specified
+    - code: '77'
+      message: Invalid/nonexistent “From Account” specified
+    - code: '78'
+      message: Invalid/nonexistent account specified (general)
+    - code: '79'
+      message: Life cycle (Mastercard use only)
+    - code: '80'
+      message: System not available
+    - code: '81'
+      message: Domestic Debit Transaction Not Allowed (Regional use only)
+    - code: '82'
+      message: Policy (Mastercard use only)
+    - code: '83'
+      message: Fraud/Security (Mastercard use only)
+    - code: '84'
+      message: Invalid Authorization Life Cycle
+    - code: '85'
+      message: Not declined
+    - code: '86'
+      message: PIN Validation not possible
+    - code: '87'
+      message: Purchase Amount Only, No Cash Back Allowed
+    - code: '88'
+      message: Cryptographic failure
+    - code: '89'
+      message: Unacceptable PIN—Transaction Declined—Retry
+ach_return_codes:
+  standard: NACHA ACH return reason codes
+  note: ACH Funding and Payout transactions are processed through the Automated Clearing House and can
+    be returned after the API call has already succeeded. The return surfaces as a FAILED transaction
+    webhook. R01 returns on ACH_FUNDING_PLUS are automatically retried at a configured interval; ERR_ACH_RETRY_ATTEMPTS_EXHAUSTED
+    is raised when retries run out.
+  count: 22
+  codes:
+  - code: R01
+    description: Insufficient Funds - The available and/or cash reserve balance is not sufficient to cover
+      the dollar value of the debit entry.
+    return_timeframe: 2 Banking Days
+  - code: R02
+    description: Account Closed - A previously active account has been closed by the customer or the RDFI.
+    return_timeframe: 2 Banking Days
+  - code: R03
+    description: No Account/Unable to Locate Account - The account number structure is valid, but the
+      account number does not exist or does not correspond to the individual identified in the entry.
+    return_timeframe: 2 Banking Days
+  - code: R04
+    description: Invalid Account Number Structure - The account number structure is not valid.
+    return_timeframe: 2 Banking Days
+  - code: R05
+    description: Unauthorized Debit to a Consumer Account - A CCD or CTX entry has been initiated to a
+      consumer account and was not authorized by the Receiver.
+    return_timeframe: 60 Calendars Days
+  - code: R06
+    description: Returned Per ODFIs Request - The ODFI has requested that the RDFI return an Erroneous
+      Entry.
+    return_timeframe: Undefined
+  - code: R07
+    description: Authorization Revoked - The Receiver revoked the authorization previously provided to
+      the Originator for this debit entry.
+    return_timeframe: 60 Calendar Days
+  - code: R08
+    description: Payment Stopped - The Receiver has placed a stop payment order on this entry.
+    return_timeframe: 2 Banking Days
+  - code: R09
+    description: Uncollected Funds - Sufficient ledger balance exists to satisfy the dollar value of the
+      transaction, but the available balance is below the dollar value of the debit entry.
+    return_timeframe: 2 Banking Days
+  - code: R10
+    description: Customer Advises Not Authorized, Improper, Ineligible, or Part of an Incomplete Transaction
+      - The RDFI has been notified by the Receiver that the Entry is unauthorized, improper, ineligible,
+      or part of an incomplete transaction.
+    return_timeframe: 60 Calendar Days
+  - code: R11
+    description: Customer Advises Entry Not in Accordance with the Terms of the Authorization
+    return_timeframe: 60 Calendar Days
+  - code: R12
+    description: Account Sold to Another DFI - A financial institution received an Entry to an account
+      that was sold to another financial institution.
+    return_timeframe: 2 Banking Days
+  - code: R13
+    description: Invalid ACH Routing Number - An entry contains a routing number that is a not a valid
+      ACH routing number.
+    return_timeframe: 2 Banking Days
+  - code: R16
+    description: Account Frozen/Entry Returned Per OFAC Instruction - Access to the account is restricted
+      due to specific action taken by the RDFI or by legal action
+    return_timeframe: 2 Banking Days
+  - code: R20
+    description: Non-Transaction Account - The ACH entry destined for a non-transaction account as defined
+      by Reg. D would include an account against which transactions are prohibited or limited.
+    return_timeframe: 2 Banking Days
+  - code: R21
+    description: Invalid Company Identification - The identification number used in the Company ID Field
+      is not valid. This Return Reason Code is generally used on CIE transactions.
+    return_timeframe: 2 Banking Days
+  - code: R22
+    description: Invalid Individual ID - The Receiver has indicated to the RDFI that the number by which
+      the Originator was identified is not correct. The Individual ID number of CIE or MTE entries is
+      used by the Receiver to identify the account.
+    return_timeframe: 2 Banking Days
+  - code: R23
+    description: Credit Entry Refused by Receiver - Any credit Entry that is refused by the Receiver may
+      be returned by the RDFI.
+    return_timeframe: 2 Calendar Days from Notice
+  - code: R24
+    description: Duplicate Entry - The RDFI has received what appears to be a duplicate entry, i.e. the
+      trace number, date, dollar amount and/or other data matches another transaction.
+    return_timeframe: 2 Banking Days
+  - code: R29
+    description: Corporate Customer Advises/Not Authorized - The Corporate Customer advises the entry
+      is not authorized.
+    return_timeframe: 2 Banking Days
+  - code: R31
+    description: Permissible Return Entry (CCD and CTX Entry) - The RDFI may return a CCD or CTX entry
+      that the ODFI accept.
+    return_timeframe: 2 Banking Days
+  - code: R51
+    description: Ineligible/Improper item
+    return_timeframe: 60 Calendar Days

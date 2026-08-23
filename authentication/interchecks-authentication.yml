@@ -1,0 +1,70 @@
+generated: '2026-08-23'
+method: searched
+source: https://docs-v2.interchecks.com/reference/get-access-token
+docs: https://docs-v2.interchecks.com/docs/getting-started
+summary:
+  types:
+  - oauth2
+  - http
+  model: >-
+    OAuth 2.0 client_credentials. The caller exchanges a client id and secret for a short-lived
+    JWT access token, then presents it as an HTTP Bearer token on every subsequent call. Keys and
+    secrets are self-managed by the payer/aggregator in the Interchecks Portal Developer area.
+  token_lifetime_seconds: 900
+  token_format: JWT
+schemes:
+- name: sec0
+  type: oauth2
+  flow: clientCredentials
+  token_endpoint: https://prod.api.interchecks.io/api/v2/oauth2/token
+  sandbox_token_endpoint: https://test.api.interchecks.io/api/v2/oauth2/token
+  operation_id: get-access-token
+  client_authentication: >-
+    HTTP Basic — Authorization header carrying base64(clientId:secret).
+  grant_type: client_credentials
+  request_content_type: application/x-www-form-urlencoded
+  response_fields:
+  - access_token
+  - expires_in
+  - token_type
+  scopes: []
+  scopes_note: >-
+    The published securityScheme declares no scopes and the documentation defines no scope or
+    permission vocabulary. Authorization is scoped by the payer_id in the request path and by the
+    payer/aggregator configuration held by Interchecks, not by OAuth scopes. No scopes/ artifact
+    is emitted for this provider.
+  sources:
+  - openapi/interchecks-payments-api-v2.json
+  - https://docs-v2.interchecks.com/reference/get-access-token
+- name: httpBearer
+  type: http
+  scheme: bearer
+  bearer_format: JWT
+  note: >-
+    The older published document (payments-api-v2.json, OpenAPI 3.0.0) declares the same
+    credential as a plain http/bearer scheme rather than an oauth2 clientCredentials flow.
+  sources:
+  - openapi/interchecks-payments-api-v2-registry.json
+tenancy:
+  path_parameter: payer_id
+  note: >-
+    Every business operation is addressed under /api/v2/{payer_id}/..., where payer_id identifies
+    the aggregator or the payer. An aggregator-level API account acts across its payers.
+additional_controls:
+- name: Payload envelope encryption
+  header: 'X-ENCRYPTED: <Payer ID>'
+  description: >-
+    Optional per-payer envelope encryption of request and response bodies. Payload is encrypted
+    with AES (AES/GCM/NoPadding by default, AES/CBC/PKCS5Padding via X-AES-MODE:
+    CBC_PKCS5PADDING); the AES key and IV are encrypted with the counterparty RSA public key
+    using RSA/ECB/OAEPPadding with SHA-256 OAEP and SHA-256 MGF1. Interchecks publishes its
+    public key in PEM or JWK form via get-encryption-public-key.
+  docs: https://docs-v2.interchecks.com/docs/encrypted-requests
+- name: Webhook signature verification
+  header: x-verification
+  description: >-
+    Inbound webhooks carry an RS256 JWT in the x-verification header whose payload holds iat and
+    request_body_sha256_hash. The verifying public key is fetched by kid from
+    /api/v2/{payer_id}/webhooks/get_validation_key/{kid}. Webhooks older than 5 minutes should be
+    rejected.
+  docs: https://docs-v2.interchecks.com/docs/webhooks

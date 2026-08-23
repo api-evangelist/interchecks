@@ -1,0 +1,131 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enrichment overlay for the Interchecks Payments API v2
+  version: 1.0.0
+x-generated: '2026-08-23'
+x-method: generated
+x-source: openapi/interchecks-payments-api-v2.json
+x-note: >-
+  Non-destructive overlay capturing the enrichment this profile derived from the provider's own
+  published documentation. The original spec is never mutated. Every value below is traceable to
+  a docs URL recorded in the matching artifact; nothing is invented. The overlay deliberately
+  does NOT invent operation tags for the untagged operations beyond the resource families the
+  provider's own path structure and reference navigation already declare.
+extends: openapi/interchecks-payments-api-v2.json
+actions:
+- target: $.info
+  description: Give the document a real title, contact and licence-free provenance block.
+  update:
+    title: Interchecks Payments API v2
+    description: >-
+      REST API for recipient onboarding and TIN verification, destination payment account
+      management (bank via Plaid, debit card, PayPal, Venmo, prepaid), payments accepted in the
+      Recipient Portal or a hosted widget, and transactions for immediate disbursement or funding
+      across ACH standard/same-day, ACH Funding Plus, ACH refund, RTP, Instant Deposit (Visa/
+      Mastercard OCT), Instant Funding (AFT), paper check, eCheck and prepaid rails.
+    contact:
+      name: Interchecks technical support
+      email: tech@interchecks.com
+      url: https://docs-v2.interchecks.com/docs/getting-started
+    x-documentation: https://docs-v2.interchecks.com/docs/getting-started
+- target: $.servers
+  description: >-
+    The published document names only the sandbox host. The provider's own documentation project
+    defines productionUrl = https://prod.api.interchecks.io and testSandboxUrl =
+    https://test.api.interchecks.io; both are recorded here rather than replacing the original.
+  update:
+  - url: https://prod.api.interchecks.io
+    description: Production
+  - url: https://test.api.interchecks.io
+    description: Sandbox
+- target: $.components.securitySchemes.sec0
+  description: >-
+    The published oauth2 scheme carries an empty flows object (which the provider's own ReadMe
+    validator flags as a warning) or a placeholder example.com tokenUrl. Fill in the real
+    clientCredentials flow documented on the Get Access Token reference page.
+  update:
+    type: oauth2
+    description: >-
+      OAuth 2.0 client_credentials. POST /api/v2/oauth2/token with an Authorization header of
+      Basic base64(clientId:secret) and grant_type=client_credentials. Returns a JWT access_token
+      with expires_in 900 seconds, presented as Authorization Bearer on every other call.
+    flows:
+      clientCredentials:
+        tokenUrl: https://prod.api.interchecks.io/api/v2/oauth2/token
+        refreshUrl: https://prod.api.interchecks.io/api/v2/oauth2/token
+        scopes: {}
+        x-scopes-note: >-
+          Interchecks defines no OAuth scopes. Authorization is bounded by the payer_id path
+          parameter and by payer/aggregator configuration held by the provider.
+- target: $.paths['/api/v2/{payer_id}/transactions'].post
+  description: Record the reversibility and idempotency semantics documented for create-transaction.
+  update:
+    x-idempotent: true
+    x-idempotency-header: Idempotency-Key
+    x-idempotency-conflict-status: 409
+    x-idempotency-in-flight-status: 102
+    x-reversibility:
+      grade: verified
+      reversible_methods:
+      - method: ACH_FUNDING_PLUS
+        reversal_operation_id: update-transaction
+        target_status: CANCELLED
+        window: while status is PROCESSING or RETRY, before the transaction is sent to the financial institution
+      - method: INSTANT_FUNDING
+        reversal_operation_id: update-transaction
+        target_status: REVERSED
+        window: while status is PAID and the transaction is not in an immutable status
+      - method: ACH_SAME_DAY / ACH_STANDARD (settled)
+        reversal_operation_id: create-transaction
+        mechanism: new ACH_REFUND transaction carrying originating_transaction_id
+        window: same day if submitted before 2:45PM Eastern on a business day
+      irreversible_methods:
+      - RTP
+      - INSTANT_DEPOSIT
+      - CHECK
+      - ECHECK
+      - PAYPAL
+      - VENMO
+      - PREPAID
+      docs: https://docs-v2.interchecks.com/reference/update-transaction
+- target: $.paths['/api/v2/{payer_id}/payments'].post
+  description: Record the idempotency semantics documented for create-payment.
+  update:
+    x-idempotent: true
+    x-idempotency-header: Idempotency-Key
+    x-idempotency-conflict-status: 409
+    x-idempotency-in-flight-status: 102
+- target: $.paths['/api/v2/{payer_id}/reports/bank-transactions'].get
+  description: >-
+    The published document reuses a duplicate-suffixed operationId from the ACH settlement report
+    for the Bank Transactions report. Record the corrected identity without editing the original;
+    this is a defect worth reporting to the provider, because operationId is what an agent binds
+    to.
+  update:
+    x-operationId-defect: >-
+      Published as get-ach-settlement-report-1; this operation returns the Bank Transactions
+      report, not the ACH settlement report.
+    x-suggested-operationId: get-bank-transactions-report
+- target: $
+  description: Attach the enrichment cross-reference so a consumer of the spec can find the derived artifacts.
+  update:
+    x-api-evangelist:
+      profile: https://apis.io/provider/interchecks
+      error_envelope:
+        http_status: integer
+        error_code: string
+        error_message: string
+      error_catalog: errors/interchecks-error-codes.yml
+      decline_codes: errors/interchecks-decline-codes.yml
+      conventions: conventions/interchecks-conventions.yml
+      authentication: authentication/interchecks-authentication.yml
+      webhooks: asyncapi/interchecks-webhooks.yml
+      sandbox: sandbox/interchecks-sandbox.yml
+      data_model: data-model/interchecks-data-model.yml
+      conformance: conformance/interchecks-conformance.yml
+      known_gaps:
+      - components.schemas is empty; every body is inlined, so nothing is reusable
+      - no tags are declared on any of the 68 operations
+      - no 429 response is declared despite 429 being documented as reachable
+      - no rate limit numbers or RateLimit/Retry-After headers are published
+      - errors are not RFC 9457 problem+json

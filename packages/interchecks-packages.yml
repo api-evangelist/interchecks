@@ -1,0 +1,56 @@
+generated: '2026-08-23'
+method: searched
+source: >-
+  npm registry search, PyPI, RubyGems, Maven Central, NuGet, pkg.go.dev, Packagist, crates.io,
+  github.com/interchecks, and https://home.interchecks.com/developers
+package_count: 0
+official_sdk_count: 0
+packages: []
+note: >-
+  Interchecks publishes no client SDK in any public package registry. The npm registry search for
+  "interchecks" returns 0 results; pypi.org/pypi/interchecks/json returns Not Found; the RubyGems
+  search returns an empty array. The company's GitHub organisation (github.com/interchecks,
+  "Interchecks Technologies, Inc") is public and holds three repositories, none of which is a
+  client library for the Payments API — ajax-panel (a Grafana panel plugin), spring-boot-test-app
+  (a Spring Boot test app) and bash-lambda-runtime (an AWS Lambda runtime for Bash). The
+  developer page advertises the REST API and documentation but names no SDK. Integration is by
+  direct HTTP; the only shipped client-side surface is the hosted widget set recorded in
+  components/interchecks-components.yml. No SDKs pointer is emitted in apis.yml because there is
+  no first-party SDK to point at.
+registries_checked:
+- registry: npm
+  query: https://registry.npmjs.org/-/v1/search?text=interchecks
+  result_count: 0
+- registry: pypi
+  query: https://pypi.org/pypi/interchecks/json
+  status: 404
+- registry: rubygems
+  query: https://rubygems.org/api/v1/search.json?query=interchecks
+  result_count: 0
+- registry: github
+  query: https://api.github.com/orgs/interchecks/repos
+  result_count: 3
+  first_party_client_libraries: 0
+github_organization:
+  url: https://github.com/interchecks
+  name: Interchecks Technologies, Inc
+  created: '2019-05-16'
+  public_repos: 3
+  repositories:
+  - name: ajax-panel
+    url: https://github.com/interchecks/ajax-panel
+    description: Ajax Panel Plugin for Grafana
+    last_push: '2023-10-17'
+    is_api_client: false
+  - name: spring-boot-test-app
+    url: https://github.com/interchecks/spring-boot-test-app
+    language: Java
+    description: Spring Boot Test app
+    last_push: '2024-02-27'
+    is_api_client: false
+  - name: bash-lambda-runtime
+    url: https://github.com/interchecks/bash-lambda-runtime
+    language: Shell
+    description: AWS Lambda Runtime for Bash functions
+    last_push: '2026-06-04'
+    is_api_client: false

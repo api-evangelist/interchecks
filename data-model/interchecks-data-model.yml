@@ -1,0 +1,276 @@
+generated: '2026-08-23'
+method: derived
+source: openapi/interchecks-payments-api-v2.json
+enriched_from:
+- https://docs-v2.interchecks.com/reference/about-recipients
+- https://docs-v2.interchecks.com/reference/about-transactions
+- https://docs-v2.interchecks.com/reference/about-widgets
+note: >-
+  Derived from the id-reference fields and path structure of the published OpenAPI. The spec
+  declares no components.schemas — every request and response body is inlined — so the graph is
+  reconstructed from path nesting and from the *_id fields that appear in bodies, not from $ref
+  links. Identifiers are opaque strings with no documented prefix scheme.
+root: Payer
+id_scheme:
+  style: opaque-string
+  prefixes: none documented
+  tenancy_key: payer_id
+  tenancy_note: >-
+    payer_id is a path parameter on every business operation and identifies either an aggregator
+    or a payer beneath one. It is the tenancy boundary, not an entity a caller can create through
+    the API.
+entity_count: 10
+entities:
+- name: Payer
+  description: >-
+    The aggregator or payer whose funds move. Addressed as the payer_id path parameter. Not
+    creatable via the API; provisioned during onboarding.
+  key: payer_id
+  operations:
+  - get-payer-bank-accounts
+  relationships:
+  - has_many: Recipient
+    via: payer_id path segment
+  - has_many: PayerBankAccount
+    via: payer_id path segment
+- name: PayerBankAccount
+  description: The payer's own funding bank accounts, from which payouts are drawn.
+  operations:
+  - get-payer-bank-accounts
+  relationships:
+  - belongs_to: Payer
+    via: payer_id
+- name: Recipient
+  description: >-
+    An individual or company that receives payouts or funds an account. Identified by
+    recipient_id, or looked up by primary email or by caller-supplied reference_id.
+  key: recipient_id
+  alternate_keys:
+  - reference_id
+  - email
+  fields:
+  - first_name
+  - last_name
+  - company_name
+  - email
+  - phone_number
+  - dob
+  - tin
+  - reference_id
+  - created_date
+  operations:
+  - create-recipient
+  - update-recipient
+  - patch-recipient
+  - get-recipient-by-id
+  - get-recipient-by-reference-id
+  - get-recipient-by-email
+  relationships:
+  - belongs_to: Payer
+    via: payer_id
+  - has_one: Address
+    via: recipient_id
+  - has_many: RecipientEmail
+    via: recipient_id
+  - has_many: PaymentAccount
+    via: recipient_id
+  - has_one: TinVerification
+    via: recipient_id
+  - has_many: Payment
+    via: recipient_id
+  - has_many: Transaction
+    via: recipient_id
+- name: Address
+  description: Mailing address on a recipient; required for the CHECK payout method.
+  fields: [address_1, address_2, city, state, zip]
+  operations:
+  - add-address
+  - get-address
+  relationships:
+  - belongs_to: Recipient
+    via: recipient_id
+- name: RecipientEmail
+  description: Additional email addresses on a recipient beyond the primary.
+  operations:
+  - add-email
+  - get-emails
+  relationships:
+  - belongs_to: Recipient
+    via: recipient_id
+- name: TinVerification
+  description: Taxpayer identification number verification result for a recipient.
+  operations:
+  - verify-recipient-tin
+  - get-tin-verification
+  relationships:
+  - belongs_to: Recipient
+    via: recipient_id
+- name: PaymentAccount
+  description: >-
+    A destination (or source) payment instrument attached to a recipient. Five concrete subtypes,
+    each with its own path family under /accounts/{recipient_id}/, sharing account_id semantics.
+  key: account_id
+  subtypes:
+  - subtype: BankAccount
+    path: /api/v2/{payer_id}/accounts/{recipient_id}/banks
+    fields: [account_number, routing_number, account_type, account_name, bank_name]
+    operations:
+    - add-bank-account
+    - get-bank-accounts
+    - get-bank-account
+    - delete-bank-account
+    - post_api-v2-payer-id-accounts-recipient-id-banks-plaid-processor-token
+    - patch_api-v2-payer-id-accounts-recipient-id-banks-plaid-processor-token-account-id-status
+    note: >-
+      Linked through Plaid Link (via the bank widget) or by handing Interchecks a Plaid processor
+      token directly. Supports ACH and RTP.
+  - subtype: CardAccount
+    path: /api/v2/{payer_id}/accounts/{recipient_id}/cards
+    fields: [card_number, exp_date, cvv, card_type, network]
+    operations:
+    - add-card-account
+    - get-card-accounts
+    - get-card-account
+    - delete-card-account
+    - verify-card-account
+    - get-card-account-verify
+    - get-card-account-verifications
+    note: Supports INSTANT_DEPOSIT (OCT) and INSTANT_FUNDING (AFT).
+  - subtype: PayPalAccount
+    path: /api/v2/{payer_id}/accounts/{recipient_id}/paypal
+    operations:
+    - add-paypal-account
+    - get-paypal-accounts
+    - get-paypal-account
+    - delete-paypal-account
+  - subtype: VenmoAccount
+    path: /api/v2/{payer_id}/accounts/{recipient_id}/venmo
+    operations:
+    - add-venmo-account
+    - get-venmo-accounts
+    - get-venmo-account
+    - delete-venmo-account
+  - subtype: PrepaidAccount
+    path: /api/v2/{payer_id}/accounts/{recipient_id}/prepaid
+    fields: [prepaid_account_type, prepaid_account_status]
+    operations:
+    - create-prepaid-account
+    - get-prepaid-account
+    - update-prepaid-account
+    - delete-prepaid-account
+    - get-prepaid-account-history
+  relationships:
+  - belongs_to: Recipient
+    via: recipient_id
+  - has_many: CardAccountVerification
+    via: account_id
+  - has_many: Transaction
+    via: account_id
+- name: CardAccountVerification
+  description: >-
+    PAN / CVV / AVS / ANI name-match result for a card account, retrievable individually or as a
+    history.
+  key: verification_id
+  fields: [network, pan, cvv, avs, ani]
+  operations:
+  - verify-card-account
+  - get-card-account-verify
+  - get-card-account-verifications
+  relationships:
+  - belongs_to: PaymentAccount
+    via: account_id
+- name: Payment
+  description: >-
+    An offer of funds a recipient must accept in the Recipient Portal or a payment widget. A
+    payment resolves into one or more transactions once the recipient chooses a method.
+  key: payment_id
+  alternate_keys: [reference_id]
+  fields: [amount, description, status, reference_id, created_date]
+  operations:
+  - create-payment
+  - update-payment
+  - get-payment-by-id
+  - get-payment-by-reference-id
+  - get-transactions-by-payment-id
+  - get-transactions-by-payment-reference-id
+  relationships:
+  - belongs_to: Recipient
+    via: recipient_id
+  - has_many: Transaction
+    via: payment_id
+  emits: PAYMENT webhook
+- name: Transaction
+  description: >-
+    A funds transfer processed immediately without recipient interaction. Carries a direction
+    (CREDIT/DEBIT) and a method (the rail).
+  key: transaction_id
+  alternate_keys: [reference_id]
+  fields:
+  - amount
+  - type
+  - method
+  - status
+  - fee
+  - memo
+  - reference_id
+  - meta_params
+  - created_date
+  - paid_date
+  - network_approval_code
+  - provider_reference_id
+  operations:
+  - create-transaction
+  - update-transaction
+  - get-transaction
+  - get-transaction-by-reference-id
+  relationships:
+  - belongs_to: Recipient
+    via: recipient_id
+  - belongs_to: PaymentAccount
+    via: account_id
+  - belongs_to: Payment
+    via: payment_id
+    note: only when the transaction was created by a recipient accepting a payment
+  - belongs_to: Transaction
+    via: originating_transaction_id
+    note: self-reference, required on an ACH_REFUND
+  emits: TRANSACTION webhook
+- name: Widget
+  description: >-
+    A short-lived hosted URL for account capture, payment acceptance or a prepaid dashboard.
+    Ephemeral — created, embedded, expired; not readable back through the API.
+  key: widget_id
+  fields: [widget_url, expiration]
+  operations:
+  - create-bank-widget
+  - create-card-widget
+  - create-payment-widget
+  - create-prepaid-dashboard-widget
+  relationships:
+  - belongs_to: Recipient
+    via: recipient_id
+  - creates: PaymentAccount
+    via: widget completion
+  emits: PAYMENT_ACCOUNT webhook
+reports:
+- name: ACH Settlement Report
+  operation: get-ach-settlement-report
+- name: Bank Transactions Report
+  operation: get-ach-settlement-report-1
+  path: /api/v2/{payer_id}/reports/bank-transactions
+  note: >-
+    The published spec gives this operation the duplicate-suffixed operationId
+    get-ach-settlement-report-1 even though it is the Bank Transactions report — a spec-quality
+    defect worth reporting to the provider, since operationId is what an agent binds to.
+- name: OCT Transactions Report
+  operation: get-payer-oct-transactions-report
+- name: OCT Settlement Report
+  operation: get-payer-oct-settlement-report
+- name: User Activity Report
+  operation: get-user-activity-report
+  format: text/csv
+  constraint: maximum 31-day date range
+core_flow: >-
+  Payer -> Recipient -> PaymentAccount -> Transaction, with Payment and Widget as the two
+  recipient-mediated entry points into the same graph, and webhooks as the only way to learn the
+  terminal state of anything on an asynchronous rail.

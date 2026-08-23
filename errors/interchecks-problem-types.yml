@@ -1,0 +1,110 @@
+generated: '2026-08-23'
+method: derived
+source: openapi/interchecks-payments-api-v2.json
+enriched_from:
+- https://docs-v2.interchecks.com/docs/http-status-codes
+- https://docs-v2.interchecks.com/docs/api-error-codes
+format: custom-json
+rfc9457: false
+note: Derived from the 4xx/5xx responses declared in the provider OpenAPI, with titles taken from the
+  published HTTP Status Codes page. Interchecks does not emit application/problem+json; the symbolic ERR_*
+  code carried inside the JSON envelope is the real discriminator and is catalogued in errors/interchecks-error-codes.yml.
+envelope:
+  http_status: integer
+  error_code: string
+  error_message: string
+problem_type_count: 5
+problem_types:
+- status: 400
+  title: Bad request due to invalid or missing parameters
+  operation_count: 19
+  operations:
+  - add-bank-account
+  - add-email
+  - add-paypal-account
+  - add-venmo-account
+  - create-bank-widget
+  - create-card-widget
+  - create-payment
+  - create-payment-widget
+  - create-prepaid-dashboard-widget
+  - create-recipient
+  - create-transaction
+  - delete-prepaid-account
+  - get-access-token
+  - get-bank-account
+  - get-emails
+  - patch-recipient
+  - update-payment
+  - update-recipient
+  - update-transaction
+  documented_examples:
+  - Bad Request - invalid Account ID
+  - Bad Request - invalid Recipient ID
+  - Invalid Account ID
+  - Invalid Client ID or Secret
+  - Result
+- status: 404
+  title: Resource or entity not found
+  operation_count: 10
+  operations:
+  - get-ach-settlement-report
+  - get-ach-settlement-report-1
+  - get-payer-oct-settlement-report
+  - get-recipient-by-email
+  - get-recipient-by-id
+  - get-recipient-by-reference-id
+  - get-transaction
+  - patch-recipient
+  - update-recipient
+  - update-transaction
+  documented_examples:
+  - Result
+  - Transaction ID not found
+- status: 409
+  title: Request conflict, either with the Idempotency-Key or an active record was found
+  operation_count: 4
+  operations:
+  - add-card-account
+  - create-recipient
+  - patch-recipient
+  - update-recipient
+  documented_examples:
+  - Card Exists
+  - Result
+- status: 422
+  title: Unprocessable request due to business logic or client configuration
+  operation_count: 11
+  operations:
+  - create-payment-widget
+  - create-transaction
+  - encryption-health-check
+  - post-payload-encryption-test-decryption
+  - post-payload-encryption-test-encryption
+  - post-payload-encryption-test-end-to-end
+  - post_api-v2-payer-id-accounts-recipient-id-banks-plaid-processor-token
+  - update-payment
+  - update-payment-status
+  - update-transaction
+  - update-transaction-status
+  documented_examples:
+  - 422 - ACH Funding - Velocity Threshold
+  - ACH Funding - Balance Threshold
+  - ACH Funding - Consumer Risk Threshold
+  - Bank Risk & Balance Multiplier Threshold
+  - Internal Server Error - Format
+  - Result
+  - Unprocessable Entity
+- status: 500
+  title: Unexpected error while processing the request
+  operation_count: 5
+  operations:
+  - encryption-health-check
+  - get-encryption-public-key
+  - post-payload-encryption-test-decryption
+  - post-payload-encryption-test-encryption
+  - post-payload-encryption-test-end-to-end
+  documented_examples:
+  - Internal Server Error - Decryption
+  - Internal Server Error - Encryption
+  - Result

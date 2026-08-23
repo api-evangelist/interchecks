@@ -1,0 +1,727 @@
+generated: '2026-08-23'
+method: derived
+source: openapi/interchecks-payments-api-v2.json
+status: candidate
+deployment:
+  mode: none
+  auth: unknown
+  verified: derived
+server_published: false
+note: 'Interchecks publishes NO MCP server. The tools below are a CANDIDATE mapping derived from the 68
+  operations in the provider OpenAPI so an integrator can see what an MCP server over this API would expose;
+  nothing here is served by Interchecks and no MCPServer pointer is wired into apis.yml. A /mcp route
+  does answer on the documentation host (POST https://docs-v2.interchecks.com/mcp returns HTTP 401 {"code":-32001,"message":"Authorization
+  required"}) but that is the ReadMe documentation platform''s own route, not an Interchecks agent surface:
+  the project configuration published in the same page reports mcp state "disabled". The 401 is a platform
+  stub and must not be read as a gated-but-present server.'
+probes:
+- url: https://docs-v2.interchecks.com/mcp
+  method: POST tools/list
+  status: 401
+  body: '{"jsonrpc":"2.0","error":{"code":-32001,"message":"Authorization required"},"id":null}'
+  verdict: ReadMe platform route; project config reports mcp state "disabled"
+- url: https://prod.api.interchecks.io/mcp
+  status: 401
+  verdict: API host authenticates every path
+candidate_auth:
+  model: oauth2 client_credentials -> JWT bearer
+  note: Any MCP server over this API would need to hold a payer client id and secret and a payer_id, per
+    authentication/interchecks-authentication.yml.
+agent_safety_note: '39 of the 68 operations are mutating and most of them move money. Any MCP server built
+  over this API should surface the reversibility findings in conventions/interchecks-conventions.yml:
+  only ACH_FUNDING_PLUS and INSTANT_FUNDING transactions have a documented reversal path, and both close
+  once the funds reach the financial institution.'
+tool_count: 68
+mutating_tool_count: 37
+tools:
+- name: get_access_token
+  operation_id: get-access-token
+  http: POST /api/v2/oauth2/token
+  category: auth
+  summary: Get Access Token
+  parameters:
+  - Authorization
+  - Content-Type
+  has_request_body: true
+  mutating: true
+- name: create_recipient
+  operation_id: create-recipient
+  http: POST /api/v2/{payer_id}/recipients
+  category: recipients
+  summary: Create Recipient
+  parameters:
+  - payer_id
+  has_request_body: true
+  mutating: true
+- name: update_recipient
+  operation_id: update-recipient
+  http: PUT /api/v2/{payer_id}/recipients/{recipient_id}
+  category: recipients
+  summary: Update Recipient
+  parameters:
+  - payer_id
+  - recipient_id
+  has_request_body: true
+  mutating: true
+- name: patch_recipient
+  operation_id: patch-recipient
+  http: PATCH /api/v2/{payer_id}/recipients/{recipient_id}
+  category: recipients
+  summary: Patch Recipient
+  parameters:
+  - payer_id
+  - recipient_id
+  has_request_body: true
+  mutating: true
+- name: get_recipient_by_id
+  operation_id: get-recipient-by-id
+  http: GET /api/v2/{payer_id}/recipients/{recipient_id}
+  category: recipients
+  summary: Get Recipient
+  parameters:
+  - payer_id
+  - recipient_id
+  has_request_body: false
+  mutating: false
+- name: get_recipient_by_reference_id
+  operation_id: get-recipient-by-reference-id
+  http: GET /api/v2/{payer_id}/recipients/reference/{reference_id}
+  category: recipients
+  summary: Get Recipient by Reference ID
+  parameters:
+  - payer_id
+  - reference_id
+  has_request_body: false
+  mutating: false
+- name: get_recipient_by_email
+  operation_id: get-recipient-by-email
+  http: GET /api/v2/{payer_id}/recipients/email/{email}
+  category: recipients
+  summary: Get Recipient by Email
+  parameters:
+  - payer_id
+  - email
+  has_request_body: false
+  mutating: false
+- name: add_address
+  operation_id: add-address
+  http: POST /api/v2/{payer_id}/recipients/{recipient_id}/address
+  category: recipients
+  summary: Add Address
+  parameters:
+  - payer_id
+  - recipient_id
+  has_request_body: true
+  mutating: true
+- name: get_address
+  operation_id: get-address
+  http: GET /api/v2/{payer_id}/recipients/{recipient_id}/address
+  category: recipients
+  summary: Get Address
+  parameters:
+  - payer_id
+  - recipient_id
+  has_request_body: false
+  mutating: false
+- name: add_email
+  operation_id: add-email
+  http: POST /api/v2/{payer_id}/recipients/{recipient_id}/emails
+  category: recipients
+  summary: Add Email
+  parameters:
+  - payer_id
+  - recipient_id
+  has_request_body: true
+  mutating: true
+- name: get_emails
+  operation_id: get-emails
+  http: GET /api/v2/{payer_id}/recipients/{recipient_id}/emails
+  category: recipients
+  summary: Get Emails
+  parameters:
+  - payer_id
+  - recipient_id
+  has_request_body: false
+  mutating: false
+- name: verify_recipient_tin
+  operation_id: verify-recipient-tin
+  http: POST /api/v2/{payer_id}/recipients/{recipient_id}/verification
+  category: recipients
+  summary: Verify TIN
+  parameters:
+  - payer_id
+  - recipient_id
+  has_request_body: true
+  mutating: true
+- name: get_tin_verification
+  operation_id: get-tin-verification
+  http: GET /api/v2/{payer_id}/recipients/{recipient_id}/verification
+  category: recipients
+  summary: Get TIN Verification
+  parameters:
+  - payer_id
+  - recipient_id
+  has_request_body: false
+  mutating: false
+- name: add_bank_account
+  operation_id: add-bank-account
+  http: POST /api/v2/{payer_id}/accounts/{recipient_id}/banks
+  category: recipients
+  summary: Add Bank Account
+  parameters:
+  - payer_id
+  - recipient_id
+  has_request_body: true
+  mutating: true
+- name: get_bank_accounts
+  operation_id: get-bank-accounts
+  http: GET /api/v2/{payer_id}/accounts/{recipient_id}/banks
+  category: recipients
+  summary: Get Bank Accounts
+  parameters:
+  - payer_id
+  - recipient_id
+  - maskAccount
+  has_request_body: false
+  mutating: false
+- name: get_bank_account
+  operation_id: get-bank-account
+  http: GET /api/v2/{payer_id}/accounts/{recipient_id}/banks/{account_id}
+  category: recipients
+  summary: Get Bank Account
+  parameters:
+  - payer_id
+  - recipient_id
+  - account_id
+  - maskAccount
+  has_request_body: false
+  mutating: false
+- name: delete_bank_account
+  operation_id: delete-bank-account
+  http: DELETE /api/v2/{payer_id}/accounts/{recipient_id}/banks/{account_id}
+  category: recipients
+  summary: Delete Bank Account
+  parameters:
+  - payer_id
+  - recipient_id
+  - account_id
+  has_request_body: false
+  mutating: true
+- name: add_card_account
+  operation_id: add-card-account
+  http: POST /api/v2/{payer_id}/accounts/{recipient_id}/cards
+  category: recipients
+  summary: Add Card Account
+  parameters:
+  - payer_id
+  - recipient_id
+  has_request_body: true
+  mutating: true
+- name: get_card_accounts
+  operation_id: get-card-accounts
+  http: GET /api/v2/{payer_id}/accounts/{recipient_id}/cards
+  category: recipients
+  summary: Get Card Accounts
+  parameters:
+  - payer_id
+  - recipient_id
+  has_request_body: false
+  mutating: false
+- name: get_card_account
+  operation_id: get-card-account
+  http: GET /api/v2/{payer_id}/accounts/{recipient_id}/cards/{account_id}
+  category: recipients
+  summary: Get Card Account
+  parameters:
+  - payer_id
+  - recipient_id
+  - account_id
+  has_request_body: false
+  mutating: false
+- name: delete_card_account
+  operation_id: delete-card-account
+  http: DELETE /api/v2/{payer_id}/accounts/{recipient_id}/cards/{account_id}
+  category: recipients
+  summary: Delete Card Account
+  parameters:
+  - payer_id
+  - recipient_id
+  - account_id
+  has_request_body: false
+  mutating: true
+- name: verify_card_account
+  operation_id: verify-card-account
+  http: POST /api/v2/{payer_id}/accounts/{recipient_id}/cards/{account_id}/verification
+  category: recipients
+  summary: Verify Card Account
+  parameters:
+  - payer_id
+  - recipient_id
+  - account_id
+  has_request_body: true
+  mutating: true
+- name: get_card_account_verify
+  operation_id: get-card-account-verify
+  http: GET /api/v2/{payer_id}/accounts/{recipient_id}/cards/{account_id}/verification/{verification_id}
+  category: recipients
+  summary: Get Card Account Verification
+  parameters:
+  - payer_id
+  - recipient_id
+  - account_id
+  - verification_id
+  has_request_body: false
+  mutating: false
+- name: get_card_account_verifications
+  operation_id: get-card-account-verifications
+  http: GET /api/v2/{payer_id}/accounts/{recipient_id}/cards/{account_id}/verifications
+  category: recipients
+  summary: Get Card Account Verifications
+  parameters:
+  - payer_id
+  - recipient_id
+  - account_id
+  has_request_body: false
+  mutating: false
+- name: add_paypal_account
+  operation_id: add-paypal-account
+  http: POST /api/v2/{payer_id}/accounts/{recipient_id}/paypal
+  category: recipients
+  summary: Add PayPal Account
+  parameters:
+  - payer_id
+  - recipient_id
+  has_request_body: true
+  mutating: true
+- name: get_paypal_accounts
+  operation_id: get-paypal-accounts
+  http: GET /api/v2/{payer_id}/accounts/{recipient_id}/paypal
+  category: recipients
+  summary: Get PayPal Accounts
+  parameters:
+  - payer_id
+  - recipient_id
+  has_request_body: false
+  mutating: false
+- name: get_paypal_account
+  operation_id: get-paypal-account
+  http: GET /api/v2/{payer_id}/accounts/{recipient_id}/paypal/{account_id}
+  category: recipients
+  summary: Get PayPal Account
+  parameters:
+  - payer_id
+  - recipient_id
+  - account_id
+  has_request_body: false
+  mutating: false
+- name: delete_paypal_account
+  operation_id: delete-paypal-account
+  http: DELETE /api/v2/{payer_id}/accounts/{recipient_id}/paypal/{account_id}
+  category: recipients
+  summary: Delete PayPal Account
+  parameters:
+  - payer_id
+  - recipient_id
+  - account_id
+  has_request_body: false
+  mutating: true
+- name: create_prepaid_account
+  operation_id: create-prepaid-account
+  http: POST /api/v2/{payer_id}/accounts/{recipient_id}/prepaid
+  category: recipients
+  summary: Create Prepaid Account
+  parameters:
+  - payer_id
+  - recipient_id
+  has_request_body: true
+  mutating: true
+- name: get_prepaid_account
+  operation_id: get-prepaid-account
+  http: GET /api/v2/{payer_id}/accounts/{recipient_id}/prepaid/{account_id}
+  category: recipients
+  summary: Get Prepaid Account
+  parameters:
+  - payer_id
+  - recipient_id
+  - account_id
+  has_request_body: false
+  mutating: false
+- name: delete_prepaid_account
+  operation_id: delete-prepaid-account
+  http: DELETE /api/v2/{payer_id}/accounts/{recipient_id}/prepaid/{account_id}
+  category: recipients
+  summary: Delete Prepaid Account
+  parameters:
+  - payer_id
+  - recipient_id
+  - account_id
+  has_request_body: false
+  mutating: true
+- name: update_prepaid_account
+  operation_id: update-prepaid-account
+  http: PATCH /api/v2/{payer_id}/accounts/{recipient_id}/prepaid/{account_id}
+  category: recipients
+  summary: Update Prepaid Account
+  parameters:
+  - payer_id
+  - recipient_id
+  - account_id
+  has_request_body: true
+  mutating: true
+- name: get_prepaid_account_history
+  operation_id: get-prepaid-account-history
+  http: GET /api/v2/{payer_id}/accounts/{recipient_id}/prepaid/{account_id}/history
+  category: recipients
+  summary: Get Prepaid Account History
+  parameters:
+  - payer_id
+  - recipient_id
+  - account_id
+  - startDate
+  - endDate
+  - filter
+  has_request_body: false
+  mutating: false
+- name: add_venmo_account
+  operation_id: add-venmo-account
+  http: POST /api/v2/{payer_id}/accounts/{recipient_id}/venmo
+  category: recipients
+  summary: Add Venmo Account
+  parameters:
+  - payer_id
+  - recipient_id
+  has_request_body: true
+  mutating: true
+- name: get_venmo_accounts
+  operation_id: get-venmo-accounts
+  http: GET /api/v2/{payer_id}/accounts/{recipient_id}/venmo
+  category: recipients
+  summary: Get Venmo Accounts
+  parameters:
+  - payer_id
+  - recipient_id
+  has_request_body: false
+  mutating: false
+- name: get_venmo_account
+  operation_id: get-venmo-account
+  http: GET /api/v2/{payer_id}/accounts/{recipient_id}/venmo/{account_id}
+  category: recipients
+  summary: Get Venmo Account
+  parameters:
+  - payer_id
+  - recipient_id
+  - account_id
+  has_request_body: false
+  mutating: false
+- name: delete_venmo_account
+  operation_id: delete-venmo-account
+  http: DELETE /api/v2/{payer_id}/accounts/{recipient_id}/venmo/{account_id}
+  category: recipients
+  summary: Delete Venmo Account
+  parameters:
+  - payer_id
+  - recipient_id
+  - account_id
+  has_request_body: false
+  mutating: true
+- name: create_payment
+  operation_id: create-payment
+  http: POST /api/v2/{payer_id}/payments
+  category: payments
+  summary: Create Payment
+  parameters:
+  - payer_id
+  - Idempotency-Key
+  has_request_body: true
+  mutating: true
+- name: update_payment
+  operation_id: update-payment
+  http: PATCH /api/v2/{payer_id}/payments/{payment_id}
+  category: payments
+  summary: Update Payment
+  parameters:
+  - payer_id
+  - payment_id
+  has_request_body: true
+  mutating: true
+- name: get_payment_by_id
+  operation_id: get-payment-by-id
+  http: GET /api/v2/{payer_id}/payments/{payment_id}
+  category: payments
+  summary: Get Payment
+  parameters:
+  - payer_id
+  - payment_id
+  has_request_body: false
+  mutating: false
+- name: get_payment_by_reference_id
+  operation_id: get-payment-by-reference-id
+  http: GET /api/v2/{payer_id}/payments/reference/{reference_id}
+  category: payments
+  summary: Get Payment by Reference ID
+  parameters:
+  - payer_id
+  - reference_id
+  has_request_body: false
+  mutating: false
+- name: get_transactions_by_payment_id
+  operation_id: get-transactions-by-payment-id
+  http: GET /api/v2/{payer_id}/payments/{payment_id}/transactions
+  category: transactions
+  summary: Get Transactions for Payment
+  parameters:
+  - payer_id
+  - payment_id
+  has_request_body: false
+  mutating: false
+- name: get_transactions_by_payment_reference_id
+  operation_id: get-transactions-by-payment-reference-id
+  http: GET /api/v2/{payer_id}/payments/reference/{reference_id}/transactions
+  category: transactions
+  summary: Get Transactions by Payment Reference ID
+  parameters:
+  - payer_id
+  - reference_id
+  has_request_body: false
+  mutating: false
+- name: create_transaction
+  operation_id: create-transaction
+  http: POST /api/v2/{payer_id}/transactions
+  category: transactions
+  summary: Create Transaction
+  parameters:
+  - payer_id
+  - Idempotency-Key
+  has_request_body: true
+  mutating: true
+- name: update_transaction
+  operation_id: update-transaction
+  http: PATCH /api/v2/{payer_id}/transactions/{transaction_id}
+  category: transactions
+  summary: Update Transaction
+  parameters:
+  - payer_id
+  - transaction_id
+  has_request_body: true
+  mutating: true
+- name: get_transaction
+  operation_id: get-transaction
+  http: GET /api/v2/{payer_id}/transactions/{transaction_id}
+  category: transactions
+  summary: Get Transaction
+  parameters:
+  - payer_id
+  - transaction_id
+  has_request_body: false
+  mutating: false
+- name: get_transaction_by_reference_id
+  operation_id: get-transaction-by-reference-id
+  http: GET /api/v2/{payer_id}/transactions/reference/{reference_id}
+  category: transactions
+  summary: Get Transaction by Reference ID
+  parameters:
+  - payer_id
+  - reference_id
+  has_request_body: false
+  mutating: false
+- name: get_payer_bank_accounts
+  operation_id: get-payer-bank-accounts
+  http: GET /api/v2/{payer_id}/payers/accounts
+  category: accounts
+  summary: Get Payer Bank Accounts
+  parameters:
+  - payer_id
+  has_request_body: false
+  mutating: false
+- name: get_ach_settlement_report
+  operation_id: get-ach-settlement-report
+  http: GET /api/v2/{payer_id}/reports/ach/funding/settlement
+  category: reports
+  summary: Get ACH Settlement Report
+  parameters:
+  - payer_id
+  - settleDate
+  has_request_body: false
+  mutating: false
+- name: get_payer_oct_transactions_report
+  operation_id: get-payer-oct-transactions-report
+  http: GET /api/v2/{payer_id}/reports/oct/transactions
+  category: reports
+  summary: Get OCT Transactions Report
+  parameters:
+  - payer_id
+  - startDate
+  - endDate
+  has_request_body: false
+  mutating: false
+- name: get_payer_oct_settlement_report
+  operation_id: get-payer-oct-settlement-report
+  http: GET /api/v2/{payer_id}/reports/oct/settlement
+  category: reports
+  summary: Get OCT Settlement Report
+  parameters:
+  - payer_id
+  - settleDate
+  has_request_body: false
+  mutating: false
+- name: get_user_activity_report
+  operation_id: get-user-activity-report
+  http: GET /api/v2/{payer_id}/reports/user-tracking
+  category: reports
+  summary: Get User Activity Report
+  parameters:
+  - payer_id
+  - startDate
+  - endDate
+  has_request_body: false
+  mutating: false
+- name: post_payload_encryption_test_decryption
+  operation_id: post-payload-encryption-test-decryption
+  http: POST /api/v2/{payer_id}/payload/encryption/test/decryption
+  category: encryption
+  summary: Post Payload Encryption Test Decryption
+  parameters:
+  - payer_id
+  - X-PayerId
+  has_request_body: true
+  mutating: true
+- name: post_payload_encryption_test_encryption
+  operation_id: post-payload-encryption-test-encryption
+  http: POST /api/v2/{payer_id}/payload/encryption/test/encryption
+  category: encryption
+  summary: Post Payload Encryption Test Encryption
+  parameters:
+  - payer_id
+  - X-PayerId
+  has_request_body: true
+  mutating: true
+- name: post_payload_encryption_test_end_to_end
+  operation_id: post-payload-encryption-test-end-to-end
+  http: POST /api/v2/{payer_id}/payload/encryption/test/end-to-end
+  category: encryption
+  summary: Post Payload Encryption Test End to End
+  parameters:
+  - payer_id
+  has_request_body: true
+  mutating: true
+- name: get_encryption_public_key
+  operation_id: get-encryption-public-key
+  http: GET /api/v2/{payer_id}/payload/encryption/public-key/{format}
+  category: encryption
+  summary: Get Encryption Public Key
+  parameters:
+  - payer_id
+  - format
+  has_request_body: false
+  mutating: false
+- name: encryption_health_check
+  operation_id: encryption-health-check
+  http: POST /api/v2/{payer_id}/payload/encryption/health
+  category: encryption
+  summary: Encryption Health Check
+  parameters:
+  - payer_id
+  - X-ENCRYPTED
+  - X-AES-MODE
+  has_request_body: true
+  mutating: true
+- name: create_account_plaid
+  operation_id: create-account-plaid
+  http: POST /api/v2/{payer_id}/test-harness/accounts/plaid
+  category: sandbox
+  summary: Create Account with Plaid Link
+  parameters: []
+  has_request_body: true
+  mutating: true
+- name: update_account_status
+  operation_id: update-account-status
+  http: POST /api/v2/{payer_id}/test-harness/accounts
+  category: sandbox
+  summary: Update Account Status
+  parameters: []
+  has_request_body: true
+  mutating: true
+- name: update_payment_status
+  operation_id: update-payment-status
+  http: POST /api/v2/{payer_id}/test-harness/payments
+  category: sandbox
+  summary: Update Payment Status
+  parameters: []
+  has_request_body: true
+  mutating: true
+- name: update_transaction_status
+  operation_id: update-transaction-status
+  http: POST /api/v2/{payer_id}/test-harness/transactions
+  category: sandbox
+  summary: Update Transaction Status
+  parameters: []
+  has_request_body: true
+  mutating: true
+- name: create_bank_widget
+  operation_id: create-bank-widget
+  http: POST /api/v2/{payer_id}/widgets/accounts/bank
+  category: widgets
+  summary: Create Bank Widget
+  parameters:
+  - payer_id
+  has_request_body: true
+  mutating: true
+- name: create_card_widget
+  operation_id: create-card-widget
+  http: POST /api/v2/{payer_id}/widgets/accounts/card
+  category: widgets
+  summary: Create Card Widget
+  parameters:
+  - payer_id
+  has_request_body: true
+  mutating: true
+- name: create_payment_widget
+  operation_id: create-payment-widget
+  http: POST /api/v2/{payer_id}/widgets/payments
+  category: widgets
+  summary: Create Payment Widget
+  parameters:
+  - payer_id
+  has_request_body: true
+  mutating: true
+- name: create_prepaid_dashboard_widget
+  operation_id: create-prepaid-dashboard-widget
+  http: POST /api/v2/{payer_id}/widgets/accounts/prepaid
+  category: widgets
+  summary: Create Prepaid Dashboard Widget
+  parameters:
+  - payer_id
+  has_request_body: true
+  mutating: true
+- name: post_api_v2_payer_id_accounts_recipient_id_banks_plaid_processor_token
+  operation_id: post_api-v2-payer-id-accounts-recipient-id-banks-plaid-processor-token
+  http: POST /api/v2/{payer_id}/accounts/{recipient_id}/banks/plaid-processor-token
+  category: recipients
+  summary: Add Bank Account
+  parameters:
+  - payer_id
+  - recipient_id
+  has_request_body: true
+  mutating: true
+- name: patch_api_v2_payer_id_accounts_recipient_id_banks_plaid_processor_token_account_id_status
+  operation_id: patch_api-v2-payer-id-accounts-recipient-id-banks-plaid-processor-token-account-id-status
+  http: PATCH /api/v2/{payer_id}/accounts/{recipient_id}/banks/plaid-processor-token/{account_id}/status
+  category: recipients
+  summary: Update Bank Account Status
+  parameters:
+  - payer_id
+  - recipient_id
+  - account_id
+  has_request_body: true
+  mutating: true
+- name: get_ach_settlement_report_1
+  operation_id: get-ach-settlement-report-1
+  http: GET /api/v2/{payer_id}/reports/bank-transactions
+  category: reports
+  summary: Get Bank Transactions Report
+  parameters:
+  - payer_id
+  - reportDate
+  - lastFour
+  has_request_body: false
+  mutating: false

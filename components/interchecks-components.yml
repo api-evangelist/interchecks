@@ -1,0 +1,87 @@
+generated: '2026-08-23'
+method: searched
+source: https://docs-v2.interchecks.com/reference/about-widgets
+docs: https://docs-v2.interchecks.com/reference/about-widgets
+model: hosted-url
+model_note: >-
+  Interchecks ships no client-side JavaScript library, npm package or web-component bundle. Each
+  component is a server-created, short-lived hosted URL that the integrator embeds in an iFrame or
+  modal window. The API call returns the URL and its expiration; there is nothing to install and
+  nothing to version on the client, which also means there is no CDN artifact to pin.
+loader_libraries: []
+families:
+- family: Widgets
+  description: Hosted user interfaces for account capture and payment acceptance.
+  embed: iFrame or modal window
+  lifetime: >-
+    Bank account widgets are valid 59 minutes; the other widgets default to 15 minutes.
+    Overridable per request via widget_params.expires_mins.
+  styling: >-
+    Configured by the Interchecks onboarding team — white or black background, with visible or
+    hidden field labels. Not caller-controlled at runtime.
+  parameters:
+  - name: expires_mins
+    description: Minutes the widget URL remains valid.
+  - name: redirect_url
+    description: Where to redirect after payment acceptance or debit card capture.
+  - name: target_origin_url
+    description: >-
+      Origin to postMessage on completion instead of redirecting. Not available on the bank
+      account widget because of iFrame element restrictions.
+  - name: access_code
+    description: String the user must enter before the widget content is shown.
+  - name: access_code_phrase
+    description: Prompt presented to the user alongside the access code field.
+  components:
+  - name: Bank Account Widget
+    operation_id: create-bank-widget
+    path: POST /api/v2/{payer_id}/widgets/accounts/bank
+    purpose: Link a bank account through Plaid Link.
+    completion_signal: >-
+      Redirect only. Appends widgetId, accountId (only if an account record was created) and
+      errorCode (only on a Plaid Link error) to the redirect_url.
+    emits_webhook: PAYMENT_ACCOUNT (bank account created / failure)
+  - name: Card Account Widget
+    operation_id: create-card-widget
+    path: POST /api/v2/{payer_id}/widgets/accounts/card
+    purpose: >-
+      Capture a debit card without the card number touching the integrator's systems, reducing
+      PCI scope.
+    completion_signal: >-
+      Redirect, or postMessage of {"source":"IC","type":"CARD","result":"SUCCESS","widget_id":"..."}
+      when target_origin_url is supplied.
+    emits_webhook: PAYMENT_ACCOUNT (card account created / verification / fraud failure)
+  - name: Payment Widget
+    operation_id: create-payment-widget
+    path: POST /api/v2/{payer_id}/widgets/payments
+    purpose: Let a recipient accept a payment and choose a destination method.
+    emits_webhook: PAYMENT
+  - name: Prepaid Account Dashboard Widget
+    operation_id: create-prepaid-dashboard-widget
+    path: POST /api/v2/{payer_id}/widgets/accounts/prepaid
+    purpose: Embedded dashboard for a recipient's prepaid account.
+    emits_webhook: PAYMENT_ACCOUNT (prepaid account)
+- family: Recipient Portal
+  description: >-
+    A hosted Interchecks-branded portal where a recipient accepts a payment created by
+    create-payment, as an alternative to embedding the payment widget.
+  embed: hosted redirect
+  components:
+  - name: Recipient Portal
+    related_operation: create-payment
+    purpose: Recipient-facing payment acceptance and payout method selection.
+postmessage_contract:
+  card:
+    success: '{"source": "IC", "type": "CARD", "result": "SUCCESS", "widget_id": "<widget_id>"}'
+  bank:
+    success: '{"source": "IC", "type": "BANK", "result": "SUCCESS", "widget_id": "<widget_id>", "account_id": "<account_id>"}'
+    error: '{"source": "IC", "type": "BANK", "result": "ERROR", "widget_id": "<widget_id>", "error_code": "<error_code>"}'
+    note: Not available on the bank account widget per About Widgets; documented in the postMessage callout.
+third_party_dependencies:
+- name: Plaid
+  role: Bank account linking and balance/risk data
+  note: >-
+    Interchecks is a supported Plaid Processor Partner and also accepts a Plaid processor token
+    directly via add-bank-account-for-processor, so an integrator that already runs its own Plaid
+    Link can skip the bank widget entirely.
+  docs: https://docs-v2.interchecks.com/reference/plaid-processing-partner

@@ -1,0 +1,432 @@
+generated: '2026-08-23'
+method: searched
+source: https://docs-v2.interchecks.com/docs/api-error-codes
+docs:
+- https://docs-v2.interchecks.com/docs/api-error-codes
+- https://docs-v2.interchecks.com/docs/http-status-codes
+- https://docs-v2.interchecks.com/reference/about-transactions
+format: custom-json
+rfc9457: false
+note: 'Interchecks publishes a flat registry of symbolic ERR_* error codes returned in a custom JSON envelope.
+  It is not RFC 9457 problem+json: the body is {http_status, error_code, error_message} with content-type
+  application/json. Transaction errors may add a transaction_id, and ACH Funding risk errors add a funding_options_response
+  object carrying the configured threshold and the actual value.'
+envelope:
+  fields:
+    http_status: integer, mirrors the HTTP status
+    error_code: string, an ERR_* symbol from the registry below
+    error_message: string, human-readable description
+  example:
+    http_status: 422
+    error_code: ERR_ACCOUNT_BALANCE_THRESHOLD
+    error_message: Account balance insufficient
+http_status_codes:
+- status: 102
+  meaning: Idempotent request is currently processing
+- status: 200
+  meaning: Request processed
+- status: 201
+  meaning: Request processed and entity created
+- status: 400
+  meaning: Bad request due to invalid or missing parameters
+- status: 401
+  meaning: Not Authenticated
+- status: 403
+  meaning: Not Authorized
+- status: 404
+  meaning: Resource or entity not found
+- status: 405
+  meaning: Method not implemented
+- status: 409
+  meaning: Request conflict, either with the Idempotency-Key or an active record was found
+- status: 422
+  meaning: Unprocessable request due to business logic or client configuration
+- status: 429
+  meaning: Too many requests in a given amount of time
+- status: 500
+  meaning: Unexpected error while processing the request
+- status: 503
+  meaning: Service unavailable, request timed out, or maintenance is underway
+retry_guidance: A 5xx does not always mean the request failed — an error or timeout from a downstream
+  provider can surface as 5xx. Interchecks recommends confirming whether the transaction has processed
+  before retrying.
+error_code_count: 126
+error_codes:
+- code: ERR_ACCOUNT_ALREADY_REGISTERED
+  message: Account already registered
+  area: account
+- code: ERR_ACCOUNT_AUTH_REQUIRED
+  message: Account authorization required
+  area: account
+- code: ERR_ACCOUNT_BALANCE_THRESHOLD
+  message: Account balance insufficient
+  area: account
+- code: ERR_ACCOUNT_BALANCE_UNAVAILABLE
+  message: Account balance unavailable
+  area: account
+- code: ERR_ACCOUNT_CLOSED
+  message: Account frozen
+  area: account
+- code: ERR_ACCOUNT_FAILED_IDENTITY_MATCH_LIMIT_EXCEEDED
+  message: Account identity match failure limit exceeded
+  area: account
+- code: ERR_ACCOUNT_FROZEN
+  message: Account frozen
+  area: account
+- code: ERR_ACCOUNT_LIMIT_EXCEEDED
+  message: Activity limit exceeded
+  area: account
+- code: ERR_ACCOUNT_NAME_MATCH_UNAVAILABLE
+  message: Account name match unavailable
+  area: account
+- code: ERR_ACCOUNT_NAME_MISMATCH
+  message: Account name mismatch
+  area: account
+- code: ERR_ACCOUNT_NOT_ADDED
+  message: We were unable to add your account at this time
+  area: account
+- code: ERR_ACCOUNT_PROVIDER_MISMATCH
+  message: Account invalid for provider
+  area: account
+- code: ERR_ACCOUNT_PROVIDER_NOT_ENABLED
+  message: Payer not enabled for Account Provider
+  area: account
+- code: ERR_ACCOUNT_RE_AUTH_REQUIRED
+  message: Account re-authorization required
+  area: account
+- code: ERR_ACCOUNT_RISK_BANK_BALANCE_THRESHOLD
+  message: Account bank risk exceeded and balance insufficient
+  area: account
+- code: ERR_ACCOUNT_RISK_LEVEL_NOT_CONFIGURED
+  message: Account risk level not configured
+  area: account
+- code: ERR_ACCOUNT_RISK_METRICS_UNAVAILABLE
+  message: Account risk detail unavailable
+  area: account
+- code: ERR_ACCOUNT_RISK_THRESHOLD
+  message: Account risk threshold exceeded
+  area: account
+- code: ERR_ACCOUNT_SHARING_LIMIT_EXCEEDED
+  message: Account sharing limit exceeded
+  area: account
+- code: ERR_ACCOUNT_TYPE_RESTRICTED
+  message: Account type restricted
+  area: account
+- code: ERR_ACCOUNT_VELOCITY_LIMIT
+  message: Account velocity limit exceeded
+  area: account
+- code: ERR_ACCOUNT_WIDGET_UNAVAILABLE
+  message: Account widget unavailable
+  area: account
+- code: ERR_ACH_RETRY_ATTEMPTS_EXHAUSTED
+  message: ACH retry attempts exhausted
+  area: ach
+- code: ERR_ACH_RETURN
+  message: '*(custom message created when referenced)*'
+  area: ach
+- code: ERR_ADDRESS_REQUIRED
+  message: Address required for card validation
+  area: general
+- code: ERR_AFT_DECLINE
+  message: '*(custom message created when referenced)*'
+  area: card-funding
+- code: ERR_AFT_RETRY_DENIED
+  message: Transaction denied due to recent AFT decline
+  area: card-funding
+- code: ERR_BANK_ACCOUNT_BLOCKED
+  message: Bank account blocked due to chargebacks
+  area: account
+- code: ERR_BANK_ACCOUNT_LIMIT
+  message: Maximum bank accounts per user exceeded
+  area: account
+- code: ERR_BANK_ACCOUNT_R03
+  message: 'R03: No Account/Unable to Locate Account'
+  area: account
+- code: ERR_BANK_ACCOUNT_USER_BLOCKED
+  message: User blocked due to chargebacks
+  area: account
+- code: ERR_BANK_ACCOUNT_VALIDATION
+  message: Error validating Bank Account
+  area: account
+- code: ERR_BIN_BLOCKED
+  message: Card BIN blocked
+  area: card-account
+- code: ERR_CARD_ACCOUNT_EXPIRED
+  message: Card expired
+  area: account
+- code: ERR_CARD_INELIGIBLE
+  message: Card ineligible
+  area: card-account
+- code: ERR_CARD_PAV_BLOCKED
+  message: Card verification blocked due to too many attempts
+  area: card-account
+- code: ERR_CARD_PAV_CVV_FAILURE
+  message: Card CVV invalid
+  area: card-account
+- code: ERR_CARD_PAV_ERROR
+  message: Unable to verify card account
+  area: card-account
+- code: ERR_CARD_PAV_FAILURE
+  message: Card account validation failed
+  area: card-account
+- code: ERR_CARD_PAV_PAN_FAILURE
+  message: Card PAN invalid
+  area: card-account
+- code: ERR_CLIENT_ACCESS_PAYER
+  message: Client does not have access to payer
+  area: payer
+- code: ERR_CREDIT_CARD_NOT_SUPPORTED
+  message: Credit cards are not supported
+  area: card-account
+- code: ERR_DATE_RANGE_LIMIT
+  message: '*(custom message with dynamic date)*'
+  area: general
+- code: ERR_DUPLICATE_REFERENCE_ID
+  message: Duplicate payment request based on Request Reference ID
+  area: general
+- code: ERR_EMAIL_IN_USE
+  message: Recipient email is assigned to another profile
+  area: general
+- code: ERR_INELIGIBLE_RECIPIENT_ACCOUNT
+  message: Ineligible account for transaction method
+  area: account
+- code: ERR_INSUFFICIENT_FUNDS
+  message: Insufficient funds
+  area: general
+- code: ERR_INTERNAL_SERVER_ERROR
+  message: Internal server error
+  area: general
+- code: ERR_INVALID_ACCOUNT_ID
+  message: Invalid account ID
+  area: account
+- code: ERR_INVALID_ADDRESS_PARAMETERS
+  message: Invalid address details
+  area: general
+- code: ERR_INVALID_CARD_DETAILS
+  message: Invalid card number
+  area: card-account
+- code: ERR_INVALID_COUNTRY
+  message: Invalid Country
+  area: general
+- code: ERR_INVALID_CURRENCY_CODE
+  message: Invalid Currency Code
+  area: general
+- code: ERR_INVALID_DATE_FORMAT
+  message: Invalid Date
+  area: general
+- code: ERR_INVALID_DOB_FORMAT
+  message: Invalid DOB format
+  area: general
+- code: ERR_INVALID_EMAIL
+  message: Invalid email
+  area: general
+- code: ERR_INVALID_EXP_DATE
+  message: Invalid Expiration Date
+  area: general
+- code: ERR_INVALID_NAME
+  message: Invalid or missing name fields
+  area: general
+- code: ERR_INVALID_ORIGINATING_TRANSACTION_ID
+  message: Invalid originating transaction ID
+  area: recipient
+- code: ERR_INVALID_PARAMETER
+  message: Missing or invalid request parameters
+  area: general
+- code: ERR_INVALID_PAYER_ID
+  message: Invalid payer ID
+  area: payer
+- code: ERR_INVALID_PAYER_INVOICE_ID
+  message: Invalid invoice ID
+  area: payer
+- code: ERR_INVALID_PAYMENT_ID
+  message: Invalid payment ID
+  area: payment
+- code: ERR_INVALID_PAYMENT_REFERENCE_ID
+  message: Payment reference ID not found
+  area: payment
+- code: ERR_INVALID_PAYOUT_METHOD_FOR_ACCOUNT
+  message: Invalid transaction method for account
+  area: account
+- code: ERR_INVALID_PHONE
+  message: Invalid Phone number
+  area: general
+- code: ERR_INVALID_RECIPIENT_EMAIL
+  message: Invalid recipient email
+  area: recipient
+- code: ERR_INVALID_RECIPIENT_ID
+  message: Invalid recipient ID
+  area: recipient
+- code: ERR_INVALID_RECIPIENT_REFERENCE_ID
+  message: Recipient reference ID not found
+  area: recipient
+- code: ERR_INVALID_ROUTING_NUMBER
+  message: Invalid Routing Number
+  area: recipient
+- code: ERR_INVALID_STATE
+  message: Invalid State
+  area: general
+- code: ERR_INVALID_TIN
+  message: Invalid or missing TIN
+  area: recipient
+- code: ERR_INVALID_TOKEN_ID
+  message: Invalid Widget Token ID
+  area: general
+- code: ERR_INVALID_TRANSACTION_ID
+  message: Invalid transaction ID
+  area: transaction
+- code: ERR_INVALID_TRANSACTION_REFERENCE_ID
+  message: Transaction reference ID not found
+  area: transaction
+- code: ERR_INVALI&#x44;*_*&#x54;RANSACTION_TYPE
+  message: Transaction type invalid for method
+  area: general
+- code: ERR_INVALID_VERIFICATION_ID
+  message: Invalid verification ID
+  area: general
+- code: ERR_LOCATION_INVALID
+  message: Location ID invalid
+  area: general
+- code: ERR_MISSING_ADDRESS
+  message: No address for Recipient
+  area: general
+- code: ERR_MISSING_RECIPIENT
+  message: Missing recipient ID or email
+  area: recipient
+- code: ERR_OCT_DECLINE
+  message: '*(custom message created when referenced)*'
+  area: card-payout
+- code: ERR_OFAC_LIST_MATCH
+  message: Cancelled due to OFAC list match
+  area: general
+- code: ERR_PARTIAL_AUTH_BELOW_THRESHOLD
+  message: Partial auth below threshold
+  area: general
+- code: ERR_PAYLOAD_ENCRYPTION_ERROR
+  message: '*(blank or custom message)*'
+  area: encryption
+- code: ERR_PAYMENT_MAX
+  message: Payment amount is greater than max amount
+  area: payment
+- code: ERR_PAYMENT_NOT_VALID_FOR_WIDGET
+  message: Payment already processed
+  area: payment
+- code: ERR_PAYMENT_OPTION_NOT_FOUND
+  message: Payer option not found for Payer
+  area: payment
+- code: ERR_PAYMENT_STATUS_IMMUTABLE
+  message: Payment in immutable status
+  area: payment
+- code: ERR_PAYMENT_STATUS_NOT_APPLICABLE
+  message: Payment status cannot be applied
+  area: payment
+- code: ERR_PREPAID_ACCOUNT_ACTIVATION_FAILED
+  message: Prepaid account for activation failed
+  area: account
+- code: ERR_PREPAID_ACCOUNT_AGE_LIMIT
+  message: Prepaid minimum age restriction
+  area: account
+- code: ERR_PREPAID_ACCOUNT_ERROR
+  message: Prepaid account creation error
+  area: account
+- code: ERR_PREPAID_ACCOUNT_EXISTS
+  message: Prepaid account for Recipient exists
+  area: account
+- code: ERR_PREPAID_ACCOUNT_IDV_LOCKED
+  message: Prepaid account locked due to failed identity verification, please contact Customer Service
+  area: account
+- code: ERR_PREPAID_ACCOUNT_INVALID_ACCOUNT_ACTION
+  message: Invalid security code
+  area: account
+- code: ERR_PREPAID_ACCOUNT_INVALID_SECURITY_CODE
+  message: Invalid security code
+  area: account
+- code: ERR_PREPAID_ACCOUNT_PROCESSING
+  message: Prepaid account for Recipient is in process of creation
+  area: account
+- code: ERR_PREPAID_CARD_NOT_SUPPORTED
+  message: Prepaid cards are not supported
+  area: card-account
+- code: ERR_PROVIDER_ACCOUNT_MISCONFIGURATION
+  message: Provider account misconfiguration
+  area: account
+- code: ERR_PROVIDER_UNAVAILABLE
+  message: Provider unavailable
+  area: general
+- code: ERR_RECIPIENT_NOT_FOUND
+  message: Recipient email not found
+  area: recipient
+- code: ERR_REFERENCE_ID_EXCEEDS_MAXIMUM_LENGTH
+  message: Reference ID exceeds maximum length of 16
+  area: general
+- code: ERR_REFERENCE_ID_INVALID
+  message: Reference ID is required for this request
+  area: general
+- code: ERR_REFUND_AMOUNT_EXCEEDED
+  message: Refund amount exceeds original transaction amount
+  area: general
+- code: ERR_REFUND_INVALID_ORIGINATING_METHOD
+  message: Refund not allowed for transaction method
+  area: recipient
+- code: ERR_REFUND_INVALID_ORIGINATING_STATUS
+  message: Refund not allowed for transaction status
+  area: recipient
+- code: ERR_RETRIEVING_CARD_DETAILS
+  message: Error determining card eligibility
+  area: card-account
+- code: ERR_RETRIEVING_CARD_PAR
+  message: Error retrieving card account reference
+  area: card-account
+- code: ERR_SETTLEMENT_REPORT
+  message: '*(custom message created when referenced)*'
+  area: general
+- code: ERR_START_DATE_AFTER_END_DATE
+  message: '*(custom message with dynamic dates)*'
+  area: card-funding
+- code: ERR_START_DATE_IN_FUTURE
+  message: '*(custom message with dynamic date)*'
+  area: general
+- code: ERR_TOKENIZING_CARD
+  message: Error validating card details
+  area: card-account
+- code: ERR_TRANSACTION_FAILURE
+  message: '*(custom message created when referenced)*'
+  area: transaction
+- code: ERR_TRANSACTION_METHOD_NOT_AVAILABLE
+  message: Transaction method not available
+  area: transaction
+- code: ERR_TRANSACTION_METHOD_NOT_UNIQUE
+  message: Multiple configurations found for transaction method
+  area: transaction
+- code: ERR_TRANSACTION_NOT_INITIATED
+  message: Transaction not initiated
+  area: transaction
+- code: ERR_TRANSACTION_RISK_DECLINE
+  message: Transaction declined due to risk parameters
+  area: transaction
+- code: ERR_TRANSACTION_RISK_THRESHOLD
+  message: Transaction risk threshold exceeded
+  area: transaction
+- code: ERR_TRANSACTION_STATUS_IMMUTABLE
+  message: Transaction in immutable status
+  area: transaction
+- code: ERR_TRANSACTION_STATUS_NOT_APPLICABLE
+  message: Transaction status cannot be applied
+  area: transaction
+- code: ERR_TRANSACTION_STATUS_UPDATE_FAILED
+  message: Transaction status update failed
+  area: transaction
+- code: ERR_UNSUPPORTED_CURRENCY_CODE
+  message: Unsupported Currency Code
+  area: general
+- code: ERR_USER_EXITED_PLAID
+  message: User exited the account linking process in Plaid
+  area: general
+- code: ERR_USER_SEGMENT_NOT_FOUND
+  message: User Segment not found
+  area: general
+- code: ERR_VELOCITY_LIMIT
+  message: Transaction failed due to velocity controls
+  area: general
+- code: ERR_VERIFICATION_NOT_ENABLED
+  message: Payer not enabled for TIN Verification
+  area: general

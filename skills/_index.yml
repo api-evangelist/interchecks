@@ -1,0 +1,83 @@
+generated: '2026-08-23'
+method: generated
+source: openapi/interchecks-payments-api-v2.json
+provider_published_skills: false
+provider_published_skills_note: >-
+  No provider-published Agent Skill, AGENTS.md or skills/ directory was found on any Interchecks
+  host or in the github.com/interchecks organisation. These skills are authored by API Evangelist
+  from the provider's own published OpenAPI and documentation; every operationId referenced was
+  verified against openapi/interchecks-payments-api-v2.json before writing.
+api: Interchecks Payments API v2
+skill_count: 5
+skills:
+- name: interchecks-onboard-recipient-bank-payout
+  file: interchecks-onboard-recipient-bank-payout.md
+  summary: >-
+    Create a recipient, link a bank account through the Plaid widget or a processor token, and pay
+    them by ACH — with the idempotency and reversibility rules that decide whether the payout can
+    be taken back.
+  operations:
+  - get-access-token
+  - create-recipient
+  - create-bank-widget
+  - get-bank-accounts
+  - create-transaction
+  - get-transaction
+  - update-transaction
+- name: interchecks-instant-card-payout
+  file: interchecks-instant-card-payout.md
+  summary: >-
+    Capture a debit card through the hosted widget without taking PCI scope, verify it, push funds
+    with INSTANT_DEPOSIT (Visa/Mastercard OCT), and read the network action code out of an
+    HTTP 200 decline.
+  operations:
+  - get-access-token
+  - create-card-widget
+  - add-card-account
+  - get-card-accounts
+  - verify-card-account
+  - get-card-account-verify
+  - create-transaction
+  - get-transaction
+- name: interchecks-verify-webhook
+  file: interchecks-verify-webhook.md
+  summary: >-
+    Verify the RS256 x-verification JWT, the SHA-256 body hash and the 5-minute freshness window
+    before acting on any Interchecks event, then dispatch on webhook_type.
+  operations:
+  - get-access-token
+- name: interchecks-ach-funding-pull
+  file: interchecks-ach-funding-pull.md
+  summary: >-
+    Pull funds by ACH Funding Plus — handle the balance/risk pre-checks and their documented
+    bypasses, cancel inside the PROCESSING/RETRY window, and refund with ACH_REFUND once that
+    window has closed.
+  operations:
+  - get-access-token
+  - create-bank-widget
+  - get-bank-accounts
+  - create-transaction
+  - get-transaction
+  - update-transaction
+  - get-ach-settlement-report
+- name: interchecks-encrypted-payloads
+  file: interchecks-encrypted-payloads.md
+  summary: >-
+    Implement and prove Interchecks envelope encryption (AES-GCM body, RSA-OAEP SHA-256 key wrap,
+    X-ENCRYPTED header) against the sandbox encryption test harness before enabling it on live
+    money movement.
+  operations:
+  - get-access-token
+  - get-encryption-public-key
+  - post-payload-encryption-test-encryption
+  - post-payload-encryption-test-decryption
+  - post-payload-encryption-test-end-to-end
+  - encryption-health-check
+grounding:
+  operationid_source: openapi/interchecks-payments-api-v2.json
+  conventions: conventions/interchecks-conventions.yml
+  errors: errors/interchecks-error-codes.yml
+  decline_codes: errors/interchecks-decline-codes.yml
+  webhooks: asyncapi/interchecks-webhooks.yml
+  sandbox: sandbox/interchecks-sandbox.yml
+  authentication: authentication/interchecks-authentication.yml

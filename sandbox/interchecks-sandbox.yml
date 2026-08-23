@@ -1,0 +1,214 @@
+generated: '2026-08-23'
+method: searched
+source: https://docs-v2.interchecks.com/docs/test-data
+docs:
+- https://docs-v2.interchecks.com/docs/test-data
+- https://docs-v2.interchecks.com/reference/payload-encryption-test
+available: true
+environments:
+- name: sandbox
+  base_url: https://test.api.interchecks.io
+  token_endpoint: https://test.api.interchecks.io/api/v2/oauth2/token
+- name: production
+  base_url: https://prod.api.interchecks.io
+  token_endpoint: https://prod.api.interchecks.io/api/v2/oauth2/token
+separation_model: >-
+  Separate hostnames rather than separate key prefixes. Credentials are self-managed per payer in
+  the Portal Developer area; the documentation publishes no live-vs-test key prefix convention.
+signup: >-
+  Sandbox access is granted through the Interchecks onboarding/integration process, not by
+  self-service signup. There is no public developer sign-up form.
+email_allowlist:
+  enforced: true
+  note: >-
+    Interchecks maintains an allow list for destination emails in Sandbox. Emails not on the list
+    are suppressed. Additions and wildcard domains are requested from tech@interchecks.com.
+test_cards:
+  eligible_bins:
+  - '451530'
+  - '531260'
+  rule: >-
+    Any card BIN not on the list returns ERR_CARD_INELIGIBLE. A BIN not starting with 4 or 5
+    returns ERR_INVALID_CARD_DETAILS. Any future expiration date may be used.
+  warning: >-
+    Interchecks explicitly instructs that a live debit card number must never be used in the
+    sandbox environment.
+  suffix_triggers:
+  - suffix: '0000'
+    behaviour: card is designated a Prepaid Debit card; may be rejected with ERR_PREPAID_CARD_NOT_SUPPORTED
+  - suffix: '1111'
+    behaviour: card is designated a Credit card; may be rejected with ERR_CREDIT_CARD_NOT_SUPPORTED
+  numbers:
+  - '4515300011000159'
+  - '4515300011000167'
+  - '4515300011000175'
+  - '4515300011000183'
+  - '4515300011000191'
+  - '4515300011000209'
+  - '4515300011000217'
+  - '4515300011000225'
+  - '4515300011000233'
+  - '4515300011000241'
+  - '5312600000002167'
+  - '5312600000002168'
+  - '5312600000002169'
+card_verification_triggers:
+  note: Values that force a specific Card Account Verification outcome.
+  triggers:
+  - parameter: card number last four
+    value: '6666'
+    result: PAN failure
+  - parameter: card number last four
+    value: '7777'
+    result: PAN failure
+  - parameter: expiration date
+    value: '2030-12'
+    result: Expiration Date failure (returned as a CVV failure)
+  - parameter: cvv
+    value: '999'
+    result: CVV failure
+  - parameter: zip code
+    value: '99991'
+    result: AVS Partial - Street only
+  - parameter: zip code
+    value: '99992'
+    result: AVS Partial - Zip only
+  - parameter: zip code
+    value: '99993'
+    result: AVS No Match
+  - parameter: zip code
+    value: '99994'
+    result: AVS Not Supported
+  - parameter: zip code
+    value: '99995'
+    result: AVS Not Processed
+  - parameter: card number last four
+    value: '9750'
+    result: First Name Partial
+  - parameter: card number last four
+    value: '9799'
+    result: First Name No match
+  - parameter: card number last four
+    value: '9850'
+    result: Last Name Partial
+  - parameter: card number last four
+    value: '9899'
+    result: Last Name No match
+  - parameter: card number last four
+    value: '9950'
+    result: First Name Partial / Last Name Partial
+  - parameter: card number last four
+    value: '9999'
+    result: First Name No Match / Last Name No Match
+  - parameter: card number last four
+    value: '9901'
+    result: Name results Not Processed
+  - parameter: card number last four
+    value: '9902'
+    result: Name results Not Supported
+test_routing_numbers:
+  note: Any valid routing number may be used to add a bank account, but only a subset is RTP eligible.
+  rtp_eligible:
+  - '011000206'
+  - '011100106'
+  - '011400071'
+  - '021004823'
+  - '072412927'
+  - '072403473'
+  - '071925567'
+  - '071904779'
+  - '071026628'
+amount_triggers:
+- method: INSTANT_DEPOSIT
+  triggers:
+  - amount: '9.01'
+    result: 503 Service unavailable
+  - amount: '9.02'
+    result: '200 with Decline error "Invalid Transaction"; message format {response code}:{error description}'
+  - amount: '9.03'
+    result: 200 with Generic error
+  - amount: '9.04'
+    result: 422 with Payer NSF error
+  - amount: '9.05'
+    result: 422 with Card Velocity error
+  - amount: '9.06'
+    result: 200 with UNKNOWN Transaction Status due to VISA timeout
+  - amount: '9.07'
+    result: 200 with UNKNOWN Transaction Status due to VISA "in process" workflow
+  note: >-
+    The 9.06 and 9.07 UNKNOWN outcomes require the payer account to be configured to allow
+    UNKNOWN transaction status; otherwise they return PAID.
+- method: INSTANT_FUNDING
+  triggers:
+  - amount: '9.01'
+    result: 503 Service unavailable
+  - amount: '9.02'
+    result: '200 with Decline error "Invalid Transaction"'
+  - amount: '9.03'
+    result: 200 with Generic error
+  - amount: '9.06'
+    result: 200 with PROCESSING Transaction Status due to VISA timeout
+  - amount: '9.07'
+    result: 200 with PROCESSING Transaction Status due to VISA "in process" workflow
+  partial_authorization:
+    note: Amounts above $9 with these cents values exercise partial authorization.
+    triggers:
+    - cents: '.10'
+      result: Partial auth with a random amount approved, returned in the response payload
+    - cents: '.11'
+      result: Partial auth below threshold, declined with ERR_PARTIAL_AUTH_BELOW_THRESHOLD
+    - cents: '.12'
+      result: Partial auth below threshold but the Visa reversal fails; transaction stays PAID
+- method: RTP
+  triggers:
+  - amount: '9.03'
+    result: Initial 201 PROCESSING response followed by a FAILED webhook
+- method: ACH_FUNDING
+  triggers:
+  - amount: '9.01'
+    result: 503 Service unavailable
+  - amount: '9.02'
+    result: 422 with ERR_ACCOUNT_BALANCE_UNAVAILABLE
+  - amount: '9.03'
+    result: 422 with ERR_ACCOUNT_BALANCE_THRESHOLD
+  - amount: '9.04'
+    result: 422 with ERR_ACCOUNT_RISK_METRICS_UNAVAILABLE
+  - amount: '9.05'
+    result: 422 with ERR_ACCOUNT_RISK_THRESHOLD
+  - amount: '9.06'
+    result: 422 with ERR_ACCOUNT_AUTH_REQUIRED
+  - amount: '9.07'
+    result: 422 with ERR_ACCOUNT_RE_AUTH_REQUIRED
+test_harness:
+  note: >-
+    Sandbox-only operations that force a terminal state instead of waiting for the real rail.
+    This is Interchecks' substitute for a time-simulation / test-clock facility.
+  operations:
+  - operation_id: create-account-plaid
+    path: POST /api/v2/{payer_id}/test-harness/accounts/plaid
+    purpose: Auto-link a Plaid bank account, bypassing the Plaid Link UI
+  - operation_id: update-account-status
+    path: POST /api/v2/{payer_id}/test-harness/accounts
+    purpose: Drive an account into a chosen status
+  - operation_id: update-payment-status
+    path: POST /api/v2/{payer_id}/test-harness/payments
+    purpose: Drive a payment into a chosen status
+  - operation_id: update-transaction-status
+    path: POST /api/v2/{payer_id}/test-harness/transactions
+    purpose: Drive a transaction into a chosen status
+encryption_test_harness:
+  note: Sandbox-only operations for validating envelope encryption before enabling it in production.
+  operations:
+  - operation_id: post-payload-encryption-test-decryption
+    purpose: Returns plaintext when sent an encrypted payload
+  - operation_id: post-payload-encryption-test-encryption
+    purpose: Returns an encrypted response when sent plaintext JSON
+  - operation_id: post-payload-encryption-test-end-to-end
+    purpose: Encrypted request in, encrypted response out, with no business logic
+  - operation_id: get-encryption-public-key
+    purpose: Retrieve the Interchecks RSA public key in PEM or JWK form
+time_simulation:
+  supported: false
+  note: >-
+    No test clock or time-travel facility. Settlement timing is simulated by the test harness
+    status-forcing operations rather than by advancing time.

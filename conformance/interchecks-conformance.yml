@@ -1,0 +1,198 @@
+generated: '2026-08-23'
+method: searched
+source: https://home.interchecks.com/developers
+docs:
+- https://home.interchecks.com/developers
+- https://home.interchecks.com/
+- https://docs-v2.interchecks.com/docs/encrypted-requests
+- https://docs-v2.interchecks.com/docs/ach-return-code
+- https://docs-v2.interchecks.com/docs/instant-deposit-failure-codes
+derived_from:
+- openapi/interchecks-payments-api-v2.json
+sector: payments
+standards:
+- id: oauth2
+  conforms: true
+  evidence: >-
+    The published OpenAPI declares securityScheme sec0 as type oauth2 with a clientCredentials
+    flow, and operation get-access-token exchanges HTTP Basic base64(clientId:secret) for an
+    access_token / expires_in / token_type response with grant_type=client_credentials — RFC 6749
+    section 4.4 shape, including the RFC 6749 invalid_client error response.
+  source: openapi/interchecks-payments-api-v2.json#/paths/~1api~1v2~1oauth2~1token
+- id: jwt
+  conforms: true
+  evidence: >-
+    Access tokens are issued as JWTs (RFC 7519) and webhook payloads are signed with an RS256 JWT
+    in the x-verification header carrying iat and request_body_sha256_hash.
+  source: https://docs-v2.interchecks.com/docs/webhooks
+- id: jwk
+  conforms: true
+  evidence: >-
+    Both the webhook validation key endpoint and get-encryption-public-key return RSA keys in JSON
+    Web Key form (kty, e, n) per RFC 7517; get-encryption-public-key also offers PEM.
+  source: https://docs-v2.interchecks.com/docs/webhooks
+- id: idempotency-key
+  conforms: true
+  evidence: >-
+    Idempotency-Key is declared as an explicit header parameter on create-payment and
+    create-transaction, with 409 for an already-processed match and 102 for one still in flight —
+    the IETF HTTP API idempotency-key-header pattern, though Interchecks does not publish a key
+    retention window.
+  source: https://docs-v2.interchecks.com/reference/create-transaction
+- id: rfc9457
+  conforms: false
+  evidence: >-
+    Errors are returned as application/json with a custom {http_status, error_code, error_message}
+    envelope. No application/problem+json media type, and none of type/title/detail/instance
+    appear. The symbolic ERR_* code is the discriminator instead.
+  source: errors/interchecks-problem-types.yml
+- id: pagination
+  conforms: false
+  evidence: >-
+    No pagination parameters, cursors or Link headers appear in any of the 68 published
+    operations; collection reads are scoped to a single recipient and reports are bounded by date
+    range.
+  source: openapi/interchecks-payments-api-v2.json
+- id: openapi
+  conforms: true
+  version: 3.1.0
+  evidence: >-
+    Interchecks publishes an OpenAPI 3.1.0 document covering 68 operations across 51 paths, plus
+    an older OpenAPI 3.0.0 document, through its ReadMe documentation project.
+  caveats:
+  - components.schemas is empty — every request and response body is inlined, so nothing is reusable
+  - no tags are declared, so the contract carries no machine-readable grouping
+  - the securityScheme declares an empty scopes object and a placeholder tokenUrl in the registry copy
+  - one duplicate-suffixed operationId (get-ach-settlement-report-1) names the Bank Transactions report
+  source: openapi/interchecks-payments-api-v2.json
+- id: asyncapi
+  conforms: false
+  evidence: >-
+    A real webhook surface exists and is documented in prose with JSON samples, but no AsyncAPI or
+    other machine-readable event contract is published.
+  source: asyncapi/interchecks-webhooks.yml
+- id: llms-txt
+  conforms: true
+  evidence: >-
+    Two llms.txt files are served — https://docs-v2.interchecks.com/llms.txt (a full documentation
+    index) and https://home.interchecks.com/llms.txt (a marketing index) — and every documentation
+    page answers to a .md suffix for a markdown twin.
+  source: llms/interchecks-llms.txt
+- id: mcp
+  conforms: false
+  evidence: >-
+    The docs platform exposes an /mcp route that answers 401, but the project's own published
+    configuration reports mcp state "disabled", so there is no reachable MCP server.
+  source: mcp/interchecks-mcp.yml
+domain_standards:
+- id: nacha-ach
+  label: NACHA ACH return reason codes
+  conforms: true
+  contract_evidence: >-
+    The contract's error surface speaks NACHA natively: 22 ACH return reason codes (R01-R51) with
+    their NACHA return timeframes are published as the failure vocabulary for ACH_FUNDING_PLUS,
+    ACH_SAME_DAY, ACH_STANDARD and ACH_REFUND, and one of them is promoted into the API's own
+    error registry as ERR_BANK_ACCOUNT_R03 ("R03: No Account/Unable to Locate Account"). Same-day
+    processing is stated against the NACHA Same Day ACH 2:45PM Eastern window.
+  spec_location: >-
+    errors/interchecks-decline-codes.yml#ach_return_codes; error code ERR_BANK_ACCOUNT_R03 in
+    https://docs-v2.interchecks.com/docs/api-error-codes
+  source: https://docs-v2.interchecks.com/docs/ach-return-code
+  buyer_impact: >-
+    An integrator that already handles NACHA return codes needs no translation layer for ACH
+    failures; the codes and their return windows arrive unmodified.
+- id: card-network-action-codes
+  label: Visa / Mastercard authorization response (action) codes
+  conforms: true
+  contract_evidence: >-
+    Card declines return the network action code inside error_message as "<action code>:<message>"
+    under ERR_OCT_DECLINE or ERR_AFT_DECLINE. 67 action codes are published, plus the network-split
+    private-use range 76-89 documented separately for Visa and for Mastercard — the ISO 8583-derived
+    response-code vocabulary passed through rather than remapped.
+  spec_location: errors/interchecks-decline-codes.yml#card_declines
+  source: https://docs-v2.interchecks.com/docs/instant-deposit-failure-codes
+- id: visa-oct-aft
+  label: Visa Original Credit Transaction / Account Funding Transaction
+  conforms: true
+  contract_evidence: >-
+    OCT and AFT are first-class transaction methods in the contract — INSTANT_DEPOSIT (CREDIT, OCT)
+    and INSTANT_FUNDING (DEBIT, AFT) — with dedicated OCT settlement and OCT transaction reporting
+    operations (get-payer-oct-transactions-report, get-payer-oct-settlement-report) and documented
+    partial-authorization and reversal semantics for AFT.
+  spec_location: >-
+    openapi/interchecks-payments-api-v2.json paths /api/v2/{payer_id}/reports/oct/transactions and
+    /api/v2/{payer_id}/reports/oct/settlement
+  source: https://docs-v2.interchecks.com/reference/about-transactions
+- id: rtp
+  label: The Clearing House Real-Time Payments
+  conforms: partial
+  contract_evidence: >-
+    RTP is a published transaction method with a documented 30-second round trip and an rtp_status
+    field in responses, and the sandbox publishes RTP-eligible routing numbers. The contract names
+    the rail but exposes no ISO 20022 message identifiers or pacs.* structures, so conformance is
+    at the product level, not the message level.
+  spec_location: transaction method RTP; response field rtp_status
+  source: https://docs-v2.interchecks.com/reference/about-transactions
+- id: iso-20022
+  label: ISO 20022
+  conforms: false
+  contract_evidence: >-
+    No ISO 20022 message type, identifier or structure appears anywhere in the contract or the
+    documentation, including on the RTP and ACH surfaces where it would be expected.
+- id: psd2-sca
+  label: PSD2 / Strong Customer Authentication
+  conforms: false
+  contract_evidence: >-
+    Not applicable — Interchecks is a US-domestic payments provider (its own materials name
+    sportsbooks, prediction markets, on-demand payroll, lenders, Fintechs and financial
+    institutions in the US) and the contract exposes only US rails (ACH, RTP, US card OCT/AFT,
+    paper check). No European regime surface is claimed.
+- id: open-payments
+  label: Open Payments / Open Banking API standard
+  conforms: false
+  contract_evidence: >-
+    Bank data and authorization are obtained through Plaid rather than through an open-banking
+    standard; the contract exposes Plaid processor tokens and Plaid Link, not an FDX or
+    Open Banking surface.
+compliance_certifications:
+- name: PCI DSS
+  level: Level 1 Service Provider
+  status: certified
+  evidence: >-
+    Published on the Interchecks developers page: "PCI Level 1 Service Provider" certified, with
+    card capture tools offered specifically to reduce the integrator's own PCI compliance burden.
+  source: https://home.interchecks.com/developers
+  attestation_document_public: false
+- name: SOC 2 Type 2
+  status: validated
+  evidence: >-
+    Published on both the Interchecks home page and the developers page as "SOC 2 Type 2"
+    validated.
+  source: https://home.interchecks.com/developers
+  attestation_document_public: false
+- name: Encryption at rest
+  status: claimed
+  evidence: AES-256 encryption at rest, stated on the developers page.
+  source: https://home.interchecks.com/developers
+compliance_note: >-
+  Both certifications are stated as claims on marketing pages. Interchecks publishes no trust
+  centre, no report request flow, no subprocessor list and no compliance page, so a buyer cannot
+  retrieve the SOC 2 report or the PCI AOC without going through sales. There is also no
+  security.txt and no vulnerability disclosure policy on any host.
+in_contract_security_controls:
+- control: Payload envelope encryption
+  detail: >-
+    Per-payer AES-GCM (or AES-CBC-PKCS5) payload encryption with RSA-OAEP SHA-256 / MGF1 SHA-256
+    key wrapping, negotiated by the X-ENCRYPTED header, with a dedicated sandbox test harness and
+    a public-key retrieval operation. This is a materially stronger transport-independent control
+    than most payments APIs of this size publish.
+  source: https://docs-v2.interchecks.com/docs/encrypted-requests
+- control: Signed webhooks
+  detail: RS256 JWT body-hash signature with published key rotation by kid and a 5-minute freshness rule.
+  source: https://docs-v2.interchecks.com/docs/webhooks
+- control: Compliance holds in the state machine
+  detail: >-
+    PENDING_KYC is a first-class transaction status ("under review by compliance team"), and
+    APPROVAL_REQUIRED gates transactions on payer configuration — the AML/KYC posture is visible
+    in the contract rather than hidden behind it.
+  source: https://docs-v2.interchecks.com/reference/about-transactions

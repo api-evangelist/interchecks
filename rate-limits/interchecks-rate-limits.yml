@@ -1,0 +1,54 @@
+generated: '2026-08-23'
+method: searched
+source: https://docs-v2.interchecks.com/docs/http-status-codes
+limit_count: 0
+limits: []
+documented: false
+note: >-
+  Interchecks documents that HTTP 429 "Too many requests in a given amount of time" can be
+  returned, but publishes no numeric limit, no window, no burst allowance and no per-key,
+  per-account or per-endpoint scope. No RateLimit-*, X-RateLimit-* or Retry-After response header
+  is documented anywhere in the reference, and the published OpenAPI declares no 429 response on
+  any of its 68 operations, so an agent has neither a documented budget nor a runtime signal to
+  back off against. The one throttle-adjacent limit that IS published is a request-size bound
+  rather than a rate: get-user-activity-report enforces a maximum 31-day date range.
+exhaustion:
+  status: 429
+  meaning: Too many requests in a given amount of time
+  response_headers: []
+  retry_after: not documented
+response_headers_documented: []
+related_bounds:
+- operation: get-user-activity-report
+  bound: maximum 31-day date range per request
+  status_on_violation: 400
+  source: https://docs-v2.interchecks.com/reference/get-user-activity-report
+- subject: ACH Funding retry
+  bound: >-
+    Not a rate limit, but a provider-side retry budget — R01 returns on ACH_FUNDING_PLUS are
+    automatically retried at a configured interval until ERR_ACH_RETRY_ATTEMPTS_EXHAUSTED.
+- subject: Webhook delivery retry
+  bound: >-
+    Outbound only — a non-2xx webhook response is retried twice within 15 seconds, then the cycle
+    repeats within the next 2 hours.
+velocity_controls:
+  note: >-
+    Distinct from rate limiting, Interchecks enforces per-account money-movement velocity and risk
+    thresholds that surface as business errors rather than 429s.
+  error_codes:
+  - ERR_ACCOUNT_VELOCITY_LIMIT
+  - ERR_ACCOUNT_LIMIT_EXCEEDED
+  - ERR_ACCOUNT_SHARING_LIMIT_EXCEEDED
+  - ERR_BANK_ACCOUNT_LIMIT
+  - ERR_ACCOUNT_RISK_THRESHOLD
+  - ERR_ACCOUNT_BALANCE_THRESHOLD
+  note_values: >-
+    The threshold values themselves are per-client configuration held by Interchecks and are not
+    published; ACH Funding risk errors return a funding_options_response object carrying the
+    configured threshold and the actual value at the time of the call.
+probed:
+- url: https://docs-v2.interchecks.com/docs/http-status-codes
+  status: 200
+- url: https://docs-v2.interchecks.com/llms.txt
+  status: 200
+  note: no rate-limit page is listed in the published documentation index

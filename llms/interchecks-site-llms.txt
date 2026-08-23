@@ -1,0 +1,13 @@
+# Interchecks
+
+> Interchecks is a leading instant payment platform that delivers a broad range of deposit and withdrawal services to a large and diversified client base that includes sportsbooks, lenders, Fintechs and financial institutions.
+
+Primary website: https://home.interchecks.com
+
+## Key Pages
+
+- Home: https://home.interchecks.com/
+- Funding: https://home.interchecks.com/funding
+- Payouts: https://home.interchecks.com/payouts
+- About: https://home.interchecks.com/about
+- Developers: https://home.interchecks.com/developers
