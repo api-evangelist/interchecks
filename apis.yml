@@ -35,28 +35,264 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 apis:
-- name: Interchecks Payments API v2
+- aid: interchecks:interchecks-accounts-api
+  name: Interchecks Accounts API
+  description: The Accounts API from Interchecks — 16 operation(s) for accounts.
+  humanURL: https://docs-v2.interchecks.com/docs/getting-started
+  baseURL: https://prod.api.interchecks.io
+  tags:
+  - Accounts
+  properties:
+  - type: OpenAPI
+    url: openapi/interchecks-accounts-api-openapi.yml
+  - type: Documentation
+    url: https://docs-v2.interchecks.com/docs/getting-started
+  - type: APIReference
+    url: https://docs-v2.interchecks.com/reference/about-recipients
+  - type: Webhooks
+    url: asyncapi/interchecks-webhooks.yml
+- aid: interchecks:interchecks-authentication-api
+  name: Interchecks Authentication API
   description: >-
-    REST API for creating and managing recipients, destination payment accounts (bank, card,
-    PayPal, Venmo, prepaid), payments accepted in the Recipient Portal or a hosted widget, and
-    transactions for immediate disbursement or funding across ACH, RTP, card OCT/AFT, check,
-    eCheck and prepaid rails. Authentication is OAuth 2.0 client_credentials returning a
-    short-lived JWT bearer token; writes accept an Idempotency-Key header.
+    OAuth 2.0 is used for authentication and authorization to the API. Client ID and Secret Key can be
+    generated in the Developer Portal.
+  humanURL: https://docs-v2.interchecks.com/docs/getting-started
+  baseURL: https://prod.api.interchecks.io
+  tags:
+  - Authentication
+  properties:
+  - type: OpenAPI
+    url: openapi/interchecks-authentication-api-openapi.yml
+  - type: Documentation
+    url: https://docs-v2.interchecks.com/docs/getting-started
+  - type: APIReference
+    url: https://docs-v2.interchecks.com/reference/about-recipients
+  - type: Webhooks
+    url: asyncapi/interchecks-webhooks.yml
+- aid: interchecks:interchecks-oauth2-api
+  name: Interchecks Oauth2 API
+  description: The Oauth2 API from Interchecks — 1 operation(s) for oauth2.
+  humanURL: https://docs-v2.interchecks.com/docs/getting-started
+  baseURL: https://prod.api.interchecks.io
+  tags:
+  - Oauth2
+  properties:
+  - type: OpenAPI
+    url: openapi/interchecks-oauth2-api-openapi.yml
+  - type: Documentation
+    url: https://docs-v2.interchecks.com/docs/getting-started
+  - type: APIReference
+    url: https://docs-v2.interchecks.com/reference/about-recipients
+  - type: Webhooks
+    url: asyncapi/interchecks-webhooks.yml
+- aid: interchecks:interchecks-payers-api
+  name: Interchecks Payers API
+  description: >-
+    Endpoints to retrieve a payer's connected accounts (aka good funds accounts) and payout method configuration
+    for the `payer_id` designated in the URL.
+  humanURL: https://docs-v2.interchecks.com/docs/getting-started
+  baseURL: https://prod.api.interchecks.io
+  tags:
+  - Payers
+  properties:
+  - type: OpenAPI
+    url: openapi/interchecks-payers-api-openapi.yml
+  - type: Documentation
+    url: https://docs-v2.interchecks.com/docs/getting-started
+  - type: APIReference
+    url: https://docs-v2.interchecks.com/reference/about-recipients
+  - type: Webhooks
+    url: asyncapi/interchecks-webhooks.yml
+- aid: interchecks:interchecks-payload-api
+  name: Interchecks Payload API
+  description: The Payload API from Interchecks — 5 operation(s) for payload.
+  humanURL: https://docs-v2.interchecks.com/docs/getting-started
+  baseURL: https://prod.api.interchecks.io
+  tags:
+  - Payload
+  properties:
+  - type: OpenAPI
+    url: openapi/interchecks-payload-api-openapi.yml
+  - type: Documentation
+    url: https://docs-v2.interchecks.com/docs/getting-started
+  - type: APIReference
+    url: https://docs-v2.interchecks.com/reference/about-recipients
+  - type: Webhooks
+    url: asyncapi/interchecks-webhooks.yml
+- aid: interchecks:interchecks-payment-accounts-bank-api
+  name: Interchecks Payment Accounts - Bank API
+  description: >-
+    The Payment Accounts - Bank API from Interchecks — 2 operation(s) for payment accounts - bank.
+  humanURL: https://docs-v2.interchecks.com/docs/getting-started
+  baseURL: https://prod.api.interchecks.io
+  tags:
+  - Payment Accounts - Bank
+  properties:
+  - type: OpenAPI
+    url: openapi/interchecks-payment-accounts-bank-api-openapi.yml
+  - type: Documentation
+    url: https://docs-v2.interchecks.com/docs/getting-started
+  - type: APIReference
+    url: https://docs-v2.interchecks.com/reference/about-recipients
+  - type: Webhooks
+    url: asyncapi/interchecks-webhooks.yml
+- aid: interchecks:interchecks-payment-accounts-card-api
+  name: Interchecks Payment Accounts - Card API
+  description: >-
+    The Payment Accounts - Card API from Interchecks — 3 operation(s) for payment accounts - card.
+  humanURL: https://docs-v2.interchecks.com/docs/getting-started
+  baseURL: https://prod.api.interchecks.io
+  tags:
+  - Payment Accounts - Card
+  properties:
+  - type: OpenAPI
+    url: openapi/interchecks-payment-accounts-card-api-openapi.yml
+  - type: Documentation
+    url: https://docs-v2.interchecks.com/docs/getting-started
+  - type: APIReference
+    url: https://docs-v2.interchecks.com/reference/about-recipients
+  - type: Webhooks
+    url: asyncapi/interchecks-webhooks.yml
+- aid: interchecks:interchecks-payment-accounts-paypal-api
+  name: Interchecks Payment Accounts - PayPal API
+  description: >-
+    The Payment Accounts - PayPal API from Interchecks — 3 operation(s) for payment accounts - paypal.
+  humanURL: https://docs-v2.interchecks.com/docs/getting-started
+  baseURL: https://prod.api.interchecks.io
+  tags:
+  - Payment Accounts - PayPal
+  properties:
+  - type: OpenAPI
+    url: openapi/interchecks-payment-accounts-paypal-api-openapi.yml
+  - type: Documentation
+    url: https://docs-v2.interchecks.com/docs/getting-started
+  - type: APIReference
+    url: https://docs-v2.interchecks.com/reference/about-recipients
+  - type: Webhooks
+    url: asyncapi/interchecks-webhooks.yml
+- aid: interchecks:interchecks-payments-api
+  name: Interchecks Payments API
+  description: The Payments API from Interchecks — 7 operation(s) for payments.
   humanURL: https://docs-v2.interchecks.com/docs/getting-started
   baseURL: https://prod.api.interchecks.io
   tags:
   - Payments
-  - Payouts
-  - Transactions
-  - Recipients
-  - Webhooks
   properties:
   - type: OpenAPI
-    url: openapi/interchecks-payments-api-v2.json
+    url: openapi/interchecks-payments-api-openapi.yml
+  - type: Documentation
+    url: https://docs-v2.interchecks.com/docs/getting-started
+  - type: APIReference
+    url: https://docs-v2.interchecks.com/reference/about-recipients
+  - type: Webhooks
+    url: asyncapi/interchecks-webhooks.yml
+- aid: interchecks:interchecks-recipient-emails-api
+  name: Interchecks Recipient Emails API
+  description: The Recipient Emails API from Interchecks — 1 operation(s) for recipient emails.
+  humanURL: https://docs-v2.interchecks.com/docs/getting-started
+  baseURL: https://prod.api.interchecks.io
+  tags:
+  - Recipient Emails
+  properties:
   - type: OpenAPI
-    url: openapi/interchecks-payments-api-v2-registry.json
-  - type: Overlay
-    url: overlays/interchecks-payments-api-v2-overlay.yaml
+    url: openapi/interchecks-recipient-emails-api-openapi.yml
+  - type: Documentation
+    url: https://docs-v2.interchecks.com/docs/getting-started
+  - type: APIReference
+    url: https://docs-v2.interchecks.com/reference/about-recipients
+  - type: Webhooks
+    url: asyncapi/interchecks-webhooks.yml
+- aid: interchecks:interchecks-recipient-verification-api
+  name: Interchecks Recipient Verification API
+  description: >-
+    The Recipient Verification API from Interchecks — 1 operation(s) for recipient verification.
+  humanURL: https://docs-v2.interchecks.com/docs/getting-started
+  baseURL: https://prod.api.interchecks.io
+  tags:
+  - Recipient Verification
+  properties:
+  - type: OpenAPI
+    url: openapi/interchecks-recipient-verification-api-openapi.yml
+  - type: Documentation
+    url: https://docs-v2.interchecks.com/docs/getting-started
+  - type: APIReference
+    url: https://docs-v2.interchecks.com/reference/about-recipients
+  - type: Webhooks
+    url: asyncapi/interchecks-webhooks.yml
+- aid: interchecks:interchecks-recipients-api
+  name: Interchecks Recipients API
+  description: The Recipients API from Interchecks — 9 operation(s) for recipients.
+  humanURL: https://docs-v2.interchecks.com/docs/getting-started
+  baseURL: https://prod.api.interchecks.io
+  tags:
+  - Recipients
+  properties:
+  - type: OpenAPI
+    url: openapi/interchecks-recipients-api-openapi.yml
+  - type: Documentation
+    url: https://docs-v2.interchecks.com/docs/getting-started
+  - type: APIReference
+    url: https://docs-v2.interchecks.com/reference/about-recipients
+  - type: Webhooks
+    url: asyncapi/interchecks-webhooks.yml
+- aid: interchecks:interchecks-reports-api
+  name: Interchecks Reports API
+  description: The Reports API from Interchecks — 5 operation(s) for reports.
+  humanURL: https://docs-v2.interchecks.com/docs/getting-started
+  baseURL: https://prod.api.interchecks.io
+  tags:
+  - Reports
+  properties:
+  - type: OpenAPI
+    url: openapi/interchecks-reports-api-openapi.yml
+  - type: Documentation
+    url: https://docs-v2.interchecks.com/docs/getting-started
+  - type: APIReference
+    url: https://docs-v2.interchecks.com/reference/about-recipients
+  - type: Webhooks
+    url: asyncapi/interchecks-webhooks.yml
+- aid: interchecks:interchecks-test-harness-api
+  name: Interchecks Test Harness API
+  description: The Test Harness API from Interchecks — 4 operation(s) for test harness.
+  humanURL: https://docs-v2.interchecks.com/docs/getting-started
+  baseURL: https://prod.api.interchecks.io
+  tags:
+  - Test Harness
+  properties:
+  - type: OpenAPI
+    url: openapi/interchecks-test-harness-api-openapi.yml
+  - type: Documentation
+    url: https://docs-v2.interchecks.com/docs/getting-started
+  - type: APIReference
+    url: https://docs-v2.interchecks.com/reference/about-recipients
+  - type: Webhooks
+    url: asyncapi/interchecks-webhooks.yml
+- aid: interchecks:interchecks-transactions-api
+  name: Interchecks Transactions API
+  description: The Transactions API from Interchecks — 4 operation(s) for transactions.
+  humanURL: https://docs-v2.interchecks.com/docs/getting-started
+  baseURL: https://prod.api.interchecks.io
+  tags:
+  - Transactions
+  properties:
+  - type: OpenAPI
+    url: openapi/interchecks-transactions-api-openapi.yml
+  - type: Documentation
+    url: https://docs-v2.interchecks.com/docs/getting-started
+  - type: APIReference
+    url: https://docs-v2.interchecks.com/reference/about-recipients
+  - type: Webhooks
+    url: asyncapi/interchecks-webhooks.yml
+- aid: interchecks:interchecks-widgets-api
+  name: Interchecks Widgets API
+  description: The Widgets API from Interchecks — 4 operation(s) for widgets.
+  humanURL: https://docs-v2.interchecks.com/docs/getting-started
+  baseURL: https://prod.api.interchecks.io
+  tags:
+  - Widgets
+  properties:
+  - type: OpenAPI
+    url: openapi/interchecks-widgets-api-openapi.yml
   - type: Documentation
     url: https://docs-v2.interchecks.com/docs/getting-started
   - type: APIReference
@@ -64,6 +300,8 @@ apis:
   - type: Webhooks
     url: asyncapi/interchecks-webhooks.yml
 common:
+- type: Overlay
+  url: overlays/interchecks-payments-api-v2-overlay.yaml
 - type: DomainSecurity
   url: security/interchecks-domain-security.yml
 - type: Website
