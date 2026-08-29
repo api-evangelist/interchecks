@@ -11,6 +11,18 @@ description: >-
   company reports more than $50 billion processed over ten years for online gaming and prediction
   markets, on-demand payroll, lending and digital banking clients, and publishes PCI DSS Level 1
   Service Provider and SOC 2 Type 2 attestations.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 image: https://home.interchecks.com/images/interchecks-logo-white.svg
 url: https://raw.githubusercontent.com/api-evangelist/interchecks/refs/heads/main/apis.yml
 x-type: company
