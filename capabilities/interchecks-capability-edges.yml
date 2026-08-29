@@ -1,0 +1,79 @@
+slug: interchecks
+provider: Interchecks
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Banking & Capital Markets
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 6
+edges:
+- tag: Payments
+  spec_file: interchecks-payments-api-openapi.yml
+  capability_id: BC-1340.10
+  capability_id_l1: BC-1340
+  capability_name: Payment Initiation Management
+  confidence: 0.85
+  evidence: POST /api/v2/{payer_id}/payments  CreatePayment  Create Payment; GET .../payments/{payment_id}/transactions  Get
+    Transactions by Payment ID
+  reason: Creation, update and retrieval of payment instructions that spawn payout transactions — capture
+    and management of the payment instruction, i.e. Payment Initiation Management.
+- tag: Payment Accounts - Bank
+  spec_file: interchecks-payment-accounts-bank-api-openapi.yml
+  capability_id: BC-1340
+  capability_id_l1: BC-1340
+  capability_name: Payments & Card Management
+  confidence: 0.75
+  evidence: 'POST /api/v2/{payer_id}/accounts/{recipient_id}/banks  CreateBankAccount  Create Bank Account;
+    description: "Create and manage destination payment accounts at an aggregator or payer level"'
+  reason: CRUD over recipient destination bank accounts on a disbursement platform — payment instrument/beneficiary
+    account management, squarely Payments & Card Management. No single L2 cleanly covers beneficiary account
+    maintenance, so L1 only.
+- tag: Transactions
+  spec_file: interchecks-transactions-api-openapi.yml
+  capability_id: BC-1340.10
+  capability_id_l1: BC-1340
+  capability_name: Payment Initiation Management
+  confidence: 0.75
+  evidence: 'POST /api/v2/{payer_id}/transactions  CreateTransaction  Create Transaction; vendor: "immediate
+    disbursement transacti[ons]"'
+  reason: Creation and status retrieval of payout transactions for immediate disbursement — capture and
+    authorisation of payment instructions. Could arguably be Real-Time Payment Management, which tempers
+    confidence on the L2.
+- tag: Accounts
+  spec_file: interchecks-accounts-api-openapi.yml
+  capability_id: BC-1340
+  capability_id_l1: BC-1340
+  capability_name: Payments & Card Management
+  confidence: 0.7
+  evidence: POST /api/v2/{payer_id}/accounts/{recipient_id}/banks add-bank-account; POST .../cards/{account_id}/verification
+    verify-card-account; add-paypal-account
+  reason: Management of recipients' destination payment accounts (bank, debit card, PayPal) used for disbursements,
+    including card verification. This is payment instrument management within Payments & Card Management;
+    no single L2 cleanly covers payee destination-account maintenance, so L1 only.
+- tag: Payment Accounts - Card
+  spec_file: interchecks-payment-accounts-card-api-openapi.yml
+  capability_id: BC-1340
+  capability_id_l1: BC-1340
+  capability_name: Payments & Card Management
+  confidence: 0.7
+  evidence: POST /api/v2/{payer_id}/accounts/{recipient_id}/cards  CreateCardAccount  Create Card Account
+  reason: Registration and deletion of recipient debit-card destination accounts for push payouts. This
+    is payment destination management, not card issuance or switching, so L1 Payments & Card Management
+    without an L2.
+- tag: Payment Accounts - PayPal
+  spec_file: interchecks-payment-accounts-paypal-api-openapi.yml
+  capability_id: BC-1340
+  capability_id_l1: BC-1340
+  capability_name: Payments & Card Management
+  confidence: 0.7
+  evidence: POST /api/v2/{payer_id}/accounts/{recipient_id}/paypal  CreatePayPalAccount  Create PayPal
+    Account
+  reason: Manages PayPal wallet destination accounts for recipients — an alternative payout rail destination,
+    i.e. payment account management under Payments & Card Management; no L2 fits wallet destination upkeep
+    specifically.

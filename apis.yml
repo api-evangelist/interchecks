@@ -312,6 +312,9 @@ apis:
   - type: Webhooks
     url: asyncapi/interchecks-webhooks.yml
 common:
+- type: CapabilityMap
+  url: capabilities/interchecks-capability-edges.yml
+  name: Interchecks Business Capability Map
 - type: Overlay
   url: overlays/interchecks-payments-api-v2-overlay.yaml
 - type: DomainSecurity
