@@ -38,6 +38,17 @@ tags:
 - Instant Payments
 - Disbursements
 - Cards
+- Financial-Services
+- Fintech
+- Webhook
+tags_raw:
+- Payments
+- Payouts
+- ACH
+- Real-Time Payments
+- Instant Payments
+- Disbursements
+- Cards
 - Financial Services
 - Fintech
 - Webhooks
@@ -53,6 +64,8 @@ apis:
   humanURL: https://docs-v2.interchecks.com/docs/getting-started
   baseURL: https://prod.api.interchecks.io
   tags:
+  - Account
+  tags_raw:
   - Accounts
   properties:
   - type: OpenAPI
@@ -87,6 +100,8 @@ apis:
   humanURL: https://docs-v2.interchecks.com/docs/getting-started
   baseURL: https://prod.api.interchecks.io
   tags:
+  - Authentication
+  tags_raw:
   - Oauth2
   properties:
   - type: OpenAPI
@@ -285,6 +300,8 @@ apis:
   humanURL: https://docs-v2.interchecks.com/docs/getting-started
   baseURL: https://prod.api.interchecks.io
   tags:
+  - Transaction
+  tags_raw:
   - Transactions
   properties:
   - type: OpenAPI
