@@ -1,0 +1,187 @@
+openapi: 3.2.0
+info:
+  title: Interchecks Payers API
+  version: '2'
+  description: 'Operations tagged Payers across 2 of this provider''s published API definitions: interchecks-payments-api-v2-registry.json, interchecks-payments-api-v2.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: http://example.com
+  variables: {}
+- url: https://test.api.interchecks.io
+tags:
+- name: Payers
+  description: Endpoints to retrieve a payer's connected accounts (aka good funds accounts) and payout method configuration for the `payer_id` designated in the URL.
+paths:
+  /api/v2/{payer_id}/payers/accounts:
+    get:
+      tags:
+      - Payers
+      summary: Get Payer Bank Accounts
+      description: Retrieves an array of connected accounts for a Payer.  If we are unable to pull account information an `error_message` field will be present in the account response.
+      operationId: GetPayerBankAccounts
+      parameters:
+      - name: payer_id
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-Content-Type-Options:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: nosniff
+                  example: nosniff
+            X-XSS-Protection:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: 1; mode=block
+                  example: 1; mode=block
+            Cache-Control:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: no-cache, no-store, max-age=0, must-revalidate
+                  example: no-cache, no-store, max-age=0, must-revalidate
+            Pragma:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: no-cache
+                  example: no-cache
+            Expires:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: '0'
+                  example: '0'
+            X-Frame-Options:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: DENY
+                  example: DENY
+            Set-Cookie:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: SESSION=NmZkYjcwNDYtMDMyNC00YjFmLWI2MTMtM2E4NmE0NTdlODdi; Path=/; HttpOnly; SameSite=Lax
+                  example: SESSION=NmZkYjcwNDYtMDMyNC00YjFmLWI2MTMtM2E4NmE0NTdlODdi; Path=/; HttpOnly; SameSite=Lax
+            Transfer-Encoding:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: chunked
+                  example: chunked
+            Date:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: Mon, 11 Oct 2021 15:35:27 GMT
+                  example: Mon, 11 Oct 2021 15:35:27 GMT
+            Keep-Alive:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: timeout=60
+                  example: timeout=60
+            Connection:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: keep-alive
+                  example: keep-alive
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetPayerBankAccount'
+                description: ''
+                example:
+                - account_bank: MVB BANK, INC.
+                  routing_number: 051504597
+                  account_number: '123456789'
+                  balance: 34000
+                  balance_real_time: true
+                  payout_methods:
+                  - INSTANT_DEPOSIT
+                  - ACH_STANDARD
+              example:
+              - account_bank: MVB BANK, INC.
+                routing_number: 051504597
+                account_number: '123456789'
+                balance: 34000
+                balance_real_time: true
+                payout_methods:
+                - INSTANT_DEPOSIT
+                - ACH_STANDARD
+      deprecated: false
+      security:
+      - httpBearer: []
+    servers:
+    - url: http://example.com
+      variables: {}
+components:
+  schemas:
+    GetPayerBankAccount:
+      title: GetPayerBankAccount
+      required:
+      - account_bank
+      - routing_number
+      - account_number
+      - balance
+      - balance_real_time
+      - payout_methods
+      type: object
+      properties:
+        account_bank:
+          type: string
+        routing_number:
+          type: string
+        account_number:
+          type: string
+        balance:
+          type: number
+        balance_real_time:
+          type: boolean
+        payout_methods:
+          type: array
+          items:
+            type: string
+          description: ''
+      example:
+        account_bank: MVB BANK, INC.
+        routing_number: 051504597
+        account_number: '123456789'
+        balance: 34000
+        balance_real_time: true
+        payout_methods:
+        - INSTANT_DEPOSIT
+        - ACH_STANDARD
+  securitySchemes:
+    httpBearer:
+      type: http
+      scheme: bearer
+    sec0:
+      type: oauth2
+      flows: {}
+x-refined-from:
+- interchecks-payments-api-v2-registry.json
+- interchecks-payments-api-v2.json

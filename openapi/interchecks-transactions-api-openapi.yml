@@ -1,0 +1,341 @@
+openapi: 3.2.0
+info:
+  title: Interchecks Transactions API
+  version: '2'
+  description: 'Operations tagged Transactions across 2 of this provider''s published API definitions: interchecks-payments-api-v2-registry.json, interchecks-payments-api-v2.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: http://example.com
+  variables: {}
+- url: https://test.api.interchecks.io
+tags:
+- name: Transactions
+paths:
+  /api/v2/{payer_id}/transactions:
+    post:
+      tags:
+      - Transactions
+      summary: Create Transaction
+      operationId: CreateTransaction
+      parameters:
+      - name: Idempotency-Key
+        in: header
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: '{{$guid}}'
+      - name: payer_id
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTransactionRequest'
+            example:
+              recipient_id: '{{recipient_id}}'
+              account_id: '{{account_id}}'
+              method: ACH_SAME_DAY
+              type: CREDIT
+              amount: 10
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - httpBearer: []
+    servers:
+    - url: http://example.com
+      variables: {}
+  /api/v2/{payer_id}/transactions/{transaction_id}:
+    get:
+      tags:
+      - Transactions
+      summary: Get Transaction by ID
+      operationId: GetTransactionbyID
+      parameters:
+      - name: payer_id
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      - name: transaction_id
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - httpBearer: []
+    patch:
+      summary: Update Transaction
+      description: ''
+      operationId: update-transaction
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      - name: transaction_id
+        in: path
+        description: Transaction ID
+        schema:
+          type: string
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  description: Status to update transaction
+                  enum:
+                  - CANCELLED
+                  - REVERSED
+            examples:
+              Cancel Transaction:
+                value:
+                  status: CANCELLED
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: '{}'
+              schema:
+                type: object
+                properties: {}
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"http_status\": 400,\n    \"error_code\": \"ERR_TRANSACTION_STATUS_NOT_APPLICABLE\",\n    \"error_message\": \"Transaction status cannot be applied\"\n}"
+              schema:
+                type: object
+                properties:
+                  http_status:
+                    type: integer
+                    example: 400
+                    default: 0
+                  error_code:
+                    type: string
+                    example: ERR_TRANSACTION_STATUS_NOT_APPLICABLE
+                  error_message:
+                    type: string
+                    example: Transaction status cannot be applied
+        '404':
+          description: '404'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"http_status\": 404,\n    \"error_code\": \"ERR_INVALID_TRANSACTION_ID\",\n    \"error_message\": \"Invalid transaction ID\"\n}"
+              schema:
+                type: object
+                properties:
+                  http_status:
+                    type: integer
+                    example: 404
+                    default: 0
+                  error_code:
+                    type: string
+                    example: ERR_INVALID_TRANSACTION_ID
+                  error_message:
+                    type: string
+                    example: Invalid transaction ID
+        '422':
+          description: '422'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"http_status\": 422,\n    \"error_code\": \"ERR_PAYMENT_STATUS_IMMUTABLE\",\n    \"error_message\": \"Payment in immutable status\"\n}"
+              schema:
+                type: object
+                properties:
+                  http_status:
+                    type: integer
+                    example: 422
+                    default: 0
+                  error_code:
+                    type: string
+                    example: ERR_PAYMENT_STATUS_IMMUTABLE
+                  error_message:
+                    type: string
+                    example: Payment in immutable status
+      tags:
+      - Transactions
+      security:
+      - httpBearer: []
+    servers:
+    - url: http://example.com
+      variables: {}
+  /api/v2/{payer_id}/transactions/reference/{transaction_reference_id}:
+    get:
+      tags:
+      - Transactions
+      summary: Get Transaction by Reference ID
+      operationId: GetTransactionbyReferenceID
+      parameters:
+      - name: payer_id
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      - name: transaction_reference_id
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - httpBearer: []
+    servers:
+    - url: http://example.com
+      variables: {}
+  /api/v2/{payer_id}/transactions/reference/{reference_id}:
+    get:
+      summary: Get Transaction by Reference ID
+      description: 'Get Transaction by Transaction reference ID
+
+
+        `200` - Request Succeeded
+
+        `404` - Transaction reference ID not found'
+      operationId: get-transaction-by-reference-id
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      - name: reference_id
+        in: path
+        description: Transaction reference ID
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "[\n    {\n        \"transaction_id\": \"ICTN-435-21315-54033-XST\",\n        \"reference_id\": \"transaction-123\",\n        \"method\": \"CHECK\",\n        \"fee\": 0.00,\n        \"amount\": 10.00,\n        \"status\": \"PAID\",\n        \"created_date\": \"2021-11-11T15:00:33.092Z\",\n        \"detail\": \"987 MAIN STREET, MIAMI, FLORIDA 33132\",\n        \"check_number\": \"10074\",\n    \t\t\"recipient_id\" : \"REejizS5fnTLiQYhGTKYXZaQ==\"\n    }\n]"
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    transaction_id:
+                      type: string
+                      example: ICTN-435-21315-54033-XST
+                    reference_id:
+                      type: string
+                      example: transaction-123
+                    method:
+                      type: string
+                      example: CHECK
+                    fee:
+                      type: integer
+                      example: 0
+                      default: 0
+                    amount:
+                      type: integer
+                      example: 10
+                      default: 0
+                    status:
+                      type: string
+                      example: PAID
+                    created_date:
+                      type: string
+                      example: '2021-11-11T15:00:33.092Z'
+                    detail:
+                      type: string
+                      example: 987 MAIN STREET, MIAMI, FLORIDA 33132
+                    check_number:
+                      type: string
+                      example: '10074'
+                    recipient_id:
+                      type: string
+                      example: REejizS5fnTLiQYhGTKYXZaQ==
+      deprecated: false
+      tags:
+      - Transactions
+      security:
+      - sec0: []
+    servers:
+    - url: https://test.api.interchecks.io
+components:
+  schemas:
+    CreateTransactionRequest:
+      title: CreateTransactionRequest
+      required:
+      - recipient_id
+      - account_id
+      - method
+      - type
+      - amount
+      type: object
+      properties:
+        recipient_id:
+          type: string
+        account_id:
+          type: string
+        method:
+          type: string
+        type:
+          type: string
+        amount:
+          type: integer
+          format: int32
+      example:
+        recipient_id: '{{recipient_id}}'
+        account_id: '{{account_id}}'
+        method: ACH_SAME_DAY
+        type: CREDIT
+        amount: 10
+  securitySchemes:
+    httpBearer:
+      type: http
+      scheme: bearer
+    sec0:
+      type: oauth2
+      flows: {}
+x-refined-from:
+- interchecks-payments-api-v2-registry.json
+- interchecks-payments-api-v2.json

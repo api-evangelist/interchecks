@@ -1,0 +1,93 @@
+openapi: 3.2.0
+info:
+  title: payments-api-v2-1 Oauth2 API
+  version: '2'
+servers:
+- url: https://test.api.interchecks.io
+security:
+- sec0: []
+tags:
+- name: Oauth2
+paths:
+  /api/v2/oauth2/token:
+    post:
+      summary: Get Access Token
+      description: Generate an OAuth 2.0 access token in the form of a JWT.  The `access_token` returned in the response is to be used when authenticating API calls as the Authentication `Bearer` value.
+      operationId: get-access-token
+      parameters:
+      - name: Authorization
+        in: header
+        description: '`Basic` authorization header with `clientId:secret` base64 encoded.'
+        schema:
+          type: string
+      - name: Content-Type
+        in: header
+        schema:
+          type: string
+          default: application/x-www-form-urlencoded
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                grant_type:
+                  type: string
+                  default: client_credentials
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"access_token\": \"eyJraWQiOiI1N0ZlMz....\",\n    \"expires_in\": 900,\n    \"token_type\": \"Bearer\"\n}"
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    example: eyJraWQiOiI1N0ZlMz....
+                  expires_in:
+                    type: integer
+                    example: 900
+                    default: 0
+                  token_type:
+                    type: string
+                    example: Bearer
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Invalid Client ID or Secret:
+                  value: "{\n    \"error\": \"invalid_client\"\n}"
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: invalid_client
+      deprecated: false
+      x-readme:
+        code-samples:
+        - language: curl
+          code: 'curl -X POST -u "clientId:secret" \
+
+            -d "grant_type=client_credentials" \
+
+            --url https://test.api.interchecks.io/oauth2/token'
+        samples-languages:
+        - curl
+      tags:
+      - Oauth2
+components:
+  securitySchemes:
+    sec0:
+      type: oauth2
+      flows: {}
+x-readme:
+  headers: []
+  explorer-enabled: false
+  proxy-enabled: true
+x-readme-fauxas: true

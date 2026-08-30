@@ -1,0 +1,1584 @@
+openapi: 3.2.0
+info:
+  title: Interchecks Recipients API
+  version: '2'
+  description: 'Operations tagged Recipients across 2 of this provider''s published API definitions: interchecks-payments-api-v2-registry.json, interchecks-payments-api-v2.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: http://example.com
+  variables: {}
+- url: https://test.api.interchecks.io
+tags:
+- name: Recipients
+paths:
+  /api/v2/{payer_id}/recipients:
+    post:
+      tags:
+      - Recipients
+      summary: Create Recipient
+      operationId: CreateRecipient
+      parameters:
+      - name: payer_id
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRecipientRequest'
+            example:
+              email: payee-123456@mailpoof.com
+              first_name: James
+              last_name: Smith
+              reference_id: payee-123456
+        required: true
+      responses:
+        '201':
+          description: Created
+          headers:
+            Location:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: http://localhost:8080/payer-api/v2/PAXI-q3MTJS-afWzgMp6WzPQ/recipients/REPg25ZBRVQ2qBEqbF_2HItg==
+                  example: http://localhost:8080/payer-api/v2/PAXI-q3MTJS-afWzgMp6WzPQ/recipients/REPg25ZBRVQ2qBEqbF_2HItg==
+            X-Content-Type-Options:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: nosniff
+                  example: nosniff
+            X-XSS-Protection:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: 1; mode=block
+                  example: 1; mode=block
+            Cache-Control:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: no-cache, no-store, max-age=0, must-revalidate
+                  example: no-cache, no-store, max-age=0, must-revalidate
+            Pragma:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: no-cache
+                  example: no-cache
+            Expires:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: '0'
+                  example: '0'
+            X-Frame-Options:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: DENY
+                  example: DENY
+            Set-Cookie:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: SESSION=ZTRhZTQ5MTYtNjFjYi00MzI3LWEzN2UtZjQ5Zjg2OWQ5NjNj; Path=/; HttpOnly; SameSite=Lax
+                  example: SESSION=ZTRhZTQ5MTYtNjFjYi00MzI3LWEzN2UtZjQ5Zjg2OWQ5NjNj; Path=/; HttpOnly; SameSite=Lax
+            Transfer-Encoding:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: chunked
+                  example: chunked
+            Date:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: Mon, 11 Oct 2021 21:33:40 GMT
+                  example: Mon, 11 Oct 2021 21:33:40 GMT
+            Keep-Alive:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: timeout=60
+                  example: timeout=60
+            Connection:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: keep-alive
+                  example: keep-alive
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateRecipient'
+              example:
+                recipient_id: REPg25ZBRVQ2qBEqbF_2HItg==
+                reference_id: payee-123456
+                email: payee-123456@mailpoof.com
+                first_name: James
+                last_name: Smith
+      deprecated: false
+      security:
+      - httpBearer: []
+    servers:
+    - url: http://example.com
+      variables: {}
+  /api/v2/{payer_id}/recipients/{recipient_id}:
+    get:
+      tags:
+      - Recipients
+      summary: Get Recipient by ID
+      operationId: GetRecipientbyID
+      parameters:
+      - name: payer_id
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      - name: recipient_id
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-Content-Type-Options:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: nosniff
+                  example: nosniff
+            X-XSS-Protection:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: 1; mode=block
+                  example: 1; mode=block
+            Cache-Control:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: no-cache, no-store, max-age=0, must-revalidate
+                  example: no-cache, no-store, max-age=0, must-revalidate
+            Pragma:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: no-cache
+                  example: no-cache
+            Expires:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: '0'
+                  example: '0'
+            X-Frame-Options:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: DENY
+                  example: DENY
+            Set-Cookie:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: SESSION=YWQxN2ZmYTUtNTg2MS00ZDkwLWFkY2UtZTI2YzQ1YjY3MmVm; Path=/; HttpOnly; SameSite=Lax
+                  example: SESSION=YWQxN2ZmYTUtNTg2MS00ZDkwLWFkY2UtZTI2YzQ1YjY3MmVm; Path=/; HttpOnly; SameSite=Lax
+            Transfer-Encoding:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: chunked
+                  example: chunked
+            Date:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: Mon, 11 Oct 2021 21:35:34 GMT
+                  example: Mon, 11 Oct 2021 21:35:34 GMT
+            Keep-Alive:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: timeout=60
+                  example: timeout=60
+            Connection:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: keep-alive
+                  example: keep-alive
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetRecipientbyID'
+              example:
+                recipient_id: REPg25ZBRVQ2qBEqbF_2HItg==
+                reference_id: payee-123456
+                email: payee-123456@mailpoof.com
+                first_name: James
+                last_name: Smith
+      deprecated: false
+      security:
+      - httpBearer: []
+    put:
+      summary: Update Recipient
+      description: 'Update Recipient profile. A full request object is required, as the Recipient record will be overwritten with the supplied parameters.
+
+
+        `200` - Request succeeded
+
+        `400` - Bad Request, missing or invalid parameters
+
+        `404` - Recipient ID not found
+
+        `409` - Recipient email already exists for another profile'
+      operationId: update-recipient
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      - name: recipient_id
+        in: path
+        description: Recipient ID
+        schema:
+          type: string
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: Recipient email
+                first_name:
+                  type: string
+                  description: Recipient first name (required for individual)
+                last_name:
+                  type: string
+                  description: Recipient last name (required for individual)
+                company_name:
+                  type: string
+                  description: Recipient company name (required if recipient is not an individual)
+                reference_id:
+                  type: string
+                  description: Recipient reference ID for payer
+                dob:
+                  type: string
+                  description: Recipient date of birth (optional)
+                  format: date
+            examples:
+              Recipient - Individual:
+                value:
+                  email: sherlock@example.com
+                  first_name: Sherlock
+                  last_name: Holmes
+                  reference_id: payee-123
+              Recipient - Company:
+                value:
+                  email: sherlock.llc@example.com
+                  company_name: Sherlock and Watson, LLC
+                  reference_id: payee-456
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Individual:
+                  value: "{\n    \"recipient_id\": \"REejizS5fnTLiQYhGTKYXZaQ==\",\n    \"reference_id\": \"payee-123\",\n    \"email\": \"sherlock@example.com\",\n    \"first_name\": \"Sherlock\",\n    \"last_name\": \"Holmes\"\n}"
+                Company:
+                  value: "{\n    \"recipient_id\": \"REsuhBF74VRkGNYf-fmrCYeA==\",\n    \"reference_id\": \"payee-456\",\n    \"email\": \"sherlock.llc@example.com\",\n    \"company_name\": \"Sherlock and Watson, LLC\"\n}"
+              schema:
+                oneOf:
+                - title: Individual
+                  type: object
+                  properties:
+                    recipient_id:
+                      type: string
+                      example: REejizS5fnTLiQYhGTKYXZaQ==
+                    reference_id:
+                      type: string
+                      example: payee-123
+                    email:
+                      type: string
+                      example: sherlock@example.com
+                    first_name:
+                      type: string
+                      example: Sherlock
+                    last_name:
+                      type: string
+                      example: Holmes
+                - title: Company
+                  type: object
+                  properties:
+                    recipient_id:
+                      type: string
+                      example: REsuhBF74VRkGNYf-fmrCYeA==
+                    reference_id:
+                      type: string
+                      example: payee-456
+                    email:
+                      type: string
+                      example: sherlock.llc@example.com
+                    company_name:
+                      type: string
+                      example: Sherlock and Watson, LLC
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"http_status\": 400,\n    \"error_code\": \"ERR_INVALID_PARAMETER\",\n    \"error_message\": \"Missing or invalid request parameters\"\n}"
+              schema:
+                type: object
+                properties:
+                  http_status:
+                    type: integer
+                    example: 400
+                    default: 0
+                  error_code:
+                    type: string
+                    example: ERR_INVALID_PARAMETER
+                  error_message:
+                    type: string
+                    example: Missing or invalid request parameters
+        '404':
+          description: '404'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"http_status\": 404,\n    \"error_code\": \"ERR_INVALID_RECIPIENT_ID\",\n    \"error_message\": \"Invalid recipient ID\"\n}"
+              schema:
+                type: object
+                properties:
+                  http_status:
+                    type: integer
+                    example: 404
+                    default: 0
+                  error_code:
+                    type: string
+                    example: ERR_INVALID_RECIPIENT_ID
+                  error_message:
+                    type: string
+                    example: Invalid recipient ID
+        '409':
+          description: '409'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"http_status\": 409,\n    \"error_code\": \"ERR_EMAIL_IN_USE\",\n    \"error_message\": \"Recipient email is assigned to another profile\"\n}"
+              schema:
+                type: object
+                properties:
+                  http_status:
+                    type: integer
+                    example: 409
+                    default: 0
+                  error_code:
+                    type: string
+                    example: ERR_EMAIL_IN_USE
+                  error_message:
+                    type: string
+                    example: Recipient email is assigned to another profile
+      deprecated: false
+      tags:
+      - Recipients
+      security:
+      - httpBearer: []
+    patch:
+      summary: Patch Recipient
+      description: 'Patch Recipient profile. Parameters included in the request will be applied to the Recipient. Omitted parameters will not be changed.
+
+
+        `200` - Request succeeded
+
+        `400` - Bad Request, missing or invalid parameters
+
+        `404` - Recipient ID not found
+
+        `409` - Recipient email already exists for another profile'
+      operationId: patch-recipient
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      - name: recipient_id
+        in: path
+        description: Recipient ID
+        schema:
+          type: string
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: Recipient email
+                first_name:
+                  type: string
+                  description: Recipient first name (required for individual)
+                last_name:
+                  type: string
+                  description: Recipient last name (required for individual)
+                company_name:
+                  type: string
+                  description: Recipient company name (required if recipient is not an individual)
+                reference_id:
+                  type: string
+                  description: Recipient reference ID for payer (optional)
+                dob:
+                  type: string
+                  description: Recipient date of birth
+                  format: date
+            examples:
+              Recipient - Individual:
+                value:
+                  email: sherlock@example.com
+                  first_name: Sherlock
+                  last_name: Holmes
+                  reference_id: payee-123
+              Recipient - Company:
+                value:
+                  email: sherlock.llc@example.com
+                  company_name: Sherlock and Watson, LLC
+                  reference_id: payee-456
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Individual:
+                  value: "{\n    \"recipient_id\": \"REejizS5fnTLiQYhGTKYXZaQ==\",\n    \"reference_id\": \"payee-123\",\n    \"email\": \"sherlock@example.com\",\n    \"first_name\": \"Sherlock\",\n    \"last_name\": \"Holmes\"\n}"
+                Company:
+                  value: "{\n    \"recipient_id\": \"REsuhBF74VRkGNYf-fmrCYeA==\",\n    \"reference_id\": \"payee-456\",\n    \"email\": \"sherlock.llc@example.com\",\n    \"company_name\": \"Sherlock and Watson, LLC\"\n}"
+              schema:
+                oneOf:
+                - title: Individual
+                  type: object
+                  properties:
+                    recipient_id:
+                      type: string
+                      example: REejizS5fnTLiQYhGTKYXZaQ==
+                    reference_id:
+                      type: string
+                      example: payee-123
+                    email:
+                      type: string
+                      example: sherlock@example.com
+                    first_name:
+                      type: string
+                      example: Sherlock
+                    last_name:
+                      type: string
+                      example: Holmes
+                - title: Company
+                  type: object
+                  properties:
+                    recipient_id:
+                      type: string
+                      example: REsuhBF74VRkGNYf-fmrCYeA==
+                    reference_id:
+                      type: string
+                      example: payee-456
+                    email:
+                      type: string
+                      example: sherlock.llc@example.com
+                    company_name:
+                      type: string
+                      example: Sherlock and Watson, LLC
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"http_status\": 400,\n    \"error_code\": \"ERR_INVALID_PARAMETER\",\n    \"error_message\": \"Missing or invalid request parameters\"\n}"
+              schema:
+                type: object
+                properties:
+                  http_status:
+                    type: integer
+                    example: 400
+                    default: 0
+                  error_code:
+                    type: string
+                    example: ERR_INVALID_PARAMETER
+                  error_message:
+                    type: string
+                    example: Missing or invalid request parameters
+        '404':
+          description: '404'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"http_status\": 404,\n    \"error_code\": \"ERR_INVALID_RECIPIENT_ID\",\n    \"error_message\": \"Invalid recipient ID\"\n}"
+              schema:
+                type: object
+                properties:
+                  http_status:
+                    type: integer
+                    example: 404
+                    default: 0
+                  error_code:
+                    type: string
+                    example: ERR_INVALID_RECIPIENT_ID
+                  error_message:
+                    type: string
+                    example: Invalid recipient ID
+        '409':
+          description: '409'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"http_status\": 409,\n    \"error_code\": \"ERR_EMAIL_IN_USE\",\n    \"error_message\": \"Recipient email is assigned to another profile\"\n}"
+              schema:
+                type: object
+                properties:
+                  http_status:
+                    type: integer
+                    example: 409
+                    default: 0
+                  error_code:
+                    type: string
+                    example: ERR_EMAIL_IN_USE
+                  error_message:
+                    type: string
+                    example: Recipient email is assigned to another profile
+      deprecated: false
+      tags:
+      - Recipients
+      security:
+      - httpBearer: []
+    servers:
+    - url: http://example.com
+      variables: {}
+  /api/v2/{payer_id}/recipients/reference/{recipient_reference_id}:
+    get:
+      tags:
+      - Recipients
+      summary: Get Recipient by Reference ID
+      operationId: GetRecipientbyReferenceID
+      parameters:
+      - name: payer_id
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      - name: recipient_reference_id
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-Content-Type-Options:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: nosniff
+                  example: nosniff
+            X-XSS-Protection:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: 1; mode=block
+                  example: 1; mode=block
+            Cache-Control:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: no-cache, no-store, max-age=0, must-revalidate
+                  example: no-cache, no-store, max-age=0, must-revalidate
+            Pragma:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: no-cache
+                  example: no-cache
+            Expires:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: '0'
+                  example: '0'
+            X-Frame-Options:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: DENY
+                  example: DENY
+            Set-Cookie:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: SESSION=YTY1MzIyMzAtZWZlNy00OTY0LWI1ZGItYTY3ODE0ZmI3MmE0; Path=/; HttpOnly; SameSite=Lax
+                  example: SESSION=YTY1MzIyMzAtZWZlNy00OTY0LWI1ZGItYTY3ODE0ZmI3MmE0; Path=/; HttpOnly; SameSite=Lax
+            Transfer-Encoding:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: chunked
+                  example: chunked
+            Date:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: Mon, 11 Oct 2021 21:35:54 GMT
+                  example: Mon, 11 Oct 2021 21:35:54 GMT
+            Keep-Alive:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: timeout=60
+                  example: timeout=60
+            Connection:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: keep-alive
+                  example: keep-alive
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetRecipientbyReferenceID'
+                description: ''
+                example:
+                - recipient_id: REPg25ZBRVQ2qBEqbF_2HItg==
+                  reference_id: payee-123456
+                  email: payee-123456@mailpoof.com
+                  first_name: James
+                  last_name: Smith
+              example:
+              - recipient_id: REPg25ZBRVQ2qBEqbF_2HItg==
+                reference_id: payee-123456
+                email: payee-123456@mailpoof.com
+                first_name: James
+                last_name: Smith
+      deprecated: false
+      security:
+      - httpBearer: []
+    servers:
+    - url: http://example.com
+      variables: {}
+  /api/v2/{payer_id}/recipients/email/{recipient_email}:
+    get:
+      tags:
+      - Recipients
+      summary: Get Recipient by Email
+      operationId: GetRecipientbyEmail
+      parameters:
+      - name: payer_id
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      - name: recipient_email
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Disposition:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: inline;filename=f.txt
+                  example: inline;filename=f.txt
+            X-Content-Type-Options:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: nosniff
+                  example: nosniff
+            X-XSS-Protection:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: 1; mode=block
+                  example: 1; mode=block
+            Cache-Control:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: no-cache, no-store, max-age=0, must-revalidate
+                  example: no-cache, no-store, max-age=0, must-revalidate
+            Pragma:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: no-cache
+                  example: no-cache
+            Expires:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: '0'
+                  example: '0'
+            X-Frame-Options:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: DENY
+                  example: DENY
+            Set-Cookie:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: SESSION=MWU0OWFlOTQtYzE2Zi00NWE3LTgyYmItNTc4Zjk0NDk2YWUz; Path=/; HttpOnly; SameSite=Lax
+                  example: SESSION=MWU0OWFlOTQtYzE2Zi00NWE3LTgyYmItNTc4Zjk0NDk2YWUz; Path=/; HttpOnly; SameSite=Lax
+            Transfer-Encoding:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: chunked
+                  example: chunked
+            Date:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: Mon, 11 Oct 2021 21:36:33 GMT
+                  example: Mon, 11 Oct 2021 21:36:33 GMT
+            Keep-Alive:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: timeout=60
+                  example: timeout=60
+            Connection:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                    example: keep-alive
+                  example: keep-alive
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetRecipientbyEmail'
+              example:
+                recipient_id: REPg25ZBRVQ2qBEqbF_2HItg==
+                reference_id: payee-123456
+                email: payee-123456@mailpoof.com
+                first_name: James
+                last_name: Smith
+      deprecated: false
+      security:
+      - httpBearer: []
+    servers:
+    - url: http://example.com
+      variables: {}
+  /api/v2/{payer_id}/recipients/reference/{reference_id}:
+    get:
+      summary: Get Recipient by Reference ID
+      description: 'Retrieve Recipient by Reference ID.
+
+
+        `200` - Request succeeded
+
+        `404` - Recipient Reference ID not found'
+      operationId: get-recipient-by-reference-id
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      - name: reference_id
+        in: path
+        description: Recipient reference ID
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Individual:
+                  value: "{\n    \"recipient_id\": \"REejizS5fnTLiQYhGTKYXZaQ==\",\n    \"reference_id\": \"payee-123\",\n    \"email\": \"sherlock@example.com\",\n    \"first_name\": \"Sherlock\",\n    \"last_name\": \"Holmes\"\n}"
+                Company:
+                  value: "{\n    \"recipient_id\": \"REsuhBF74VRkGNYf-fmrCYeA==\",\n    \"reference_id\": \"payee-456\",\n    \"email\": \"sherlock.llc@example.com\",\n    \"company_name\": \"Sherlock and Watson, LLC\"\n}"
+              schema:
+                oneOf:
+                - title: Individual
+                  type: object
+                  properties:
+                    recipient_id:
+                      type: string
+                      example: REejizS5fnTLiQYhGTKYXZaQ==
+                    reference_id:
+                      type: string
+                      example: payee-123
+                    email:
+                      type: string
+                      example: sherlock@example.com
+                    first_name:
+                      type: string
+                      example: Sherlock
+                    last_name:
+                      type: string
+                      example: Holmes
+                - title: Company
+                  type: object
+                  properties:
+                    recipient_id:
+                      type: string
+                      example: REsuhBF74VRkGNYf-fmrCYeA==
+                    reference_id:
+                      type: string
+                      example: payee-456
+                    email:
+                      type: string
+                      example: sherlock.llc@example.com
+                    company_name:
+                      type: string
+                      example: Sherlock and Watson, LLC
+        '404':
+          description: '404'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"http_status\": 404,\n    \"error_code\": \"ERR_INVALID_RECIPIENT_REFERENCE_ID\",\n    \"error_message\": \"Recipient reference ID not found\"\n}"
+              schema:
+                type: object
+                properties:
+                  http_status:
+                    type: integer
+                    example: 404
+                    default: 0
+                  error_code:
+                    type: string
+                    example: ERR_INVALID_RECIPIENT_REFERENCE_ID
+                  error_message:
+                    type: string
+                    example: Recipient reference ID not found
+      deprecated: false
+      tags:
+      - Recipients
+      security:
+      - sec0: []
+    servers:
+    - url: https://test.api.interchecks.io
+  /api/v2/{payer_id}/recipients/email/{email}:
+    get:
+      summary: Get Recipient by Email
+      description: 'Retrieve Recipient by email.
+
+
+        `200` - Request succeeded
+
+        `404` - Email address not found'
+      operationId: get-recipient-by-email
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      - name: email
+        in: path
+        description: Recipient email address
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Individual:
+                  value: "{\n    \"recipient_id\": \"REejizS5fnTLiQYhGTKYXZaQ==\",\n    \"reference_id\": \"payee-123\",\n    \"email\": \"sherlock@example.com\",\n    \"first_name\": \"Sherlock\",\n    \"last_name\": \"Holmes\"\n}"
+                Company:
+                  value: "{\n    \"recipient_id\": \"REsuhBF74VRkGNYf-fmrCYeA==\",\n    \"reference_id\": \"payee-456\",\n    \"email\": \"sherlock.llc@example.com\",\n    \"company_name\": \"Sherlock and Watson, LLC\"\n}"
+              schema:
+                oneOf:
+                - title: Individual
+                  type: object
+                  properties:
+                    recipient_id:
+                      type: string
+                      example: REejizS5fnTLiQYhGTKYXZaQ==
+                    reference_id:
+                      type: string
+                      example: payee-123
+                    email:
+                      type: string
+                      example: sherlock@example.com
+                    first_name:
+                      type: string
+                      example: Sherlock
+                    last_name:
+                      type: string
+                      example: Holmes
+                - title: Company
+                  type: object
+                  properties:
+                    recipient_id:
+                      type: string
+                      example: REsuhBF74VRkGNYf-fmrCYeA==
+                    reference_id:
+                      type: string
+                      example: payee-456
+                    email:
+                      type: string
+                      example: sherlock.llc@example.com
+                    company_name:
+                      type: string
+                      example: Sherlock and Watson, LLC
+        '404':
+          description: '404'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"http_status\": 404,\n    \"error_code\": \"ERR_RECIPIENT_NOT_FOUND\",\n    \"error_message\": \"Recipient email not found\"\n}"
+              schema:
+                type: object
+                properties:
+                  http_status:
+                    type: integer
+                    example: 404
+                    default: 0
+                  error_code:
+                    type: string
+                    example: ERR_RECIPIENT_NOT_FOUND
+                  error_message:
+                    type: string
+                    example: Recipient email not found
+      deprecated: false
+      tags:
+      - Recipients
+      security:
+      - sec0: []
+    servers:
+    - url: https://test.api.interchecks.io
+  /api/v2/{payer_id}/recipients/{recipient_id}/address:
+    post:
+      summary: Add Address
+      description: 'Set address for Recipient.  If Recipient already has an address, the POST method will overwrite.
+
+
+        `200` - Request Succeeded
+
+        `400` - Bad Request, missing or invalid parameters
+
+        `404` - Recipient ID not found'
+      operationId: add-address
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      - name: recipient_id
+        in: path
+        description: Recipient ID
+        schema:
+          type: string
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                address_1:
+                  type: string
+                  description: Address line 1
+                address_2:
+                  type: string
+                  description: Address line 2 (optional)
+                city:
+                  type: string
+                  description: City
+                state:
+                  type: string
+                  description: State abbreviation
+                zip:
+                  type: string
+                  description: Zip code
+            examples:
+              Address:
+                value:
+                  address_1: 123 MAIN STREET
+                  city: BROOKLYN
+                  state: NY
+                  zip: '11249'
+                  country: US
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"address_1\": \"123 MAIN STREET\",\n    \"city\": \"BROOKLYN\",\n    \"state\": \"NY\",\n    \"zip\": \"11249\",\n    \"country\": \"US\"\n}"
+              schema:
+                type: object
+                properties:
+                  address_1:
+                    type: string
+                    example: 123 MAIN STREET
+                  city:
+                    type: string
+                    example: BROOKLYN
+                  state:
+                    type: string
+                    example: NY
+                  zip:
+                    type: string
+                    example: '11249'
+                  country:
+                    type: string
+                    example: US
+      deprecated: false
+      tags:
+      - Recipients
+      security:
+      - sec0: []
+    get:
+      summary: Get Address
+      description: 'Get address for Recipient.
+
+
+        `200` - Request Succeeded
+
+        `404` - Recipient ID not found'
+      operationId: get-address
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      - name: recipient_id
+        in: path
+        description: Recipient ID
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"address_1\": \"123 MAIN STREET\",\n    \"city\": \"BROOKLYN\",\n    \"state\": \"NY\",\n    \"zip\": \"11249\",\n    \"country\": \"US\"\n}"
+              schema:
+                type: object
+                properties:
+                  address_1:
+                    type: string
+                    example: 123 MAIN STREET
+                  city:
+                    type: string
+                    example: BROOKLYN
+                  state:
+                    type: string
+                    example: NY
+                  zip:
+                    type: string
+                    example: '11249'
+                  country:
+                    type: string
+                    example: US
+      deprecated: false
+      tags:
+      - Recipients
+      security:
+      - sec0: []
+    servers:
+    - url: https://test.api.interchecks.io
+  /api/v2/{payer_id}/recipients/{recipient_id}/emails:
+    post:
+      summary: Add Email
+      description: 'Add an email as primary/non-primary for Recipient.  Adding a primary email address will demote the current primary to a secondary address.  Recipients can receive payments at any active email address on record, but will only receive notifications to their primary email address.
+
+
+        `200` - Request Succeeded
+
+        `400` - Bad Request, missing or invalid parameters
+
+        `404` - Recipient ID not found
+
+        `409` - Email assigned to another Recipient profile'
+      operationId: add-email
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      - name: recipient_id
+        in: path
+        description: Recipient ID
+        schema:
+          type: string
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: Recipient email
+                primary:
+                  type: boolean
+                  description: Indicates if email is set as primary
+            examples:
+              Email:
+                value:
+                  email: sherlock.2@example.com
+                  primary: 'false'
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: '{}'
+              schema:
+                type: object
+                properties: {}
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: '{}'
+              schema:
+                type: object
+                properties: {}
+      deprecated: false
+      tags:
+      - Recipients
+      security:
+      - sec0: []
+    get:
+      summary: Get Emails
+      description: 'Retrieves an array of `email` objects for the Recipient.
+
+
+        `200` - Request Succeeded
+
+        `404` - Recipient ID not found'
+      operationId: get-emails
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      - name: recipient_id
+        in: path
+        description: Recipient ID
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "[\n  {\n    \"email\": \"sherlock@example.com\",\n    \"primary\": true,\n    \"invalid\": false\n  },\n  {\n    \"email\": \"sherlock.2@example.com\",\n    \"primary\": false,\n    \"invalid\": false\n  }\n]"
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    email:
+                      type: string
+                      example: sherlock@example.com
+                    primary:
+                      type: boolean
+                      example: true
+                      default: true
+                    invalid:
+                      type: boolean
+                      example: false
+                      default: true
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: '{}'
+              schema:
+                type: object
+                properties: {}
+      deprecated: false
+      tags:
+      - Recipients
+      security:
+      - sec0: []
+    servers:
+    - url: https://test.api.interchecks.io
+  /api/v2/{payer_id}/recipients/{recipient_id}/verification:
+    post:
+      summary: Verify TIN
+      description: 'TIN Verification will return the `verification_status`. To view the full details of the TIN Verification, invoke the `GET` method.
+
+
+        `200` - Request Succeeded
+
+        `400` - Bad Request, missing or invalid parameters
+
+        `403` - Payer not enabled for Verification
+
+        `404` - Recipient not found'
+      operationId: verify-recipient-tin
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      - name: recipient_id
+        in: path
+        description: Recipient ID
+        schema:
+          type: string
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tin:
+                  type: string
+                  description: Recipient TIN - 9 digits, no spaces or dashes
+                legal_entity_type:
+                  type: string
+                  description: Legal declaration of entity
+                  enum:
+                  - INDIVIDUAL
+                  - SOLE_PROPRIETOR
+                  - LLC
+                  - CORPORATION
+                  - GENERAL_PARTNERSHIP
+                  - LIMITED_PARTNERSHIP
+                  - LIMITED_LIABILITY_PARTNERSHIP
+            examples:
+              Request Example:
+                value:
+                  tin: '123456789'
+                  legal_entity_type: INDIVIDUAL
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n  \"verification_status\": \"PASS\"\n}"
+              schema:
+                type: object
+                properties:
+                  verification_status:
+                    type: string
+                    example: PASS
+      deprecated: false
+      tags:
+      - Recipients
+      security:
+      - sec0: []
+    get:
+      summary: Get TIN Verification
+      description: 'Get TIN Verification detail for Recipient.
+
+
+        `200` - Request Succeeded
+
+        `403` - Payer not enabled for Verification
+
+        `404` - Recipient not found'
+      operationId: get-tin-verification
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      - name: recipient_id
+        in: path
+        description: Recipient ID
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n  \"tin\": \"123456789\",\n  \"tin_verification_status\": \"PASS\",\n  \"tin_verified_date\": \"2021-10-14T12:10:06.666Z\",\n  \"legal_entity_type\": \"INDIVIDUAL\"\n}"
+              schema:
+                type: object
+                properties:
+                  tin:
+                    type: string
+                    example: '123456789'
+                  tin_verification_status:
+                    type: string
+                    example: PASS
+                  tin_verified_date:
+                    type: string
+                    example: '2021-10-14T12:10:06.666Z'
+                  legal_entity_type:
+                    type: string
+                    example: INDIVIDUAL
+      deprecated: false
+      tags:
+      - Recipients
+      security:
+      - sec0: []
+    servers:
+    - url: https://test.api.interchecks.io
+components:
+  schemas:
+    CreateRecipient:
+      title: CreateRecipient
+      required:
+      - recipient_id
+      - reference_id
+      - email
+      - first_name
+      - last_name
+      type: object
+      properties:
+        recipient_id:
+          type: string
+        reference_id:
+          type: string
+        email:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+      example:
+        recipient_id: REPg25ZBRVQ2qBEqbF_2HItg==
+        reference_id: payee-123456
+        email: payee-123456@mailpoof.com
+        first_name: James
+        last_name: Smith
+    CreateRecipientRequest:
+      title: CreateRecipientRequest
+      required:
+      - email
+      - first_name
+      - last_name
+      - reference_id
+      type: object
+      properties:
+        email:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        reference_id:
+          type: string
+      example:
+        email: payee-123456@mailpoof.com
+        first_name: James
+        last_name: Smith
+        reference_id: payee-123456
+    GetRecipientbyID:
+      title: GetRecipientbyID
+      required:
+      - recipient_id
+      - reference_id
+      - email
+      - first_name
+      - last_name
+      type: object
+      properties:
+        recipient_id:
+          type: string
+        reference_id:
+          type: string
+        email:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+      example:
+        recipient_id: REPg25ZBRVQ2qBEqbF_2HItg==
+        reference_id: payee-123456
+        email: payee-123456@mailpoof.com
+        first_name: James
+        last_name: Smith
+    GetRecipientbyEmail:
+      title: GetRecipientbyEmail
+      required:
+      - recipient_id
+      - reference_id
+      - email
+      - first_name
+      - last_name
+      type: object
+      properties:
+        recipient_id:
+          type: string
+        reference_id:
+          type: string
+        email:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+      example:
+        recipient_id: REPg25ZBRVQ2qBEqbF_2HItg==
+        reference_id: payee-123456
+        email: payee-123456@mailpoof.com
+        first_name: James
+        last_name: Smith
+    GetRecipientbyReferenceID:
+      title: GetRecipientbyReferenceID
+      required:
+      - recipient_id
+      - reference_id
+      - email
+      - first_name
+      - last_name
+      type: object
+      properties:
+        recipient_id:
+          type: string
+        reference_id:
+          type: string
+        email:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+      example:
+        recipient_id: REPg25ZBRVQ2qBEqbF_2HItg==
+        reference_id: payee-123456
+        email: payee-123456@mailpoof.com
+        first_name: James
+        last_name: Smith
+  securitySchemes:
+    httpBearer:
+      type: http
+      scheme: bearer
+    sec0:
+      type: oauth2
+      flows: {}
+x-refined-from:
+- interchecks-payments-api-v2-registry.json
+- interchecks-payments-api-v2.json

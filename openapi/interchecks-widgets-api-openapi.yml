@@ -1,0 +1,364 @@
+openapi: 3.2.0
+info:
+  title: payments-api-v2-1 Widgets API
+  version: '2'
+servers:
+- url: https://test.api.interchecks.io
+security:
+- sec0: []
+tags:
+- name: Widgets
+paths:
+  /api/v2/{payer_id}/widgets/accounts/bank:
+    post:
+      summary: Create Bank Widget
+      description: 'Create a Widget URL to add a Bank Account using Plaid Link.  <br>View the [About Widgets](ref:about-widgets) page to learn about optional `widget_params`.<br>`201` - Created<br>`400` - Bad Request, missing or invalid parameters.
+
+
+        Upon completion of bank account link, Interchecks will utilize the `redirect_url` parameter in the `widget_params` to redirect control back to the client''s browser.  The completion page should provide the appropriate messaging to the user to indicate next steps or action required.'
+      operationId: create-bank-widget
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                recipient_id:
+                  type: string
+                  description: Recipient ID
+                account_id:
+                  type: string
+                  description: Required if the bank account requires a re-authorization process with Plaid Link
+                  default: optional
+                mobile_device:
+                  type: boolean
+                  description: Indicate mobile device to render appropriate UI
+                  default: false
+                link_provider:
+                  type: string
+                  description: Determines the link workflow
+                  default: INTERCHECKS
+                  enum:
+                  - PLAID
+                  - INTERCHECKS
+            examples:
+              Bank Widget for new Account:
+                value:
+                  recipient_id: REejizS5fnTLiQYhGTKYXZaQ==
+                  mobile_device: true
+                  link_provider: PLAID
+              Bank Widget for Account re-auth:
+                value:
+                  recipient_id: REejizS5fnTLiQYhGTKYXZaQ==
+                  account_id: RPAes4gfds5ygQYhsadf33==
+                  mobile_device: true
+                  link_provider: PLAID
+      responses:
+        '201':
+          description: '201'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"widget_id\": \"UTnFBl7AW8QD64HVcwn5H_VA==\",\n    \"widget_url\": \"https://domain-to-provider-link.com\",\n    \"expiration\": \"2022-11-02T22:44:14.481Z\"\n}"
+              schema:
+                type: object
+                properties:
+                  widget_id:
+                    type: string
+                    example: UTnFBl7AW8QD64HVcwn5H_VA==
+                  widget_url:
+                    type: string
+                    example: https://domain-to-provider-link.com
+                  expiration:
+                    type: string
+                    example: '2022-11-02T22:44:14.481Z'
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Bad Request - invalid Recipient ID:
+                  value: "{\n    \"http_status\": 400,\n    \"error_code\": \"ERR_INVALID_RECIPIENT_ID\",\n    \"error_message\": \"Invalid recipient ID\"\n}"
+                Bad Request - invalid Account ID:
+                  value: "{\n    \"http_status\": 400,\n    \"error_code\": \"ERR_INVALID_ACCOUNT_ID\",\n    \"error_message\": \"Invalid account ID\"\n}"
+              schema:
+                oneOf:
+                - title: Bad Request - invalid Recipient ID
+                  type: object
+                  properties:
+                    http_status:
+                      type: integer
+                      example: 400
+                      default: 0
+                    error_code:
+                      type: string
+                      example: ERR_INVALID_RECIPIENT_ID
+                    error_message:
+                      type: string
+                      example: Invalid recipient ID
+                - title: Bad Request - invalid Account ID
+                  type: object
+                  properties:
+                    http_status:
+                      type: integer
+                      example: 400
+                      default: 0
+                    error_code:
+                      type: string
+                      example: ERR_INVALID_ACCOUNT_ID
+                    error_message:
+                      type: string
+                      example: Invalid account ID
+      deprecated: false
+      tags:
+      - Widgets
+  /api/v2/{payer_id}/widgets/accounts/card:
+    post:
+      summary: Create Card Widget
+      description: Create a Widget URL to add a Debit Card.  View the [About Widgets](ref:about-widgets) page to learn about optional `widget_params`.`201` - Created`400` - Bad Request, missing or invalid parameters
+      operationId: create-card-widget
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                recipient_id:
+                  type: string
+                  description: Recipient ID
+            examples:
+              Card Widget:
+                value:
+                  recipient_id: REejizS5fnTLiQYhGTKYXZaQ==
+      responses:
+        '201':
+          description: '201'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"widget_id\": \"UTnFBl7AW8QD64HVcwn5H_VA==\",\n    \"widget_url\": \"{{environment-url}}/widget-v2/{{payer_id}}/UTnFBl7AW8QD64HVcwn5H_VA==\",\n    \"expiration\": \"2022-11-02T22:44:14.481Z\"\n}"
+              schema:
+                type: object
+                properties:
+                  widget_id:
+                    type: string
+                    example: UTnFBl7AW8QD64HVcwn5H_VA==
+                  widget_url:
+                    type: string
+                    example: '{{environment-url}}/widget-v2/{{payer_id}}/UTnFBl7AW8QD64HVcwn5H_VA=='
+                  expiration:
+                    type: string
+                    example: '2022-11-02T22:44:14.481Z'
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"http_status\": 400,\n    \"error_code\": \"ERR_INVALID_RECIPIENT_ID\",\n    \"error_message\": \"Invalid recipient ID\"\n}"
+              schema:
+                type: object
+                properties:
+                  http_status:
+                    type: integer
+                    example: 400
+                    default: 0
+                  error_code:
+                    type: string
+                    example: ERR_INVALID_RECIPIENT_ID
+                  error_message:
+                    type: string
+                    example: Invalid recipient ID
+      deprecated: false
+      tags:
+      - Widgets
+  /api/v2/{payer_id}/widgets/payments:
+    post:
+      summary: Create Payment Widget
+      description: Create a Widget URL for a Recipient to accept Payment.  View the  [About Widgets](ref:about-widgets) page to learn about optional `widget_params`.`201` - Created`400` - Bad Request, missing or invalid parameters`422` - Payment not in a `PENDING` status
+      operationId: create-payment-widget
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                recipient_id:
+                  type: string
+                  description: Recipient ID
+                payment_id:
+                  type: string
+                  description: Payment ID
+            examples:
+              Card Widget:
+                value:
+                  recipient_id: REejizS5fnTLiQYhGTKYXZaQ==
+                  payment_id: PM5duKcOBzSGmWxQoUDQinhQ==
+      responses:
+        '201':
+          description: '201'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"widget_id\": \"UTnFBl7AW8QD64HVcwn5H_VB==\",\n    \"widget_url\": \"{{environment-url}}/widget-v2/{{payer_id}}/UTnFBl7AW8QD64HVcwn5H_VB==\",\n    \"expiration\": \"2022-11-02T22:44:14.481Z\"\n}"
+              schema:
+                type: object
+                properties:
+                  widget_id:
+                    type: string
+                    example: UTnFBl7AW8QD64HVcwn5H_VB==
+                  widget_url:
+                    type: string
+                    example: '{{environment-url}}/widget-v2/{{payer_id}}/UTnFBl7AW8QD64HVcwn5H_VB=='
+                  expiration:
+                    type: string
+                    example: '2022-11-02T22:44:14.481Z'
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"http_status\": 400,\n    \"error_code\": \"ERR_INVALID_RECIPIENT_ID\",\n    \"error_message\": \"Invalid recipient ID\"\n}"
+              schema:
+                type: object
+                properties:
+                  http_status:
+                    type: integer
+                    example: 400
+                    default: 0
+                  error_code:
+                    type: string
+                    example: ERR_INVALID_RECIPIENT_ID
+                  error_message:
+                    type: string
+                    example: Invalid recipient ID
+        '422':
+          description: '422'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"http_status\": 422,\n    \"error_code\": \"ERR_PAYMENT_NOT_VALID_FOR_WIDGET\",\n    \"error_message\": \"Payment already processed\"\n}"
+              schema:
+                type: object
+                properties:
+                  http_status:
+                    type: integer
+                    example: 422
+                    default: 0
+                  error_code:
+                    type: string
+                    example: ERR_PAYMENT_NOT_VALID_FOR_WIDGET
+                  error_message:
+                    type: string
+                    example: Payment already processed
+      deprecated: false
+      tags:
+      - Widgets
+  /api/v2/{payer_id}/widgets/accounts/prepaid:
+    post:
+      summary: Create Prepaid Dashboard Widget
+      description: Create a Widget URL for a Recipient view and manage their Prepaid Card account.  View the  [About Widgets](ref:about-widgets) page to learn about optional `widget_params`.`201` - Created`400` - Bad Request, missing or invalid parameters
+      operationId: create-prepaid-dashboard-widget
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                recipient_id:
+                  type: string
+                  description: Recipient ID
+                account_id:
+                  type: string
+                  description: Account ID
+            examples:
+              Card Widget:
+                value:
+                  recipient_id: REejizS5fnTLiQYhGTKYXZaQ==
+                  account_id: RPA-7tbtEUw_TYKdOc3UY4EyGQ==
+      responses:
+        '201':
+          description: '201'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"widget_id\": \"UTnFBl7AW8QD64HVcwn5H_VC==\",\n    \"widget_url\": \"{{environment-url}}/widget-v2/{{payer_id}}/UTnFBl7AW8QD64HVcwn5H_VC==\",\n    \"expiration\": \"2022-11-02T22:44:14.481Z\"\n}"
+              schema:
+                type: object
+                properties:
+                  widget_id:
+                    type: string
+                    example: UTnFBl7AW8QD64HVcwn5H_VC==
+                  widget_url:
+                    type: string
+                    example: '{{environment-url}}/widget-v2/{{payer_id}}/UTnFBl7AW8QD64HVcwn5H_VC=='
+                  expiration:
+                    type: string
+                    example: '2022-11-02T22:44:14.481Z'
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"http_status\": 404,\n    \"error_code\": \"ERR_INVALID_ACCOUNT_ID\",\n    \"error_message\": \"Invalid account ID\"\n}"
+              schema:
+                type: object
+                properties:
+                  http_status:
+                    type: integer
+                    example: 404
+                    default: 0
+                  error_code:
+                    type: string
+                    example: ERR_INVALID_ACCOUNT_ID
+                  error_message:
+                    type: string
+                    example: Invalid account ID
+      deprecated: false
+      tags:
+      - Widgets
+components:
+  securitySchemes:
+    sec0:
+      type: oauth2
+      flows: {}
+x-readme:
+  headers: []
+  explorer-enabled: false
+  proxy-enabled: true
+x-readme-fauxas: true

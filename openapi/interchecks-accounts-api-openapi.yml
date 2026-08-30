@@ -1,0 +1,2347 @@
+openapi: 3.2.0
+info:
+  title: payments-api-v2-1 Accounts API
+  version: '2'
+servers:
+- url: https://test.api.interchecks.io
+security:
+- sec0: []
+tags:
+- name: Accounts
+paths:
+  /api/v2/{payer_id}/accounts/{recipient_id}/banks:
+    post:
+      summary: Add Bank Account
+      description: 'Add a Bank Account for Recipient.
+
+
+        `201` - Created, will include a Location response header
+
+        `400` - Bad Request, missing or invalid parameters
+
+        `404` - Recipient ID not found'
+      operationId: add-bank-account
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      - name: recipient_id
+        in: path
+        description: Recipient ID
+        schema:
+          type: string
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                account_number:
+                  type: string
+                  description: Bank account number
+                routing_number:
+                  type: string
+                  description: Bank routing number
+                account_type:
+                  type: string
+                  description: Bank account type
+                  enum:
+                  - CHECKING
+                  - SAVINGS
+                  - BUSINESS
+                account_name:
+                  type: string
+                  description: Bank account name - only required for business accounts
+            examples:
+              Request Example:
+                value:
+                  account_number: '123456789'
+                  routing_number: '021502011'
+                  account_type: CHECKING
+      responses:
+        '201':
+          description: '201'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"account_id\": \"RPA-L2NW6S4ASIeaKqeP4JmocA==\",\n    \"description\": \"CHECKING 1****6789\",\n    \"created_date\": \"2021-11-09T13:52:55.330Z\",\n    \"account_name\": \"Sherlock Holmes\",\n    \"account_number\": \"123456789\",\n    \"account_type\": \"CHECKING\",\n    \"bank_name\": \"BANCO POPULAR\",\n    \"routing_number\": \"021502011\",\n    \"rtp_status\": \"DISABLED\"\n}"
+              schema:
+                type: object
+                properties:
+                  account_id:
+                    type: string
+                    example: RPA-L2NW6S4ASIeaKqeP4JmocA==
+                  description:
+                    type: string
+                    example: CHECKING 1****6789
+                  created_date:
+                    type: string
+                    example: '2021-11-09T13:52:55.330Z'
+                  account_name:
+                    type: string
+                    example: Sherlock Holmes
+                  account_number:
+                    type: string
+                    example: '123456789'
+                  account_type:
+                    type: string
+                    example: CHECKING
+                  bank_name:
+                    type: string
+                    example: BANCO POPULAR
+                  routing_number:
+                    type: string
+                    example: '021502011'
+                  rtp_status:
+                    type: string
+                    example: DISABLED
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"http_status\": 404,\n    \"error_code\": \"ERR_INVALID_ROUTING_NUMBER\",\n    \"error_message\": \"Invalid Routing Number\"\n}"
+              schema:
+                type: object
+                properties:
+                  http_status:
+                    type: integer
+                    example: 404
+                    default: 0
+                  error_code:
+                    type: string
+                    example: ERR_INVALID_ROUTING_NUMBER
+                  error_message:
+                    type: string
+                    example: Invalid Routing Number
+      deprecated: false
+      tags:
+      - Accounts
+    get:
+      summary: Get Bank Accounts
+      description: 'Get Bank Accounts for Recipient.
+
+
+        `200` - Request Succeeded
+
+        `404` - Recipient ID or Account ID not found'
+      operationId: get-bank-accounts
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      - name: recipient_id
+        in: path
+        description: Recipient ID
+        schema:
+          type: string
+        required: true
+      - name: maskAccount
+        in: query
+        description: Limits the `account_number` value to last 4 digits
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "[\n  {\n    \"account_id\": \"RPA-L2NW6S4ASIeaKqeP4JmocA==\",\n    \"description\": \"CHECKING 1****6789\",\n    \"created_date\": \"2021-11-09T13:52:55.330Z\",\n    \"account_name\": \"Sherlock Holmes\",\n    \"account_number\": \"123456789\",\n    \"account_type\": \"CHECKING\",\n    \"bank_name\": \"BANCO POPULAR\",\n    \"routing_number\": \"021502011\",\n    \"rtp_status\": \"DISABLED\"\n\t}\n]"
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    account_id:
+                      type: string
+                      example: RPA-L2NW6S4ASIeaKqeP4JmocA==
+                    description:
+                      type: string
+                      example: CHECKING 1****6789
+                    created_date:
+                      type: string
+                      example: '2021-11-09T13:52:55.330Z'
+                    account_name:
+                      type: string
+                      example: Sherlock Holmes
+                    account_number:
+                      type: string
+                      example: '123456789'
+                    account_type:
+                      type: string
+                      example: CHECKING
+                    bank_name:
+                      type: string
+                      example: BANCO POPULAR
+                    routing_number:
+                      type: string
+                      example: '021502011'
+                    rtp_status:
+                      type: string
+                      example: DISABLED
+      deprecated: false
+      tags:
+      - Accounts
+  /api/v2/{payer_id}/accounts/{recipient_id}/banks/{account_id}:
+    get:
+      summary: Get Bank Account
+      description: 'Get Bank Account for Recipient.
+
+
+        `200` - Request Succeeded
+
+        `404` - Recipient ID or Account ID not found'
+      operationId: get-bank-account
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      - name: recipient_id
+        in: path
+        description: Recipient ID
+        schema:
+          type: string
+        required: true
+      - name: account_id
+        in: path
+        description: Payment Account ID
+        schema:
+          type: string
+        required: true
+      - name: maskAccount
+        in: query
+        description: Limits the `account_number` value to last 4 digits
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"account_id\": \"RPA-L2NW6S4ASIeaKqeP4JmocA==\",\n    \"description\": \"CHECKING 1****6789\",\n    \"created_date\": \"2021-11-09T13:52:55.330Z\",\n    \"account_name\": \"Sherlock Holmes\",\n    \"account_number\": \"123456789\",\n    \"account_type\": \"CHECKING\",\n    \"bank_name\": \"BANCO POPULAR\",\n    \"routing_number\": \"021502011\",\n    \"rtp_status\": \"DISABLED\"\n}"
+              schema:
+                type: object
+                properties:
+                  account_id:
+                    type: string
+                    example: RPA-L2NW6S4ASIeaKqeP4JmocA==
+                  description:
+                    type: string
+                    example: CHECKING 1****6789
+                  created_date:
+                    type: string
+                    example: '2021-11-09T13:52:55.330Z'
+                  account_name:
+                    type: string
+                    example: Sherlock Holmes
+                  account_number:
+                    type: string
+                    example: '123456789'
+                  account_type:
+                    type: string
+                    example: CHECKING
+                  bank_name:
+                    type: string
+                    example: BANCO POPULAR
+                  routing_number:
+                    type: string
+                    example: '021502011'
+                  rtp_status:
+                    type: string
+                    example: DISABLED
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"http_status\": 400,\n    \"error_code\": \"ERR_INVALID_RECIPIENT_ID\",\n    \"error_message\": \"Invalid Recipient ID\"\n}"
+              schema:
+                type: object
+                properties:
+                  http_status:
+                    type: integer
+                    example: 400
+                    default: 0
+                  error_code:
+                    type: string
+                    example: ERR_INVALID_RECIPIENT_ID
+                  error_message:
+                    type: string
+                    example: Invalid Recipient ID
+      deprecated: false
+      tags:
+      - Accounts
+    delete:
+      summary: Delete Bank Account
+      description: 'Delete Bank Account for Recipient.
+
+
+        `200` - Request Succeeded
+
+        `404` - Recipient ID or Account ID not found'
+      operationId: delete-bank-account
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      - name: recipient_id
+        in: path
+        description: Recipient ID
+        schema:
+          type: string
+        required: true
+      - name: account_id
+        in: path
+        description: Payment Account ID
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: '{}'
+              schema:
+                type: object
+                properties: {}
+      deprecated: false
+      tags:
+      - Accounts
+  /api/v2/{payer_id}/accounts/{recipient_id}/cards:
+    post:
+      summary: Add Card Account
+      description: Add a Card Account for a Recipient.
+      operationId: add-card-account
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      - name: recipient_id
+        in: path
+        description: Recipient ID
+        schema:
+          type: string
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                card_number:
+                  type: string
+                  description: Card number - 16 digits no spaces or dashes
+                exp_date:
+                  type: string
+                  description: Card expiration date formatted as YYYY-MM
+                account_name:
+                  type: string
+                  description: Card account name - only required for business accounts
+                cvv:
+                  type: string
+                  description: Card account CVV code (optional)
+                address:
+                  properties:
+                    address_1:
+                      type: string
+                      description: Address line 1
+                    city:
+                      type: string
+                      description: City
+                    state:
+                      type: string
+                      description: State abbreviation
+                    zip:
+                      type: string
+                      description: Zip code
+                  required: []
+                  type: object
+            examples:
+              Create Card Account:
+                value:
+                  card_number: '4515300011000167'
+                  exp_date: 2026-08
+              Create Card Account with Account Verification:
+                value:
+                  card_number: '4515300011000167'
+                  exp_date: 2026-08
+                  cvv: '123'
+              Create Card Account with Address Verification:
+                value:
+                  card_number: '4515300011000167'
+                  exp_date: 2026-08
+                  cvv: '123'
+                  address:
+                    address_1: 123 Main St.
+                    city: Miami
+                    state: FL
+                    zip: '33333'
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Failed Creation:
+                  value: "{\n    \"http_status\": 200,\n    \"error_code\": \"ERR_CARD_INELIGIBLE\",\n    \"error_message\": \"Card ineligible\"\n}"
+                Verification Result for No Match:
+                  value: "{\n\t\t\"error_response_code\": \"ERR_CARD_PAV_FAILURE\",\n    \"error_message\": \"Card account validation failed\",\n    \"account_id\": \"RPA-f9Qe4Pm_THaw7uDTqck4IQ==\",\n    \"description\": \"Visa Debit 0167\",\n    \"created_date\": \"2021-11-09T14:47:42.843Z\",\n    \"bank_name\": \"Banco Popular\",\n    \"card_number\": \"451530XXXXXX0167\",\n    \"card_type\": \"DEBIT\",\n    \"exp_date\": \"2026-08\",\n    \"verification_result\": {\n            \"network\": \"VISA\",\n            \"pan\": \"MATCH\",\n            \"cvv\": \"MATCH\",\n            \"avs\": {\n                \"street\": \"MATCH\",\n                \"zip\": \"NO_MATCH\"\n            },\n            \"ani\": {\n                \"first_name\": \"MATCH\",\n                \"last_name\": \"PARTIAL\"\n            }\n        }\n}"
+              schema:
+                oneOf:
+                - title: Failed Creation
+                  type: object
+                  properties:
+                    http_status:
+                      type: integer
+                      example: 200
+                      default: 0
+                    error_code:
+                      type: string
+                      example: ERR_CARD_INELIGIBLE
+                    error_message:
+                      type: string
+                      example: Card ineligible
+                - title: Verification Result for No Match
+                  type: object
+                  properties:
+                    error_response_code:
+                      type: string
+                      example: ERR_CARD_PAV_FAILURE
+                    error_message:
+                      type: string
+                      example: Card account validation failed
+                    account_id:
+                      type: string
+                      example: RPA-f9Qe4Pm_THaw7uDTqck4IQ==
+                    description:
+                      type: string
+                      example: Visa Debit 0167
+                    created_date:
+                      type: string
+                      example: '2021-11-09T14:47:42.843Z'
+                    bank_name:
+                      type: string
+                      example: Banco Popular
+                    card_number:
+                      type: string
+                      example: 451530XXXXXX0167
+                    card_type:
+                      type: string
+                      example: DEBIT
+                    exp_date:
+                      type: string
+                      example: 2026-08
+                    verification_result:
+                      type: object
+                      properties:
+                        network:
+                          type: string
+                          example: VISA
+                        pan:
+                          type: string
+                          example: MATCH
+                        cvv:
+                          type: string
+                          example: MATCH
+                        avs:
+                          type: object
+                          properties:
+                            street:
+                              type: string
+                              example: MATCH
+                            zip:
+                              type: string
+                              example: NO_MATCH
+                        ani:
+                          type: object
+                          properties:
+                            first_name:
+                              type: string
+                              example: MATCH
+                            last_name:
+                              type: string
+                              example: PARTIAL
+        '201':
+          description: '201'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"account_id\": \"RPA-f9Qe4Pm_THaw7uDTqck4IQ==\",\n    \"description\": \"Visa Debit 0167\",\n    \"created_date\": \"2021-11-09T14:47:42.843Z\",\n    \"bank_name\": \"Banco Popular\",\n    \"card_number\": \"451530XXXXXX0167\",\n    \"card_type\": \"DEBIT\",\n    \"exp_date\": \"2026-08\",\n    \"verification_result\": {\n            \"network\": \"VISA\",\n            \"pan\": \"MATCH\",\n            \"cvv\": \"MATCH\",\n            \"avs\": {\n                \"street\": \"MATCH\",\n                \"zip\": \"MATCH\"\n            },\n            \"ani\": {\n                \"first_name\": \"MATCH\",\n                \"last_name\": \"PARTIAL\"\n            }\n        }\n}"
+              schema:
+                oneOf:
+                - type: object
+                  properties:
+                    account_id:
+                      type: string
+                      example: RPA-f9Qe4Pm_THaw7uDTqck4IQ==
+                    description:
+                      type: string
+                      example: Visa Debit 0167
+                    created_date:
+                      type: string
+                      example: '2021-11-09T14:47:42.843Z'
+                    bank_name:
+                      type: string
+                      example: Banco Popular
+                    card_number:
+                      type: string
+                      example: 451530XXXXXX0167
+                    card_type:
+                      type: string
+                      example: DEBIT
+                    exp_date:
+                      type: string
+                      example: 2026-08
+                - type: object
+                  properties:
+                    account_id:
+                      type: string
+                      example: RPA-f9Qe4Pm_THaw7uDTqck4IQ==
+                    description:
+                      type: string
+                      example: Visa Debit 0167
+                    created_date:
+                      type: string
+                      example: '2021-11-09T14:47:42.843Z'
+                    bank_name:
+                      type: string
+                      example: Banco Popular
+                    card_number:
+                      type: string
+                      example: 451530XXXXXX0167
+                    card_type:
+                      type: string
+                      example: DEBIT
+                    exp_date:
+                      type: string
+                      example: 2026-08
+                    verification_result:
+                      type: object
+                      properties:
+                        network:
+                          type: string
+                          example: VISA
+                        pan:
+                          type: string
+                          example: MATCH
+                        cvv:
+                          type: string
+                          example: MATCH
+                        avs:
+                          type: object
+                          properties:
+                            street:
+                              type: string
+                              example: MATCH
+                            zip:
+                              type: string
+                              example: MATCH
+                        ani:
+                          type: object
+                          properties:
+                            first_name:
+                              type: string
+                              example: MATCH
+                            last_name:
+                              type: string
+                              example: PARTIAL
+        '409':
+          description: '409'
+          content:
+            application/json:
+              examples:
+                Card Exists:
+                  value: "{\n    \"account_id\": \"RPA-f9Qe4Pm_THaw7uDTqck4IQ==\",\n    \"description\": \"Visa Debit 0167\",\n    \"created_date\": \"2021-11-09T14:47:42.843Z\",\n    \"bank_name\": \"Banco Popular\",\n    \"card_number\": \"451530XXXXXX0167\",\n    \"card_type\": \"DEBIT\",\n    \"exp_date\": \"2026-08\"\n}"
+              schema:
+                type: object
+                properties:
+                  account_id:
+                    type: string
+                    example: RPA-f9Qe4Pm_THaw7uDTqck4IQ==
+                  description:
+                    type: string
+                    example: Visa Debit 0167
+                  created_date:
+                    type: string
+                    example: '2021-11-09T14:47:42.843Z'
+                  bank_name:
+                    type: string
+                    example: Banco Popular
+                  card_number:
+                    type: string
+                    example: 451530XXXXXX0167
+                  card_type:
+                    type: string
+                    example: DEBIT
+                  exp_date:
+                    type: string
+                    example: 2026-08
+      deprecated: false
+      tags:
+      - Accounts
+    get:
+      summary: Get Card Accounts
+      description: 'Get Card Accounts for Recipient.
+
+
+        `200` - Request Succeeded
+
+        `404` - Recipient ID or Account ID not found'
+      operationId: get-card-accounts
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      - name: recipient_id
+        in: path
+        description: Recipient ID
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "[\n  {\n    \"account_id\": \"RPA-f9Qe4Pm_THaw7uDTqck4IQ==\",\n    \"description\": \"Visa Debit 0167\",\n    \"created_date\": \"2021-11-09T14:47:42.843Z\",\n    \"bank_name\": \"Banco Popular\",\n    \"card_number\": \"451530XXXXXX0167\",\n    \"card_type\": \"DEBIT\",\n    \"exp_date\": \"2026-08\"\n\t}\n]  "
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    account_id:
+                      type: string
+                      example: RPA-f9Qe4Pm_THaw7uDTqck4IQ==
+                    description:
+                      type: string
+                      example: Visa Debit 0167
+                    created_date:
+                      type: string
+                      example: '2021-11-09T14:47:42.843Z'
+                    bank_name:
+                      type: string
+                      example: Banco Popular
+                    card_number:
+                      type: string
+                      example: 451530XXXXXX0167
+                    card_type:
+                      type: string
+                      example: DEBIT
+                    exp_date:
+                      type: string
+                      example: 2026-08
+      deprecated: false
+      tags:
+      - Accounts
+  /api/v2/{payer_id}/accounts/{recipient_id}/cards/{account_id}:
+    get:
+      summary: Get Card Account
+      description: 'Get Card Account for Recipient.
+
+
+        `200` - Request Succeeded
+
+        `404` - Recipient ID or Account ID not found'
+      operationId: get-card-account
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      - name: recipient_id
+        in: path
+        description: Recipient ID
+        schema:
+          type: string
+        required: true
+      - name: account_id
+        in: path
+        description: Payment Account ID
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"account_id\": \"RPA-f9Qe4Pm_THaw7uDTqck4IQ==\",\n    \"description\": \"Visa Debit 0167\",\n    \"created_date\": \"2021-11-09T14:47:42.843Z\",\n    \"bank_name\": \"Banco Popular\",\n    \"card_number\": \"451530XXXXXX0167\",\n    \"card_type\": \"DEBIT\",\n    \"exp_date\": \"2026-08\"\n}"
+                Get Card Account with Verification:
+                  value: "{\n    \"account_id\": \"RPA-f9Qe4Pm_THaw7uDTqck4IQ==\",\n    \"description\": \"Visa Debit 0167\",\n    \"created_date\": \"2021-11-09T14:47:42.843Z\",\n    \"bank_name\": \"Banco Popular\",\n    \"card_number\": \"451530XXXXXX0167\",\n    \"card_type\": \"DEBIT\",\n    \"exp_date\": \"2026-08\",\n    \"verification_status\": \"VERIFIED\",\n\t\t\"verification_result\": {\n    \t\"network\": \"VISA\",\n      \"pan\": \"MATCH\",\n      \"cvv\": \"MATCH\",\n      \"avs\": {\n      \t\"street\": \"MATCH\",\n      \t\"zip\": \"MATCH\"\n      },\n     \t\"ani\": {\n      \t\"first_name\": \"MATCH\",\n        \"last_name\": \"MATCH\"\n      }\n    }\n}\n"
+              schema:
+                oneOf:
+                - type: object
+                  properties:
+                    account_id:
+                      type: string
+                      example: RPA-f9Qe4Pm_THaw7uDTqck4IQ==
+                    description:
+                      type: string
+                      example: Visa Debit 0167
+                    created_date:
+                      type: string
+                      example: '2021-11-09T14:47:42.843Z'
+                    bank_name:
+                      type: string
+                      example: Banco Popular
+                    card_number:
+                      type: string
+                      example: 451530XXXXXX0167
+                    card_type:
+                      type: string
+                      example: DEBIT
+                    exp_date:
+                      type: string
+                      example: 2026-08
+                - title: Get Card Account with Verification
+                  type: object
+                  properties:
+                    account_id:
+                      type: string
+                      example: RPA-f9Qe4Pm_THaw7uDTqck4IQ==
+                    description:
+                      type: string
+                      example: Visa Debit 0167
+                    created_date:
+                      type: string
+                      example: '2021-11-09T14:47:42.843Z'
+                    bank_name:
+                      type: string
+                      example: Banco Popular
+                    card_number:
+                      type: string
+                      example: 451530XXXXXX0167
+                    card_type:
+                      type: string
+                      example: DEBIT
+                    exp_date:
+                      type: string
+                      example: 2026-08
+                    verification_status:
+                      type: string
+                      example: VERIFIED
+                    verification_result:
+                      type: object
+                      properties:
+                        network:
+                          type: string
+                          example: VISA
+                        pan:
+                          type: string
+                          example: MATCH
+                        cvv:
+                          type: string
+                          example: MATCH
+                        avs:
+                          type: object
+                          properties:
+                            street:
+                              type: string
+                              example: MATCH
+                            zip:
+                              type: string
+                              example: MATCH
+                        ani:
+                          type: object
+                          properties:
+                            first_name:
+                              type: string
+                              example: MATCH
+                            last_name:
+                              type: string
+                              example: MATCH
+      deprecated: false
+      tags:
+      - Accounts
+    delete:
+      summary: Delete Card Account
+      description: 'Delete Card Account for Recipient.
+
+
+        `200` - Request Succeeded
+
+        `404` - Recipient ID or Account ID not found'
+      operationId: delete-card-account
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      - name: recipient_id
+        in: path
+        description: Recipient ID
+        schema:
+          type: string
+        required: true
+      - name: account_id
+        in: path
+        description: Payment Account ID
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: '{}'
+              schema:
+                type: object
+                properties: {}
+      deprecated: false
+      tags:
+      - Accounts
+  /api/v2/{payer_id}/accounts/{recipient_id}/cards/{account_id}/verification:
+    post:
+      summary: Verify Card Account
+      description: Card Account Verification for Account Name and/or Address on an existing active Card account
+      operationId: verify-card-account
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      - name: recipient_id
+        in: path
+        description: Recipient ID
+        schema:
+          type: string
+        required: true
+      - name: account_id
+        in: path
+        description: Account ID
+        schema:
+          type: string
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                first_name:
+                  type: string
+                  description: First Name (optional)
+                last_name:
+                  type: string
+                  description: Last Name (optional)
+                address:
+                  properties:
+                    address_1:
+                      type: string
+                      description: Address line 1 (optional)
+                    city:
+                      type: string
+                      description: City
+                    state:
+                      type: string
+                      description: State abbreviation
+                    zip:
+                      type: string
+                      description: Zip code (optional)
+                  required: []
+                  type: object
+                  description: Address (optional)
+                verification_options:
+                  properties:
+                    require_match:
+                      type: boolean
+                      description: Enforce matching logic required for funding transactions.  If there is a non-match, and error code/message will be returned.
+                      default: false
+                  required: []
+                  type: object
+                  description: Verification options
+            examples:
+              Verification for Name:
+                value:
+                  first_name: John
+                  last_name: Smith
+              Verification for Address:
+                value:
+                  address:
+                    address_1: 123 Main St
+                    zip: '11249'
+              Verification for Name & Address:
+                value:
+                  first_name: John
+                  last_name: Smith
+                  address:
+                    address_1: 123 Main St
+                    city: Brooklyn
+                    state: NY
+                    zip: '11249'
+              Verification for Name & Address with Required match:
+                value:
+                  first_name: John
+                  last_name: Smith
+                  address:
+                    address_1: 123 Main St
+                    city: Brooklyn
+                    state: NY
+                    zip: '11249'
+                  verification_options:
+                    require_match: true
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Verification response for Name:
+                  value: "{\n    \"verification_id\": \"PAV-V5jn9KH5RDWWxdX4AkzMdA==\",\n    \"network\": \"VISA\",\n    \"pan\": \"MATCH\",\n    \"cvv\": \"NOT_PROCESSED\",\n    \"avs\": {\n        \"street\": \"NOT_PROCESSED\",\n        \"zip\": \"NOT_PROCESSED\"\n    },\n    \"ani\": {\n        \"first_name\": \"MATCH\",\n        \"last_name\": \"MATCH\"\n    },\n    \"created_date\": \"2024-03-01T15:18:57.464Z\"\n}"
+                Verification response for Address:
+                  value: "{\n    \"verification_id\": \"PAV-V5jn9KH5RDWWxdX4AkzMdA==\",\n    \"network\": \"VISA\",\n    \"pan\": \"MATCH\",\n    \"cvv\": \"NOT_PROCESSED\",\n    \"avs\": {\n        \"street\": \"MATCH\",\n        \"zip\": \"MATCH\"\n    },\n    \"created_date\": \"2024-03-01T15:18:57.464Z\"\n}"
+                Verification Response for Name & Address:
+                  value: "{\n    \"verification_id\": \"PAV-V5jn9KH5RDWWxdX4AkzMdA==\",\n    \"network\": \"VISA\",\n    \"pan\": \"MATCH\",\n    \"cvv\": \"NOT_PROCESSED\",\n    \"avs\": {\n        \"street\": \"MATCH\",\n        \"zip\": \"MATCH\"\n    },\n    \"ani\": {\n        \"first_name\": \"MATCH\",\n        \"last_name\": \"MATCH\"\n    },\n    \"created_date\": \"2024-03-01T15:18:57.464Z\"\n}"
+                Verification  Response for Name & Address with required match:
+                  value: "{\n    \"http_status\": 200,\n    \"error_code\": \"ERR_CARD_PAV_FAILURE\",\n    \"error_message\": \"Card account validation failed\",\n\t\t\"verification_id\": \"PAV-V5jn9KH5RDWWxdX4AkzMdA==\",\n    \"network\": \"VISA\",\n    \"pan\": \"MATCH\",\n    \"cvv\": \"NOT_PROCESSED\",\n    \"avs\": {\n        \"street\": \"MATCH\",\n        \"zip\": \"NO_MATCH\"\n    },\n    \"ani\": {\n        \"first_name\": \"MATCH\",\n        \"last_name\": \"MATCH\"\n    },\n    \"created_date\": \"2024-03-01T15:18:57.464Z\"\n}"
+              schema:
+                oneOf:
+                - title: Verification response for Name
+                  type: object
+                  properties:
+                    verification_id:
+                      type: string
+                      example: PAV-V5jn9KH5RDWWxdX4AkzMdA==
+                    network:
+                      type: string
+                      example: VISA
+                    pan:
+                      type: string
+                      example: MATCH
+                    cvv:
+                      type: string
+                      example: NOT_PROCESSED
+                    avs:
+                      type: object
+                      properties:
+                        street:
+                          type: string
+                          example: NOT_PROCESSED
+                        zip:
+                          type: string
+                          example: NOT_PROCESSED
+                    ani:
+                      type: object
+                      properties:
+                        first_name:
+                          type: string
+                          example: MATCH
+                        last_name:
+                          type: string
+                          example: MATCH
+                    created_date:
+                      type: string
+                      example: '2024-03-01T15:18:57.464Z'
+                - title: Verification response for Address
+                  type: object
+                  properties:
+                    verification_id:
+                      type: string
+                      example: PAV-V5jn9KH5RDWWxdX4AkzMdA==
+                    network:
+                      type: string
+                      example: VISA
+                    pan:
+                      type: string
+                      example: MATCH
+                    cvv:
+                      type: string
+                      example: NOT_PROCESSED
+                    avs:
+                      type: object
+                      properties:
+                        street:
+                          type: string
+                          example: MATCH
+                        zip:
+                          type: string
+                          example: MATCH
+                    created_date:
+                      type: string
+                      example: '2024-03-01T15:18:57.464Z'
+                - title: Verification Response for Name & Address
+                  type: object
+                  properties:
+                    verification_id:
+                      type: string
+                      example: PAV-V5jn9KH5RDWWxdX4AkzMdA==
+                    network:
+                      type: string
+                      example: VISA
+                    pan:
+                      type: string
+                      example: MATCH
+                    cvv:
+                      type: string
+                      example: NOT_PROCESSED
+                    avs:
+                      type: object
+                      properties:
+                        street:
+                          type: string
+                          example: MATCH
+                        zip:
+                          type: string
+                          example: MATCH
+                    ani:
+                      type: object
+                      properties:
+                        first_name:
+                          type: string
+                          example: MATCH
+                        last_name:
+                          type: string
+                          example: MATCH
+                    created_date:
+                      type: string
+                      example: '2024-03-01T15:18:57.464Z'
+                - title: Verification  Response for Name & Address with required match
+                  type: object
+                  properties:
+                    http_status:
+                      type: integer
+                      example: 200
+                      default: 0
+                    error_code:
+                      type: string
+                      example: ERR_CARD_PAV_FAILURE
+                    error_message:
+                      type: string
+                      example: Card account validation failed
+                    verification_id:
+                      type: string
+                      example: PAV-V5jn9KH5RDWWxdX4AkzMdA==
+                    network:
+                      type: string
+                      example: VISA
+                    pan:
+                      type: string
+                      example: MATCH
+                    cvv:
+                      type: string
+                      example: NOT_PROCESSED
+                    avs:
+                      type: object
+                      properties:
+                        street:
+                          type: string
+                          example: MATCH
+                        zip:
+                          type: string
+                          example: NO_MATCH
+                    ani:
+                      type: object
+                      properties:
+                        first_name:
+                          type: string
+                          example: MATCH
+                        last_name:
+                          type: string
+                          example: MATCH
+                    created_date:
+                      type: string
+                      example: '2024-03-01T15:18:57.464Z'
+      deprecated: false
+      tags:
+      - Accounts
+  /api/v2/{payer_id}/accounts/{recipient_id}/cards/{account_id}/verification/{verification_id}:
+    get:
+      summary: Get Card Account Verification
+      description: Get Card Account Verification response
+      operationId: get-card-account-verify
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      - name: recipient_id
+        in: path
+        description: Recipient ID
+        schema:
+          type: string
+        required: true
+      - name: account_id
+        in: path
+        description: Account ID
+        schema:
+          type: string
+        required: true
+      - name: verification_id
+        in: path
+        description: Verification ID
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Verification response for Name:
+                  value: "{\n    \"verification_id\": \"PAV-V5jn9KH5RDWWxdX4AkzMdA==\",\n    \"network\": \"VISA\",\n    \"pan\": \"MATCH\",\n    \"cvv\": \"NOT_PROCESSED\",\n    \"avs\": {\n        \"street\": \"NOT_PROCESSED\",\n        \"zip\": \"NOT_PROCESSED\"\n    },\n    \"ani\": {\n        \"first_name\": \"MATCH\",\n        \"last_name\": \"MATCH\"\n    },\n    \"created_date\": \"2024-03-01T15:18:57.464Z\"\n}"
+                Verification response for Address:
+                  value: "{\n    \"verification_id\": \"PAV-V5jn9KH5RDWWxdX4AkzMdA==\",\n    \"network\": \"VISA\",\n    \"pan\": \"MATCH\",\n    \"cvv\": \"NOT_PROCESSED\",\n    \"avs\": {\n        \"street\": \"MATCH\",\n        \"zip\": \"MATCH\"\n    },\n    \"created_date\": \"2024-03-01T15:18:57.464Z\"\n}"
+                Verification Response for Name & Address:
+                  value: "{\n    \"verification_id\": \"PAV-V5jn9KH5RDWWxdX4AkzMdA==\",\n    \"network\": \"VISA\",\n    \"pan\": \"MATCH\",\n    \"cvv\": \"NOT_PROCESSED\",\n    \"avs\": {\n        \"street\": \"MATCH\",\n        \"zip\": \"MATCH\"\n    },\n    \"ani\": {\n        \"first_name\": \"MATCH\",\n        \"last_name\": \"MATCH\"\n    },\n    \"created_date\": \"2024-03-01T15:18:57.464Z\"\n}"
+              schema:
+                oneOf:
+                - title: Verification response for Name
+                  type: object
+                  properties:
+                    verification_id:
+                      type: string
+                      example: PAV-V5jn9KH5RDWWxdX4AkzMdA==
+                    network:
+                      type: string
+                      example: VISA
+                    pan:
+                      type: string
+                      example: MATCH
+                    cvv:
+                      type: string
+                      example: NOT_PROCESSED
+                    avs:
+                      type: object
+                      properties:
+                        street:
+                          type: string
+                          example: NOT_PROCESSED
+                        zip:
+                          type: string
+                          example: NOT_PROCESSED
+                    ani:
+                      type: object
+                      properties:
+                        first_name:
+                          type: string
+                          example: MATCH
+                        last_name:
+                          type: string
+                          example: MATCH
+                    created_date:
+                      type: string
+                      example: '2024-03-01T15:18:57.464Z'
+                - title: Verification response for Address
+                  type: object
+                  properties:
+                    verification_id:
+                      type: string
+                      example: PAV-V5jn9KH5RDWWxdX4AkzMdA==
+                    network:
+                      type: string
+                      example: VISA
+                    pan:
+                      type: string
+                      example: MATCH
+                    cvv:
+                      type: string
+                      example: NOT_PROCESSED
+                    avs:
+                      type: object
+                      properties:
+                        street:
+                          type: string
+                          example: MATCH
+                        zip:
+                          type: string
+                          example: MATCH
+                    created_date:
+                      type: string
+                      example: '2024-03-01T15:18:57.464Z'
+                - title: Verification Response for Name & Address
+                  type: object
+                  properties:
+                    verification_id:
+                      type: string
+                      example: PAV-V5jn9KH5RDWWxdX4AkzMdA==
+                    network:
+                      type: string
+                      example: VISA
+                    pan:
+                      type: string
+                      example: MATCH
+                    cvv:
+                      type: string
+                      example: NOT_PROCESSED
+                    avs:
+                      type: object
+                      properties:
+                        street:
+                          type: string
+                          example: MATCH
+                        zip:
+                          type: string
+                          example: MATCH
+                    ani:
+                      type: object
+                      properties:
+                        first_name:
+                          type: string
+                          example: MATCH
+                        last_name:
+                          type: string
+                          example: MATCH
+                    created_date:
+                      type: string
+                      example: '2024-03-01T15:18:57.464Z'
+      deprecated: false
+      tags:
+      - Accounts
+  /api/v2/{payer_id}/accounts/{recipient_id}/cards/{account_id}/verifications:
+    get:
+      summary: Get Card Account Verifications
+      description: Get Account Verifications for Card account
+      operationId: get-card-account-verifications
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      - name: recipient_id
+        in: path
+        description: Recipient ID
+        schema:
+          type: string
+        required: true
+      - name: account_id
+        in: path
+        description: Account ID
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "[\n\t{\n    \"verification_id\": \"PAV-V5jn9KH5RDWWxdX4AkzMdA==\",\n    \"network\": \"VISA\",\n    \"pan\": \"MATCH\",\n    \"cvv\": \"NOT_PROCESSED\",\n    \"avs\": {\n        \"street\": \"MATCH\",\n        \"zip\": \"MATCH\"\n    },\n    \"ani\": {\n        \"first_name\": \"MATCH\",\n        \"last_name\": \"MATCH\"\n    },\n    \"created_date\": \"2024-03-01T15:18:57.464Z\"\n  },\n\t{\n    \"verification_id\": \"PAV-YrnKElsGHh6svaerKRlHA==\",\n    \"network\": \"VISA\",\n    \"pan\": \"MATCH\",\n    \"cvv\": \"NOT_PROCESSED\",\n    \"avs\": {\n        \"street\": \"MATCH\",\n        \"zip\": \"NO_MATCH\"\n    },\n    \"ani\": {\n        \"first_name\": \"MATCH\",\n        \"last_name\": \"MATCH\"\n    },\n    \"created_date\": \"2024-03-01T15:20:57.464Z\"\n\t}\n]\n"
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    verification_id:
+                      type: string
+                      example: PAV-V5jn9KH5RDWWxdX4AkzMdA==
+                    network:
+                      type: string
+                      example: VISA
+                    pan:
+                      type: string
+                      example: MATCH
+                    cvv:
+                      type: string
+                      example: NOT_PROCESSED
+                    avs:
+                      type: object
+                      properties:
+                        street:
+                          type: string
+                          example: MATCH
+                        zip:
+                          type: string
+                          example: MATCH
+                    ani:
+                      type: object
+                      properties:
+                        first_name:
+                          type: string
+                          example: MATCH
+                        last_name:
+                          type: string
+                          example: MATCH
+                    created_date:
+                      type: string
+                      example: '2024-03-01T15:18:57.464Z'
+      deprecated: false
+      tags:
+      - Accounts
+  /api/v2/{payer_id}/accounts/{recipient_id}/paypal:
+    post:
+      summary: Add PayPal Account
+      description: 'Add a PayPal Account for Recipient.
+
+
+        `201` - Created, will include a Location response header
+
+        `400` - Bad Request, missing or invalid parameters
+
+        `404` - Recipient ID not found'
+      operationId: add-paypal-account
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      - name: recipient_id
+        in: path
+        description: Recipient ID
+        schema:
+          type: string
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: Paypal email address
+            examples:
+              Request Example:
+                value:
+                  email: sherlock@example.com
+      responses:
+        '201':
+          description: '201'
+          content:
+            application/json:
+              examples:
+                Created:
+                  value: "{\n    \"account_id\": \"RPA-MESt9UKeR6-IkNMdNRM7qg==\",\n    \"description\": \"sherlock@example.com\",\n    \"created_date\": \"2021-11-09T14:19:39.349Z\",\n    \"email\": \"sherlock@example.com\"\n}"
+              schema:
+                type: object
+                properties:
+                  account_id:
+                    type: string
+                    example: RPA-MESt9UKeR6-IkNMdNRM7qg==
+                  description:
+                    type: string
+                    example: sherlock@example.com
+                  created_date:
+                    type: string
+                    example: '2021-11-09T14:19:39.349Z'
+                  email:
+                    type: string
+                    example: sherlock@example.com
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"http_status\": 400,\n    \"error_code\": \"ERR_INVALID_EMAIL\",\n    \"error_message\": \"Invalid email\"\n}"
+              schema:
+                type: object
+                properties:
+                  http_status:
+                    type: integer
+                    example: 400
+                    default: 0
+                  error_code:
+                    type: string
+                    example: ERR_INVALID_EMAIL
+                  error_message:
+                    type: string
+                    example: Invalid email
+      deprecated: false
+      tags:
+      - Accounts
+    get:
+      summary: Get PayPal Accounts
+      description: 'Get PayPal Accounts for Recipient.
+
+
+        `200` - Request Succeeded
+
+        `404` - Recipient ID or Account ID not found'
+      operationId: get-paypal-accounts
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      - name: recipient_id
+        in: path
+        description: Recipient ID
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "[\n  {\n    \"account_id\": \"RPA-MESt9UKeR6-IkNMdNRM7qg==\",\n    \"description\": \"sherlock@example.com\",\n    \"created_date\": \"2021-11-09T14:19:39.349Z\",\n    \"email\": \"sherlock@example.com\"\n\t}\n]"
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    account_id:
+                      type: string
+                      example: RPA-MESt9UKeR6-IkNMdNRM7qg==
+                    description:
+                      type: string
+                      example: sherlock@example.com
+                    created_date:
+                      type: string
+                      example: '2021-11-09T14:19:39.349Z'
+                    email:
+                      type: string
+                      example: sherlock@example.com
+      deprecated: false
+      tags:
+      - Accounts
+  /api/v2/{payer_id}/accounts/{recipient_id}/paypal/{account_id}:
+    get:
+      summary: Get PayPal Account
+      description: 'Get PayPal Account for Recipient.
+
+
+        `200` - Request Succeeded
+
+        `404` - Recipient ID or Account ID not found'
+      operationId: get-paypal-account
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      - name: recipient_id
+        in: path
+        description: Recipient ID
+        schema:
+          type: string
+        required: true
+      - name: account_id
+        in: path
+        description: Payment Account ID
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"account_id\": \"RPA-MESt9UKeR6-IkNMdNRM7qg==\",\n    \"description\": \"sherlock@example.com\",\n    \"created_date\": \"2021-11-09T14:19:39.349Z\",\n    \"email\": \"sherlock@example.com\"\n}"
+              schema:
+                type: object
+                properties:
+                  account_id:
+                    type: string
+                    example: RPA-MESt9UKeR6-IkNMdNRM7qg==
+                  description:
+                    type: string
+                    example: sherlock@example.com
+                  created_date:
+                    type: string
+                    example: '2021-11-09T14:19:39.349Z'
+                  email:
+                    type: string
+                    example: sherlock@example.com
+      deprecated: false
+      tags:
+      - Accounts
+    delete:
+      summary: Delete PayPal Account
+      description: 'Delete PayPal Account for Recipient.
+
+
+        `200` - Request Succeeded
+
+        `404` - Recipient ID or Account ID not found'
+      operationId: delete-paypal-account
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      - name: recipient_id
+        in: path
+        description: Recipient ID
+        schema:
+          type: string
+        required: true
+      - name: account_id
+        in: path
+        description: Payment Account ID
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: '{}'
+              schema:
+                type: object
+                properties: {}
+      deprecated: false
+      tags:
+      - Accounts
+  /api/v2/{payer_id}/accounts/{recipient_id}/prepaid:
+    post:
+      summary: Create Prepaid Account
+      description: 'Creates a Prepaid account for a Recipient.
+
+
+        `201` - Created, will include a Location response header
+
+        `200` - Request Succeeded, but entity not created
+
+        `400` - Bad Request, missing or invalid parameters
+
+        `404` - Recipient ID not found
+
+        `422` - Account exists or locked due identity verification failure'
+      operationId: create-prepaid-account
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      - name: recipient_id
+        in: path
+        description: Recipient ID
+        schema:
+          type: string
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                first_name:
+                  type: string
+                  description: Account first name
+                last_name:
+                  type: string
+                  description: Account last name
+                dob:
+                  type: string
+                  description: Date of birth
+                  format: date
+                tin:
+                  type: string
+                  description: TIN - 9 digits, no spaces or dashes
+                address:
+                  properties:
+                    address_1:
+                      type: string
+                      description: Address line 1
+                    address_2:
+                      type: string
+                      description: Address line 2 (optional)
+                    city:
+                      type: string
+                      description: City
+                    state:
+                      type: string
+                      description: State abbreviation
+                    zip:
+                      type: string
+                      description: Zip code
+                  required: []
+                  type: object
+            examples:
+              Request Example:
+                value:
+                  first_name: Sherlock
+                  last_name: Holmes
+                  dob: '2000-01-01'
+                  tin: '123456789'
+                  address:
+                    address_1: 123 MAIN STREET
+                    city: BROOKLYN
+                    state: NY
+                    zip: '11249'
+      responses:
+        '201':
+          description: '201'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"account_id\": \"RPA-XUhOc4RzTuGVBGb93EKPRg==\",\n    \"description\": \"Visa® Prepaid Card\",\n    \"created_date\": \"2022-11-03T23:36:55.732Z\",\n    \"prepaid_account_type\": \"PHYSICALCARD_VISA\",\n    \"prepaid_account_status\": \"PROCESSING\"\n}"
+              schema:
+                type: object
+                properties:
+                  account_id:
+                    type: string
+                    example: RPA-XUhOc4RzTuGVBGb93EKPRg==
+                  description:
+                    type: string
+                    example: Visa® Prepaid Card
+                  created_date:
+                    type: string
+                    example: '2022-11-03T23:36:55.732Z'
+                  prepaid_account_type:
+                    type: string
+                    example: PHYSICALCARD_VISA
+                  prepaid_account_status:
+                    type: string
+                    example: PROCESSING
+      deprecated: false
+      tags:
+      - Accounts
+  /api/v2/{payer_id}/accounts/{recipient_id}/prepaid/{account_id}:
+    get:
+      summary: Get Prepaid Account
+      description: 'Get Prepaid Account for Recipient.
+
+
+        `200` - Request Succeeded
+
+        `404` - Recipient ID or Account ID not found'
+      operationId: get-prepaid-account
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      - name: recipient_id
+        in: path
+        description: Recipient ID
+        schema:
+          type: string
+        required: true
+      - name: account_id
+        in: path
+        description: Account ID
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"account_id\": \"RPA-4P-bqWs8STOOC-uzI6T5Yw\",\n    \"description\": \"Visa® Prepaid Card 5586\",\n    \"created_date\": \"2021-07-28T20:51:13.831Z\",\n    \"prepaid_account_type\": \"PHYSICALCARD_VISA\",\n    \"prepaid_account_status\": \"ACTIVE\",\n    \"prepaid_account_balance\": 0.0,\n    \"prepaid_card_number\": \"4***********5586\",\n    \"prepaid_dda_number\": \"913406491642945\",\n    \"prepaid_routing_number\": \"073972181\",\n    \"prepaid_account_max_load\": 1000.00,\n    \"prepaid_account_security_code\": \"058042\"\n}"
+              schema:
+                type: object
+                properties:
+                  account_id:
+                    type: string
+                    example: RPA-4P-bqWs8STOOC-uzI6T5Yw
+                  description:
+                    type: string
+                    example: Visa® Prepaid Card 5586
+                  created_date:
+                    type: string
+                    example: '2021-07-28T20:51:13.831Z'
+                  prepaid_account_type:
+                    type: string
+                    example: PHYSICALCARD_VISA
+                  prepaid_account_status:
+                    type: string
+                    example: ACTIVE
+                  prepaid_account_balance:
+                    type: integer
+                    example: 0
+                    default: 0
+                  prepaid_card_number:
+                    type: string
+                    example: 4***********5586
+                  prepaid_dda_number:
+                    type: string
+                    example: '913406491642945'
+                  prepaid_routing_number:
+                    type: string
+                    example: 073972181
+                  prepaid_account_max_load:
+                    type: integer
+                    example: 1000
+                    default: 0
+                  prepaid_account_security_code:
+                    type: string
+                    example: 058042
+      deprecated: false
+      tags:
+      - Accounts
+    delete:
+      summary: Delete Prepaid Account
+      description: '`200` - Request Succeeded
+
+        `404` - Recipient ID or Account ID not found'
+      operationId: delete-prepaid-account
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      - name: recipient_id
+        in: path
+        description: Recipient ID
+        schema:
+          type: string
+        required: true
+      - name: account_id
+        in: path
+        description: Account ID
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: '{}'
+              schema:
+                type: object
+                properties: {}
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: '{}'
+              schema:
+                type: object
+                properties: {}
+      deprecated: false
+      tags:
+      - Accounts
+    patch:
+      summary: Update Prepaid Account
+      description: 'Updates a Prepaid account based on action.
+
+
+        `200` - Request Succeeded
+
+        `400` - Bad Request, missing or invalid parameters
+
+        `404` - Recipient ID or Account ID not found'
+      operationId: update-prepaid-account
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      - name: recipient_id
+        in: path
+        description: Recipient ID
+        schema:
+          type: string
+        required: true
+      - name: account_id
+        in: path
+        description: Account ID
+        schema:
+          type: string
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                account_action:
+                  type: string
+                  description: Account action
+                  enum:
+                  - ACTIVATE
+                security_code:
+                  type: string
+                  description: Account security code
+            examples:
+              Request Example:
+                value:
+                  account_action: ACTIVATE
+                  security_code: '867530'
+      responses:
+        '201':
+          description: '201'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"account_id\": \"RPA-XUhOc4RzTuGVBGb93EKPRg==\",\n    \"description\": \"Visa® Prepaid Card\",\n    \"created_date\": \"2022-11-03T23:36:55.732Z\",\n    \"prepaid_account_type\": \"PHYSICALCARD_VISA\",\n    \"prepaid_account_status\": \"ACTIVE\"\n}"
+              schema:
+                type: object
+                properties:
+                  account_id:
+                    type: string
+                    example: RPA-XUhOc4RzTuGVBGb93EKPRg==
+                  description:
+                    type: string
+                    example: Visa® Prepaid Card
+                  created_date:
+                    type: string
+                    example: '2022-11-03T23:36:55.732Z'
+                  prepaid_account_type:
+                    type: string
+                    example: PHYSICALCARD_VISA
+                  prepaid_account_status:
+                    type: string
+                    example: ACTIVE
+      deprecated: false
+      tags:
+      - Accounts
+  /api/v2/{payer_id}/accounts/{recipient_id}/prepaid/{account_id}/history:
+    get:
+      summary: Get Prepaid Account History
+      description: 'Get Prepaid Account History for Recipient.
+
+
+        `200` - Request Succeeded
+
+        `404` - Recipient ID or Account ID not found'
+      operationId: get-prepaid-account-history
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      - name: recipient_id
+        in: path
+        description: Recipient ID
+        schema:
+          type: string
+        required: true
+      - name: account_id
+        in: path
+        description: Account ID
+        schema:
+          type: string
+        required: true
+      - name: startDate
+        in: query
+        description: Start date filter (optional)
+        schema:
+          type: string
+          format: date
+      - name: endDate
+        in: query
+        description: End date filter (optiona)
+        schema:
+          type: string
+          format: date
+      - name: filter
+        in: query
+        description: ALL = History entries for customer service, CUSTOMER = History entries for recipient
+        schema:
+          type: string
+          enum:
+          - ALL
+          - CUSTOMER
+          default: ALL
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                OK - Filter = ALL:
+                  value: "{\n    \"account_summaries\": [\n        {\n            \"account_last_four\": \"5586\",\n            \"account_transactions\": [\n                {\n                    \"systemTransactionId\": 2046862,\n                    \"activity\": \"Activation Unlock\",\n                    \"currency\": \"USD\",\n                    \"notes\": \"2046862\",\n                    \"amount\": 0.0,\n                    \"date\": \"2022-07-22T10:25:23.510Z\"\n                },\n                {\n                    \"systemTransactionId\": 1810006,\n                    \"activity\": \"Activation Lock\",\n                    \"currency\": \"USD\",\n                    \"notes\": \"1810006\",\n                    \"amount\": 0.0,\n                    \"date\": \"2021-07-28T20:51:16.753Z\"\n                },\n                {\n                    \"systemTransactionId\": 1810004,\n                    \"activity\": \"Batch Card Activation\",\n                    \"currency\": \"USD\",\n                    \"notes\": \"1810004\",\n                    \"amount\": 0.0,\n                    \"date\": \"2021-07-28T20:51:16.673Z\"\n                },\n                {\n                    \"systemTransactionId\": 1810005,\n                    \"activity\": \"New Card Activation\",\n                    \"location\": \"Client 1 (Payments)\",\n                    \"reason\": \"Activation\",\n                    \"result\": \"Active\",\n                    \"currency\": \"USD\",\n                    \"notes\": \"1810005\",\n                    \"amount\": 0.00,\n                    \"date\": \"2021-07-28T20:51:16.673Z\"\n                },\n                {\n                    \"systemTransactionId\": 1809999,\n                    \"activity\": \"Card Order Creation\",\n                    \"currency\": \"USD\",\n                    \"notes\": \"1809999\",\n                    \"amount\": 0.0,\n                    \"date\": \"2021-07-28T20:51:16.283Z\"\n                }\n            ]\n        }\n    ]\n}"
+                OK - Filter = CUSTOMER:
+                  value: "{\n    \"account_summaries\": [\n        {\n            \"account_last_four\": \"5586\",\n            \"account_transactions\": [\n                {\n                    \"systemTransactionId\": 1810005,\n                    \"activity\": \"New Card Activation\",\n                    \"reason\": \"Activation\",\n                    \"currency\": \"USD\",\n                    \"notes\": \"1810005\",\n                    \"amount\": 0.00,\n                    \"date\": \"2021-07-28T20:51:16.673Z\"\n                }\n            ]\n        }\n    ]\n}"
+              schema:
+                oneOf:
+                - title: OK - Filter = ALL
+                  type: object
+                  properties:
+                    account_summaries:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          account_last_four:
+                            type: string
+                            example: '5586'
+                          account_transactions:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                systemTransactionId:
+                                  type: integer
+                                  example: 2046862
+                                  default: 0
+                                activity:
+                                  type: string
+                                  example: Activation Unlock
+                                currency:
+                                  type: string
+                                  example: USD
+                                notes:
+                                  type: string
+                                  example: '2046862'
+                                amount:
+                                  type: integer
+                                  example: 0
+                                  default: 0
+                                date:
+                                  type: string
+                                  example: '2022-07-22T10:25:23.510Z'
+                - title: OK - Filter = CUSTOMER
+                  type: object
+                  properties:
+                    account_summaries:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          account_last_four:
+                            type: string
+                            example: '5586'
+                          account_transactions:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                systemTransactionId:
+                                  type: integer
+                                  example: 1810005
+                                  default: 0
+                                activity:
+                                  type: string
+                                  example: New Card Activation
+                                reason:
+                                  type: string
+                                  example: Activation
+                                currency:
+                                  type: string
+                                  example: USD
+                                notes:
+                                  type: string
+                                  example: '1810005'
+                                amount:
+                                  type: integer
+                                  example: 0
+                                  default: 0
+                                date:
+                                  type: string
+                                  example: '2021-07-28T20:51:16.673Z'
+      deprecated: false
+      tags:
+      - Accounts
+  /api/v2/{payer_id}/accounts/{recipient_id}/venmo:
+    post:
+      summary: Add Venmo Account
+      description: 'Add a Venmo Account for Recipient.
+
+
+        `201` - Created, will include a Location response header
+
+        `400` - Bad Request, missing or invalid parameters
+
+        `404` - Recipient ID not found'
+      operationId: add-venmo-account
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      - name: recipient_id
+        in: path
+        description: Recipient ID
+        schema:
+          type: string
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                phone_ number:
+                  type: string
+                  description: Venmo account phone number - format of xxx-xxx-xxxx
+            examples:
+              Request Example:
+                value:
+                  phone_number: 555-867-5309
+      responses:
+        '201':
+          description: '201'
+          content:
+            application/json:
+              examples:
+                Created:
+                  value: "{\n    \"account_id\": \"RPA-d11zbCESyUUab99loSXb2uHg==\",\n    \"description\": \"555-867-5309\",\n    \"created_date\": \"2022-08-31T09:14:30.572Z\",\n    \"phone_number\": \"555-867-5309\"\n}"
+              schema:
+                type: object
+                properties:
+                  account_id:
+                    type: string
+                    example: RPA-d11zbCESyUUab99loSXb2uHg==
+                  description:
+                    type: string
+                    example: 555-867-5309
+                  created_date:
+                    type: string
+                    example: '2022-08-31T09:14:30.572Z'
+                  phone_number:
+                    type: string
+                    example: 555-867-5309
+        '400':
+          description: '400'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"http_status\": 400,\n    \"error_code\": \"ERR_INVALID_EMAIL\",\n    \"error_message\": \"Invalid email\"\n}"
+              schema:
+                type: object
+                properties:
+                  http_status:
+                    type: integer
+                    example: 400
+                    default: 0
+                  error_code:
+                    type: string
+                    example: ERR_INVALID_EMAIL
+                  error_message:
+                    type: string
+                    example: Invalid email
+      deprecated: false
+      tags:
+      - Accounts
+    get:
+      summary: Get Venmo Accounts
+      description: 'Get Venmo Accounts for Recipient.
+
+
+        `200` - Request Succeeded
+
+        `404` - Recipient ID or Account ID not found'
+      operationId: get-venmo-accounts
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      - name: recipient_id
+        in: path
+        description: Recipient ID
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "[\n  {\n    \"account_id\": \"RPA-d11zbCESyUUab99loSXb2uHg==\",\n    \"description\": \"555-867-5309\",\n    \"created_date\": \"2022-08-31T09:14:30.572Z\",\n    \"phone_number\": \"555-867-5309\"\n\t}\n]"
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    account_id:
+                      type: string
+                      example: RPA-d11zbCESyUUab99loSXb2uHg==
+                    description:
+                      type: string
+                      example: 555-867-5309
+                    created_date:
+                      type: string
+                      example: '2022-08-31T09:14:30.572Z'
+                    phone_number:
+                      type: string
+                      example: 555-867-5309
+      deprecated: false
+      tags:
+      - Accounts
+  /api/v2/{payer_id}/accounts/{recipient_id}/venmo/{account_id}:
+    get:
+      summary: Get Venmo Account
+      description: 'Get Venmo Account for Recipient.
+
+
+        `200` - Request Succeeded
+
+        `404` - Recipient ID or Account ID not found'
+      operationId: get-venmo-account
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      - name: recipient_id
+        in: path
+        description: Recipient ID
+        schema:
+          type: string
+        required: true
+      - name: account_id
+        in: path
+        description: Payment Account ID
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"account_id\": \"RPA-d11zbCESyUUab99loSXb2uHg==\",\n    \"description\": \"555-867-5309\",\n    \"created_date\": \"2022-08-31T09:14:30.572Z\",\n    \"phone_number\": \"555-867-5309\"\n}"
+              schema:
+                type: object
+                properties:
+                  account_id:
+                    type: string
+                    example: RPA-d11zbCESyUUab99loSXb2uHg==
+                  description:
+                    type: string
+                    example: 555-867-5309
+                  created_date:
+                    type: string
+                    example: '2022-08-31T09:14:30.572Z'
+                  phone_number:
+                    type: string
+                    example: 555-867-5309
+      deprecated: false
+      tags:
+      - Accounts
+    delete:
+      summary: Delete Venmo Account
+      description: 'Delete Venmo Account for Recipient.
+
+
+        `200` - Request Succeeded
+
+        `404` - Recipient ID or Account ID not found'
+      operationId: delete-venmo-account
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      - name: recipient_id
+        in: path
+        description: Recipient ID
+        schema:
+          type: string
+        required: true
+      - name: account_id
+        in: path
+        description: Payment Account ID
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: '{}'
+              schema:
+                type: object
+                properties: {}
+      deprecated: false
+      tags:
+      - Accounts
+  /api/v2/{payer_id}/accounts/{recipient_id}/banks/plaid-processor-token:
+    post:
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+              examples:
+                Created:
+                  summary: Created
+                  value:
+                    account_id: RPA-L2NW6S4ASIeaKqeP4JmocA==
+                    description: CHECKING 1****6789
+                    created_date: '2021-11-09T13:52:55.330Z'
+                    account_name: Sherlock Holmes
+                    account_number: '123456789'
+                    account_type: CHECKING
+                    bank_name: BANCO POPULAR
+                    routing_number: '021502011'
+                    rtp_status: DISABLED
+          description: Created
+        '422':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+              examples:
+                Unprocessable Entity:
+                  summary: Unprocessable Entity
+                  value:
+                    http_status: 422
+                    error_code: ERR_ACCOUNT_LIMIT_EXCEEDED
+                    error_message: Activity Limit Exceeded
+          description: Unprocessable Entity
+      parameters:
+      - in: path
+        name: payer_id
+        schema:
+          type: string
+          default: ''
+        required: true
+        description: Payer ID
+      - in: path
+        name: recipient_id
+        schema:
+          type: string
+        required: true
+        description: Recipient ID
+      summary: Add Bank Account
+      operationId: post_api-v2-payer-id-accounts-recipient-id-banks-plaid-processor-token
+      description: Add a Plaid Linked Bank Account using a Plaid Processor Token.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                processor_token:
+                  type: string
+                  description: Plaid processor token
+              required:
+              - processor_token
+      tags:
+      - Accounts
+  /api/v2/{payer_id}/accounts/{recipient_id}/banks/plaid-processor-token/{account_id}/status:
+    patch:
+      responses:
+        '204':
+          description: ''
+      parameters:
+      - in: path
+        name: payer_id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: recipient_id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: account_id
+        schema:
+          type: string
+        required: true
+      summary: Update Bank Account Status
+      description: Update Plaid linked account status
+      operationId: patch_api-v2-payer-id-accounts-recipient-id-banks-plaid-processor-token-account-id-status
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                event:
+                  type: string
+                  enum:
+                  - ITEM_LOGIN_REQUIRED
+                  - PENDING_DISCONNECT
+                  - USER_ACCOUNT_REVOKED
+                  - PENDING_EXPIRATION
+                  - USER_PERMISSION_REVOKED
+                  - ITEM_NOT_SUPPORTED
+                  - LOGIN_REPAIRED
+                  description: Plaid status event
+              required:
+              - event
+      tags:
+      - Accounts
+components:
+  securitySchemes:
+    sec0:
+      type: oauth2
+      flows: {}
+x-readme:
+  headers: []
+  explorer-enabled: false
+  proxy-enabled: true
+x-readme-fauxas: true

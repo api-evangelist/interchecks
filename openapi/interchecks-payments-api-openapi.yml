@@ -1,0 +1,397 @@
+openapi: 3.2.0
+info:
+  title: Interchecks Payments API
+  version: '2'
+  description: 'Operations tagged Payments across 2 of this provider''s published API definitions: interchecks-payments-api-v2-registry.json, interchecks-payments-api-v2.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: http://example.com
+  variables: {}
+- url: https://test.api.interchecks.io
+tags:
+- name: Payments
+paths:
+  /api/v2/{payer_id}/payments:
+    post:
+      tags:
+      - Payments
+      summary: Create Payment
+      operationId: CreatePayment
+      parameters:
+      - name: Idempotency-Key
+        in: header
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: '{{$guid}}'
+      - name: payer_id
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePaymentRequest'
+            example:
+              recipient_id: '{{recipient_id}}'
+              amount: 25
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - httpBearer: []
+    servers:
+    - url: http://example.com
+      variables: {}
+  /api/v2/{payer_id}/payments/{payment_id}:
+    patch:
+      tags:
+      - Payments
+      summary: Update Payment
+      operationId: UpdatePayment
+      parameters:
+      - name: api-gateway-request-id
+        in: header
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: abc125
+      - name: payer_id
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      - name: payment_id
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePaymentRequest'
+            example:
+              status: CANCELLED
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - httpBearer: []
+    get:
+      tags:
+      - Payments
+      summary: Get Payment by ID
+      operationId: GetPaymentbyID
+      parameters:
+      - name: api-gateway-request-id
+        in: header
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+          example: abc124
+      - name: payer_id
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      - name: payment_id
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - httpBearer: []
+    servers:
+    - url: http://example.com
+      variables: {}
+  /api/v2/{payer_id}/payments/reference/{payment_reference_id}:
+    get:
+      tags:
+      - Payments
+      summary: Get Payment by Reference ID
+      operationId: GetPaymentbyReferenceID
+      parameters:
+      - name: payer_id
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      - name: payment_reference_id
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - httpBearer: []
+    servers:
+    - url: http://example.com
+      variables: {}
+  /api/v2/{payer_id}/payments/{payment_id}/transactions:
+    get:
+      tags:
+      - Payments
+      summary: Get Transactions by Payment ID
+      operationId: GetTransactionsbyPaymentID
+      parameters:
+      - name: payer_id
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      - name: payment_id
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - httpBearer: []
+    servers:
+    - url: http://example.com
+      variables: {}
+  /api/v2/{payer_id}/payments/reference/{payment_reference_id}/transactions:
+    get:
+      tags:
+      - Payments
+      summary: Get Transactions by Payment Reference ID
+      operationId: GetTransactionsbyPaymentReferenceID
+      parameters:
+      - name: payer_id
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      - name: payment_reference_id
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - httpBearer: []
+    servers:
+    - url: http://example.com
+      variables: {}
+  /api/v2/{payer_id}/payments/reference/{reference_id}:
+    get:
+      summary: Get Payment by Reference ID
+      description: 'Get Payment by Reference ID
+
+
+        `200` - Request Succeeded
+
+        `404` - Payment reference ID not found'
+      operationId: get-payment-by-reference-id
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      - name: reference_id
+        in: path
+        description: Payment reference ID
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "[\n  {\n    \"recipient_id\": \"REejizS5fnTLiQYhGTKYXZaQ==\",\n    \"payment_id\": \"PM5duKcOBzSGmWxQoUDQinhQ==\",\n    \"amount\": 25.00,\n    \"reference_id\": \"payment-123\",\n    \"status\": \"PENDING\",\n    \"created_date\": \"2021-11-09T17:27:27.462Z\"\n\t}\n]  "
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    recipient_id:
+                      type: string
+                      example: REejizS5fnTLiQYhGTKYXZaQ==
+                    payment_id:
+                      type: string
+                      example: PM5duKcOBzSGmWxQoUDQinhQ==
+                    amount:
+                      type: integer
+                      example: 25
+                      default: 0
+                    reference_id:
+                      type: string
+                      example: payment-123
+                    status:
+                      type: string
+                      example: PENDING
+                    created_date:
+                      type: string
+                      example: '2021-11-09T17:27:27.462Z'
+      deprecated: false
+      tags:
+      - Payments
+      security:
+      - sec0: []
+    servers:
+    - url: https://test.api.interchecks.io
+  /api/v2/{payer_id}/payments/reference/{reference_id}/transactions:
+    get:
+      summary: Get Transactions by Payment Reference ID
+      description: 'Get Transactions by Payment Reference ID.
+
+
+        `200` - Request Succeeded
+
+        `404` - Payment Reference ID not found'
+      operationId: get-transactions-by-payment-reference-id
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      - name: reference_id
+        in: path
+        description: Payment Reference ID
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Check Payout:
+                  value: "[\n    {\n        \"transaction_id\": \"ICTN-435-21313-64588-JDK\",\n        \"method\": \"CHECK\",\n        \"fee\": 0.00,\n        \"amount\": 25.00,\n        \"status\": \"PAID\",\n        \"created_date\": \"2021-11-09T17:56:28.319Z\",\n        \"detail\": \"987 MAIN STREET, MIAMI, FLORIDA 33132\",\n        \"check_number\": \"10070\"\n    }\n]"
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    transaction_id:
+                      type: string
+                      example: ICTN-435-21313-64588-JDK
+                    method:
+                      type: string
+                      example: CHECK
+                    fee:
+                      type: integer
+                      example: 0
+                      default: 0
+                    amount:
+                      type: integer
+                      example: 25
+                      default: 0
+                    status:
+                      type: string
+                      example: PAID
+                    created_date:
+                      type: string
+                      example: '2021-11-09T17:56:28.319Z'
+                    detail:
+                      type: string
+                      example: 987 MAIN STREET, MIAMI, FLORIDA 33132
+                    check_number:
+                      type: string
+                      example: '10070'
+      deprecated: false
+      tags:
+      - Payments
+      security:
+      - sec0: []
+    servers:
+    - url: https://test.api.interchecks.io
+components:
+  schemas:
+    CreatePaymentRequest:
+      title: CreatePaymentRequest
+      required:
+      - recipient_id
+      - amount
+      type: object
+      properties:
+        recipient_id:
+          type: string
+        amount:
+          type: number
+      example:
+        recipient_id: '{{recipient_id}}'
+        amount: 25
+    UpdatePaymentRequest:
+      title: UpdatePaymentRequest
+      required:
+      - status
+      type: object
+      properties:
+        status:
+          type: string
+      example:
+        status: CANCELLED
+  securitySchemes:
+    httpBearer:
+      type: http
+      scheme: bearer
+    sec0:
+      type: oauth2
+      flows: {}
+x-refined-from:
+- interchecks-payments-api-v2-registry.json
+- interchecks-payments-api-v2.json

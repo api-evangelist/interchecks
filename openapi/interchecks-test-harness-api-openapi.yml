@@ -1,0 +1,267 @@
+openapi: 3.2.0
+info:
+  title: payments-api-v2-1 Test Harness API
+  version: '2'
+servers:
+- url: https://test.api.interchecks.io
+security:
+- sec0: []
+tags:
+- name: Test Harness
+paths:
+  /api/v2/{payer_id}/test-harness/accounts/plaid:
+    post:
+      summary: Create Account with Plaid Link
+      description: ''
+      operationId: create-account-plaid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                widget_id:
+                  type: string
+                  description: Widget ID
+                webhook_url:
+                  type: string
+                  description: Webhook URL (optional) - Webhook subscription URL will be overridden with provided value
+            examples:
+              Request Example:
+                value:
+                  widget_id: UTsZZ3DE_eTSWCUv7QFi7i5w==
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"account_id\": \"RPA-sws6LZyJQs2_mvJz0QIeMQ==\",\n    \"description\": \"CHECKING 1924\",\n    \"created_date\": \"2024-07-23T12:19:59.178Z\",\n    \"account_name\": \"SHERLOCK HOLMES\",\n    \"account_number\": \"7022381924\",\n    \"account_type\": \"CHECKING\",\n    \"bank_name\": \"CITIZENS BANK NA\",\n    \"routing_number\": \"011401533\",\n    \"rtp_status\": \"ENABLED\"\n}"
+              schema:
+                type: object
+                properties:
+                  account_id:
+                    type: string
+                    example: RPA-sws6LZyJQs2_mvJz0QIeMQ==
+                  description:
+                    type: string
+                    example: CHECKING 1924
+                  created_date:
+                    type: string
+                    example: '2024-07-23T12:19:59.178Z'
+                  account_name:
+                    type: string
+                    example: SHERLOCK HOLMES
+                  account_number:
+                    type: string
+                    example: '7022381924'
+                  account_type:
+                    type: string
+                    example: CHECKING
+                  bank_name:
+                    type: string
+                    example: CITIZENS BANK NA
+                  routing_number:
+                    type: string
+                    example: '011401533'
+                  rtp_status:
+                    type: string
+                    example: ENABLED
+      deprecated: false
+      tags:
+      - Test Harness
+  /api/v2/{payer_id}/test-harness/accounts:
+    post:
+      summary: Update Account Status
+      description: ''
+      operationId: update-account-status
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                account_id:
+                  type: string
+                  description: Account ID
+                action:
+                  type: string
+                  description: Account action
+                  enum:
+                  - BANK_ACCOUNT_BLOCKED
+                  - BANK_ACCOUNT_VALIDATION_FAILED
+                  - PLAID_REAUTH_REQUIRED
+                  - PLAID_PERMISSION_REVOKED
+                  - REACTIVATE_BANK_ACCOUNT
+                webhook_url:
+                  type: string
+                  description: Webhook URL (optional) - Webhook subscription URL will be overridden with provided value
+            examples:
+              Request Example:
+                value:
+                  account_id: RPA-6TX9kE1pS2yCFuj7VnaISA==
+                  action: BANK_ACCOUNT_BLOCKED
+                  webhook_url: http://test.domain.com
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: '{}'
+              schema:
+                type: object
+                properties: {}
+      deprecated: false
+      tags:
+      - Test Harness
+  /api/v2/{payer_id}/test-harness/payments:
+    post:
+      summary: Update Payment Status
+      description: 'Update Payment Status.  Payment can only be updated if in a non terminal status: PAID, PENDING_KYC, APPROVAL_REQUIRED, PENDING
+
+
+        `200` - Request Succeeded
+
+        `400` - Bad Request, missing or invalid parameters
+
+        `422` - Transaction not updateable'
+      operationId: update-payment-status
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                payment_id:
+                  type: string
+                  description: Payment ID
+                status:
+                  type: string
+                  description: Payment Status
+                  enum:
+                  - APPROVAL_REQUIRED
+                  - PENDING
+                  - CANCELLED
+                  - RETURNED
+                  - PAID
+                webhook_url:
+                  type: string
+                  description: Webhook URL (optional) - Webhook subscription URL will be overridden with provided value
+            examples:
+              Request Example:
+                value:
+                  payment_id: PMiSYqFhMrQxaqVOsbcs3c0g34
+                  status: CANCELLED
+                  webhook_url: http://test.domain.com
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: '{}'
+              schema:
+                type: object
+                properties: {}
+        '422':
+          description: '422'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"http_status\": 422,\n    \"error_code\": \"ERR_TH_PAYMENT_STATUS_NOT_UPDATEABLE\",\n    \"error_message\": \"Only APPROVAL_REQUIRED, PAID, PENDING, PENDING_KYC payments can be updated\"\n}"
+              schema:
+                type: object
+                properties:
+                  http_status:
+                    type: integer
+                    example: 422
+                    default: 0
+                  error_code:
+                    type: string
+                    example: ERR_TH_PAYMENT_STATUS_NOT_UPDATEABLE
+                  error_message:
+                    type: string
+                    example: Only APPROVAL_REQUIRED, PAID, PENDING, PENDING_KYC payments can be updated
+      deprecated: false
+      tags:
+      - Test Harness
+  /api/v2/{payer_id}/test-harness/transactions:
+    post:
+      summary: Update Transaction Status
+      description: Update Transaction Status.  `200` - Request Succeeded`400` - Bad Request, missing or invalid parameters`422` - Transaction not undateable
+      operationId: update-transaction-status
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                transaction_id:
+                  type: string
+                  description: Transaction ID
+                status:
+                  type: string
+                  description: Transaction Status
+                  enum:
+                  - ''
+                webhook_url:
+                  type: string
+                  description: Webhook URL (optional) - Webhook subscription URL will be overridden with provided value
+                ach_return_code:
+                  type: string
+                  description: ACH Return Code value (R01, R03, etc) to trigger ACH workflows (optional) when updating the status to FAILED
+            examples:
+              Request Example:
+                value:
+                  transaction_id: ICTN-652-22277-65670-GZH
+                  status: FAILED
+                  webhook_url: http://test.domain.com
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: '{}'
+              schema:
+                type: object
+                properties: {}
+        '422':
+          description: '422'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"http_status\": 422,\n    \"error_code\": \"ERR_TH_TRANSACTION_STATUS_NOT_UPDATEABLE\",\n    \"error_message\": \"Only PAID, PENDING_KYC, PROCESSING, UNKNOWN transactions can be updated\"\n}"
+              schema:
+                type: object
+                properties:
+                  http_status:
+                    type: integer
+                    example: 422
+                    default: 0
+                  error_code:
+                    type: string
+                    example: ERR_TH_TRANSACTION_STATUS_NOT_UPDATEABLE
+                  error_message:
+                    type: string
+                    example: Only PAID, PENDING_KYC, PROCESSING, UNKNOWN transactions can be updated
+      deprecated: false
+      tags:
+      - Test Harness
+components:
+  securitySchemes:
+    sec0:
+      type: oauth2
+      flows: {}
+x-readme:
+  headers: []
+  explorer-enabled: false
+  proxy-enabled: true
+x-readme-fauxas: true

@@ -1,0 +1,161 @@
+openapi: 3.2.0
+info:
+  title: Payments API V2 Payment Accounts - Card API
+  description: "# Introduction\nPayments API v2 enables payers to:\n- Create and manage recipients at an aggregator or payer level\n- Create and manage destination payment accounts at an aggregator or payer level\n- Create and manage payments for Portal acceptance\n- Create payout transactions for immediate disbursement\n\n# Idempotent Requests\nThe API supports **Idempotency** for safely retrying requests without performing the same operation twice for **Create Payment** and **Create Transaction** endpoints.  Add the `Idempotency-Key: <key>` header to the request using a unique value as the key.  Idempotency Keys are honored for 24 hours and only for **20x** and **400** responses.  If the supplied ~Idempotency-Key` value matches an existing request the following HTTP Status codes may be returned.\n- **102 PROCESSING** : We are still processing the request\n- **409 CONFLICT** : We have previously processing the request and return the original response body payload.\n\n# HTTP Status Codes\n| HTTP Status Code | Description |\n| --- | ---- |\n| 102 | Idempotent request is current processing |\n| 200 | Request processed |\n| 201 | Request processed and entity created |\n| 400 | Bad request due to invalid or missing parameters |\n| 401 | Not Authenticated |\n| 403 | Not Authorized |\n| 404 | Resource or entity not found |\n| 409 | Idempotent request conflict |\n| 429 | Too many requests in a given amount of time |\n| 500 | Unexpected error while processing the request |\n| 503 | Service unavailable or timeout |\n\n# Error Response\nRequests resulting in an error response will contain an HTTP status code, error message, and an error code for non-authentication related errors.\n\n** Authentication Error example **\n```\n{\n    \"http_status\": 401,\n    \"error_message\": \"401 UNAUTHORIZED\"\n}\n```\n### Authorization Error example\n```\n{\n    \"http_status\": 403,\n    \"error_message\": \"403 FORBIDDEN\"\n}\n```\n### Bad Request example\n```\n{\n    \"http_status\": 400,\n    \"error_code\": \"ERR_INVALID_RECIPIENT_ID\",\n    \"error_message\": \"Invalid recipient ID\"\n}\n```\n\n# Error Codes\nListed in alphabetical order\n\n| Error Code | Error Message |\n| --- | --- |\n| ERR_ACCOUNT_LIMIT_EXCEEDED | Activity limit exceeded |\n| ERR_ACCOUNT_PROVIDER_NOT_ENABLED | Payer not enabled for Account Provider |\n| ERR_ACCOUNT_PROVIDER_MISMATCH | Account invalid for provider |\n| ERR_CARD_INELIGIBLE | Card ineligible |\n| ERR_CLIENT_ACCESS_PAYER | Client does not have access to payer |\n| ERR_CREDIT_CARD_NOT_SUPPORTED | Credit cards not supported |\n| ERR_EMAIL_IN_USE | Recipient email is assigned to another profile |\n| ERR_INTERNAL_SERVER_ERROR | Internal server error |\n| ERR_INVALID_ACCOUNT_ID | Invalid account ID |\n| ERR_INVALID_CARD_DETAILS | Invalid card details |\n| ERR_INVALID_COUNTRY | Invalid Country |\n| ERR_INVALID_CURRENCY_CODE | Invalid Currency Code |\n| ERR_INVALID_EMAIL | Invalid email |\n| ERR_INVALID_NAME | Invalid or missing name fields |\n| ERR_INVALID_PARAMETER | Missing or invalid request parameters |\n| ERR_INVALID_PAYMENT_ID | Invalid payment ID |\n| ERR_INVALID_PAYER_ID | Invalid payer ID |\n| ERR_INVALID_PAYMENT_REFERENCE_ID | Payment reference ID not found |\n| ERR_INVALID_PAYOUT_METHOD_FOR_ACCOUNT | Invalid payout method for account |\n| ERR_INVALID_RECIPIENT_EMAIL | Invalid recipient email |\n| ERR_INVALID_RECIPIENT_ID | Invalid recipient ID |\n| ERR_INVALID_RECIPIENT_REFERENCE_ID | Recipient reference ID not found |\n| ERR_INVALID_ROUTING_NUMBER | Invalid Routing Number |\n| ERR_INVALID_STATE | Invalid State |\n| ERR_INVALID_TRANSACTION_ID | Invalid transaction ID |\n| ERR_INVALID_TRANSACTION_REFERENCE_ID | Transaction reference ID not found |\n| ERR_MISSING_RECIPIENT | Missing recipient ID or email |\n| ERR_OCT_DECLINE | (Error specific to decline reason) | \n| ERR_OFAC_LIST_MATCH | Cancelled due to OFAC list match |\n| ERR_PAYMENT_STATUS_IMMUTABLE | Payment in immutable status |\n| ERR_PAYMENT_STATUS_NOT_APPLICABLE | Payment status cannot be applied |\n| ERR_PAYOUT_METHOD_NOT_AVAILABLE | Payout method not available |\n| ERR_RECIPIENT_NOT_FOUND | Recipient email not found |\n| ERR_RETRIEVING_CARD_DETAILS | Error determining card eligibility |\n| ERR_TRANSACTION_FAILURE | (Error specific to transaction failure) |\n| ERR_VERIFICATION_NOT_ENABLED | Payer not enabled for TIN Verification |"
+  contact: {}
+  version: '2'
+servers:
+- url: http://example.com
+  variables: {}
+security:
+- httpBearer: []
+tags:
+- name: Payment Accounts - Card
+paths:
+  /api/v2/{payer_id}/accounts/{recipient_id}/cards:
+    post:
+      tags:
+      - Payment Accounts - Card
+      summary: Create Card Account
+      operationId: CreateCardAccount
+      parameters:
+      - name: payer_id
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      - name: recipient_id
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCardAccountRequest'
+            example:
+              card_number: '4515300011000001'
+              exp_date: 2030-01
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /payer-api/v2/{payer_id}/accounts/{recipient_id}/cards/{account_id}:
+    get:
+      tags:
+      - Payment Accounts - Card
+      summary: Get Card Account
+      operationId: GetCardAccount
+      parameters:
+      - name: payer_id
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      - name: recipient_id
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      - name: account_id
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+    delete:
+      tags:
+      - Payment Accounts - Card
+      summary: Delete Card Account
+      operationId: DeleteCardAccount
+      parameters:
+      - name: payer_id
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      - name: recipient_id
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      - name: account_id
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /payer-api/v2/{payer_id}/accounts/{recipient_id}/cards:
+    get:
+      tags:
+      - Payment Accounts - Card
+      summary: Get Card Accounts
+      operationId: GetCardAccounts
+      parameters:
+      - name: payer_id
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      - name: recipient_id
+        in: path
+        description: ''
+        required: true
+        style: simple
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+components:
+  schemas:
+    CreateCardAccountRequest:
+      title: CreateCardAccountRequest
+      required:
+      - card_number
+      - exp_date
+      type: object
+      properties:
+        card_number:
+          type: string
+        exp_date:
+          type: string
+      example:
+        card_number: '4515300011000001'
+        exp_date: 2030-01
+  securitySchemes:
+    httpBearer:
+      type: http
+      scheme: bearer

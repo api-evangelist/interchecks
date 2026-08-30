@@ -1,0 +1,259 @@
+openapi: 3.2.0
+info:
+  title: payments-api-v2-1 Reports API
+  version: '2'
+servers:
+- url: https://test.api.interchecks.io
+security:
+- sec0: []
+tags:
+- name: Reports
+paths:
+  /api/v2/{payer_id}/reports/ach/funding/settlement:
+    get:
+      summary: Get ACH Settlement Report
+      description: ''
+      operationId: get-ach-settlement-report
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      - name: settleDate
+        in: query
+        description: Format of date should be yyyy-mm-dd
+        schema:
+          type: string
+      responses:
+        '200':
+          description: '200'
+          content:
+            text/plain:
+              examples:
+                Result:
+                  value: '"Payer Name","Payer ID",Name,"Transaction ID","Transaction Created Date(EST)","Paid Date","Failed Date","Transaction Status","Transaction Method","Transaction Type","Return Code","Settlement Date","Recipient Account","Settlement Bank Transaction ID","ACH Bank Transaction ID","Recipient External Reference ID","Transaction External Reference ID",Attempts,"Settled Account","Sent To","Transaction Amount"'
+        '404':
+          description: '404'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"http_status\": 404,\n    \"error_code\": \"ERR_SETTLEMENT_REPORT\",\n    \"error_message\": \"No report found\"\n}"
+              schema:
+                type: object
+                properties:
+                  http_status:
+                    type: integer
+                    example: 404
+                    default: 0
+                  error_code:
+                    type: string
+                    example: ERR_SETTLEMENT_REPORT
+                  error_message:
+                    type: string
+                    example: No report found
+      deprecated: false
+      tags:
+      - Reports
+  /api/v2/{payer_id}/reports/oct/transactions:
+    get:
+      summary: Get OCT Transactions Report
+      description: 'Get Aggregator or Payer OCT Transactions Report for a date range.  The `payer_id` value passed in should reflect the requested Aggregator or Payer.  There is a maximum date range of 31 days enforced.
+
+
+        ** Report returns a `Content-Type` of `application/csv`
+
+
+        `200` - Request succeeded
+
+        `400` - Bad Request, missing or invalid parameters'
+      operationId: get-payer-oct-transactions-report
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      - name: startDate
+        in: query
+        description: Format of date should be yyyy-mm-dd
+        schema:
+          type: string
+      - name: endDate
+        in: query
+        description: Format of date should be yyyy-mm-dd
+        schema:
+          type: string
+      responses:
+        '200':
+          description: '200'
+          content:
+            text/plain:
+              examples:
+                application/csv:
+                  value: 'Payer Name,Payer ID,First Name,Last Name,Interchecks Transaction ID,Transaction Timestamp,Transaction Status,Amount,Debit Type,Network Response Code,OCT Reference ID,Card,Settlement Date,Interchecks Settlement Reference
+
+                    ExamplePayerName,payerId,FirstName,LastName,ICTN-1234,2022-08-18 20:09:00.780918,Paid,0.33,Instant Deposit,00,223100000012,451530XXXXXX0852,08/19/2022,20220819_1660888820_AUTO'
+      deprecated: false
+      tags:
+      - Reports
+  /api/v2/{payer_id}/reports/oct/settlement:
+    get:
+      summary: Get OCT Settlement Report
+      description: 'Get Aggregator or Payer OCT Settlement Report for a specific Settle Date.  The `payer_id` value passed in should reflect the requested Aggregator or Payer.
+
+
+        ** Report returns a `Content-Type` of `application/csv`
+
+
+        `200` - Request succeeded
+
+        `400` - Bad Request, missing or invalid parameters
+
+        `404` - Report does not exist'
+      operationId: get-payer-oct-settlement-report
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      - name: settleDate
+        in: query
+        description: Format of date should be yyyy-mm-dd
+        schema:
+          type: string
+      responses:
+        '200':
+          description: '200'
+          content:
+            text/plain:
+              examples:
+                application/csv:
+                  value: 'Payer Name,Payer ID,First Name,Last Name,Interchecks Transaction ID,Transaction Timestamp,Transaction Status,Debit Type,Amount,DR/CR,Network Response Code,GL Post Status,GL Post Reference,Settlement Date,Account Number,OCT Reference ID,Card
+
+                    ExamplePayerName,PayerId,FirstName,LastName,ICTN-1234,2022-08-18 23:54:00,Paid,Instant Deposit,0.3,DR,00,SUCCESS,223106000018-IKT7Z6E3F3,08/19/2022,66600000210,223103000067,451530XXXXXX0381'
+        '404':
+          description: '404'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"http_status\": 404,\n    \"error_code\": \"ERR_SETTLEMENT_REPORT\",\n    \"error_message\": \"No report found\"\n}"
+              schema:
+                type: object
+                properties:
+                  http_status:
+                    type: integer
+                    example: 404
+                    default: 0
+                  error_code:
+                    type: string
+                    example: ERR_SETTLEMENT_REPORT
+                  error_message:
+                    type: string
+                    example: No report found
+      deprecated: false
+      tags:
+      - Reports
+  /api/v2/{payer_id}/reports/user-tracking:
+    get:
+      summary: Get User Activity Report
+      description: Get Payer user activity Report for a date range.  The `payer_id` value passed in should reflect the requested Aggregator or Payer.  There is a maximum date range of 31 days enforced.** Report returns a `Content-Type` of `application/csv``200` - Request succeeded`400` - Bad Request, missing or invalid parameters
+      operationId: get-user-activity-report
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      - name: startDate
+        in: query
+        description: Format of date should be yyyy-mm-dd
+        schema:
+          type: string
+      - name: endDate
+        in: query
+        description: Format of date should be yyyy-mm-dd
+        schema:
+          type: string
+      responses:
+        '200':
+          description: '200'
+          content:
+            text/plain:
+              examples:
+                application/csv:
+                  value: Username,Email,"IP Address","Portal Area","Portal Action","Target ID","Target Reference ID",Date
+      deprecated: false
+      tags:
+      - Reports
+  /api/v2/{payer_id}/reports/bank-transactions:
+    get:
+      summary: Get Bank Transactions Report
+      description: ''
+      operationId: get-ach-settlement-report-1
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      - name: reportDate
+        in: query
+        description: Format of date should be yyyy-mm-dd
+        schema:
+          type: string
+        required: true
+      - in: query
+        name: lastFour
+        schema:
+          type: number
+        required: true
+        description: Last four of bank account number
+      responses:
+        '200':
+          description: '200'
+          content:
+            text/plain:
+              examples:
+                Result:
+                  value: '"Account Name","Transaction ID",Type,Amount,"Virtual Balance",IMAD,OMAD,"ACH Trace","Counterparty Name","Created Date","Approved By","Approved Date",Source,Completed,Status,"Company Id","Company Name","Company Entry Description","ACH Reversal","ACH Return","Client Reference ID","Error Code","Error Description"'
+        '404':
+          description: '404'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: ''
+              schema:
+                type: object
+                properties:
+                  http_status:
+                    type: integer
+                    example: 404
+                    default: 0
+                  error_code:
+                    type: string
+                    example: ERR_SETTLEMENT_REPORT
+                  error_message:
+                    type: string
+                    example: No report found
+      tags:
+      - Reports
+components:
+  securitySchemes:
+    sec0:
+      type: oauth2
+      flows: {}
+x-readme:
+  headers: []
+  explorer-enabled: false
+  proxy-enabled: true
+x-readme-fauxas: true

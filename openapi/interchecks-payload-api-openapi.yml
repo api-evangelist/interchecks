@@ -1,0 +1,479 @@
+openapi: 3.2.0
+info:
+  title: payments-api-v2-1 Payload API
+  version: '2'
+servers:
+- url: https://test.api.interchecks.io
+security:
+- sec0: []
+tags:
+- name: Payload
+paths:
+  /api/v2/{payer_id}/payload/encryption/test/decryption:
+    post:
+      summary: Post Payload Encryption Test Decryption
+      description: Return plaintext when sent an encrypted payload
+      operationId: post-payload-encryption-test-decryption
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      - name: X-PayerId
+        in: header
+        description: Payer ID
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                RAW_BODY:
+                  type: string
+                  description: Encrypted Request Json format as defined in the Encrypted Payload Guide
+                  format: json
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"encryptedPayload\": \"9spSIO9+Zhhtcx21gKaujVjmFGhaRszg6xxxC3aPfy3qGrhobRKG4LjF8Z45J2CnW5HcQQbMUCCzgRjSG9HQtXvPYBZ+mNfNgX+5y0IgTzAeE8JDN04Z65+XPcakH8cjj2KGqTI1E3oMWKrAx73rEsGSQh6nHu89XMbXYSRhzGcQRKvX797kkTA64ybTSY1HX4SHzFUjrg==\",\n    \"decryptedPayload\": \"{\\r\\n    \\\"email\\\": \\\"sherlock@mailpoof.com\\\",\\r\\n    \\\"first_name\\\": \\\"Sherlock\\\",\\r\\n    \\\"last_name\\\": \\\"Holmes\\\",\\r\\n    \\\"reference_id\\\": \\\"payee-123\\\"\\r\\n}\"\n}"
+              schema:
+                type: object
+                properties:
+                  encryptedPayload:
+                    type: string
+                    example: 9spSIO9+Zhhtcx21gKaujVjmFGhaRszg6xxxC3aPfy3qGrhobRKG4LjF8Z45J2CnW5HcQQbMUCCzgRjSG9HQtXvPYBZ+mNfNgX+5y0IgTzAeE8JDN04Z65+XPcakH8cjj2KGqTI1E3oMWKrAx73rEsGSQh6nHu89XMbXYSRhzGcQRKvX797kkTA64ybTSY1HX4SHzFUjrg==
+                  decryptedPayload:
+                    type: string
+                    example: "{\n    \"email\": \"sherlock@mailpoof.com\",\n    \"first_name\": \"Sherlock\",\n    \"last_name\": \"Holmes\",\n    \"reference_id\": \"payee-123\"\n}"
+        '422':
+          description: '422'
+          content:
+            application/json:
+              examples:
+                Internal Server Error - Format:
+                  value: "{\n    \"http_status\": 422,\n    \"error_code\": \"ERR_PAYLOAD_ENCRYPTION_ERROR\",\n    \"error_message\": \"Error Encountered. Expected: [encryptedText, key, kid, ivSpec].\"\n}"
+              schema:
+                type: object
+                properties:
+                  http_status:
+                    type: integer
+                    example: 422
+                    default: 0
+                  error_code:
+                    type: string
+                    example: ERR_PAYLOAD_ENCRYPTION_ERROR
+                  error_message:
+                    type: string
+                    example: 'Error Encountered. Expected: [encryptedText, key, kid, ivSpec].'
+        '500':
+          description: '500'
+          content:
+            application/json:
+              examples:
+                Internal Server Error - Decryption:
+                  value: "{\n    \"http_status\": 500,\n    \"error_code\": \"ERR_PAYLOAD_ENCRYPTION_ERROR\",\n    \"error_message\": \"Error Encountered While Decrypting Payload.\"\n}"
+              schema:
+                type: object
+                properties:
+                  http_status:
+                    type: integer
+                    example: 500
+                    default: 0
+                  error_code:
+                    type: string
+                    example: ERR_PAYLOAD_ENCRYPTION_ERROR
+                  error_message:
+                    type: string
+                    example: Error Encountered While Decrypting Payload.
+      deprecated: false
+      tags:
+      - Payload
+  /api/v2/{payer_id}/payload/encryption/test/encryption:
+    post:
+      summary: Post Payload Encryption Test Encryption
+      description: Returns encrypted response when sent plaintext JSON
+      operationId: post-payload-encryption-test-encryption
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      - name: X-PayerId
+        in: header
+        description: Payer ID
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                RAW_BODY:
+                  type: string
+                  description: 'Plaintext JSON, i.e. {"Hello": "World"}'
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"encryptedText\": \"8Qklz3Ph30pORkQK4m+dZNSnsUyXU54ftrC5fFoWfrn4umDSEEscIJ0kYJBUYkaOoX/3UDexaMmJTanOpgOvU6xz5AI52aFgDo6GkVEXIPkHE4Ne6Fae3ai3JK5PhsSbmh1t7VLXmzshpofARAirorDc4x/+gTXntZFvYTL0jQfbTAYstoSLO3WrUGrg1NhYQR/ageQpaw==\",\n    \"key\": \"3f01e22b2099dbb7d0310c6be46d366053721549c4ef4c13a8b495c2abc3b8ef7f5bc92639f47eae5200ddbce952b22113863a6e064ac5e6ac593763112ee4c545b151e5374a24c357ec4fbed4fc1fa117a48b6d509741a38c4eddad4dbf40a953fab72a867995630003d383b340ccd80bda3c01a0210549586b7dd6105d170b903a80a5714a26cc2e20a53a5e9b27665a7c817be632a2b01e4a3618e49365206fb00462b578b4cdbbcc3c5d693d696587734d788feaaffb4f9023290803a9a761396b5c10aa3001658268e128576770aaec42c4994b3b95e2f1b4d12603bf0df7802e378b6c682fc318b510d804ad99e769bdee92c0be114ae85fc35a2517060de660df9a106f2635c4f89a05cfb8fe9f3e612c7ff143e0e8721ee367bb051a7569d5b52e15de37aaf72faaf0668182bb2255fa6f2c732d8daeac26badb4df611ad9ca482608df1bf86c43398509447f0c724755bcd2a8ac5fcf82231950bad7a652d489b7472520e9cebaa0171c7a0369f5817fe78c3cf8c0d470b5a9ce7d30d31da1edcf70860158496b4b56d025b4ee5e6baeb0e2d76f5d673d87bbc69357dfb3f770a0c025ca18712b24c8a6c8e394660b8d4839838394b56225fb95aeebe8010a25d2922af70e9795d81e341267bbe404b81f163f7b3ef617158ba1d228f08dd1ff49238f6ca94bb92d6a2d2b1000a9f12daa24fc1a203d7fb15fc09dc\",\n    \"kid\": \"\\\"ABC001\\\"\",\n    \"ivSpec\": \"0bb3a62faaf7661055697f7225e934f43f36435d59466348b1127be39c35532b23abd921b00c07d03d2e8ae6a9b2dc4fb35fd3addc18b6c92df640ba4805e220eeceffd95c061305a8d1d0047729b1149b4c2a94882d46509833551740df57cd0dde34fe3eb5ecaf1a792123110a57de5932d80c8648f8e9dcc317873a5dc5eaf6ea5e950ce131f9dde8e6762d2aff09e3dcb2ca10d10e065df348e213b6ba4ddc9e943cc730466ed84ad212fb3095dbd382730951658a94c10e99fdf1c5f88ba54d9837c792e7e87e1fb30e42b5eb94e0d27b580e0295941a5d68b744b7a405ba3de3426af6248ca4999e10e3bdd43f6365dffc83f520fe281d91e39200e088b982d3b0c58f50e46766b9666955c249c35a8761053eebe7440b87ea3c036e5eccb321b34efd35cac9760f66eb6f4107395f52b12d8efe48d801eb8934ff6e881eb634b21fb2c7b7ca1267b8c60bc07aff8ae2135da2be8a8c12b6ed3a1054105898240eb121d993eb7e167860a32b4db312765a918c26b079d97163008939a38acc7c71c911c82c3e73c2642811892e7d06a0ffcf790e0a7759ee4e100e8ab967e4590bf6a758f3aebf648c723b4169e2970b1d813d9afa330ec0c3a1c3d88714169e987d2bebbfc0a0327bb65390b30279fed28dc98d480b677d46c029b6269607663801e6a35f6aacc8879ad57f8a543b6356f39f9ffc1ceb6746d24eded2\"\n}"
+              schema:
+                type: object
+                properties:
+                  encryptedText:
+                    type: string
+                    example: 8Qklz3Ph30pORkQK4m+dZNSnsUyXU54ftrC5fFoWfrn4umDSEEscIJ0kYJBUYkaOoX/3UDexaMmJTanOpgOvU6xz5AI52aFgDo6GkVEXIPkHE4Ne6Fae3ai3JK5PhsSbmh1t7VLXmzshpofARAirorDc4x/+gTXntZFvYTL0jQfbTAYstoSLO3WrUGrg1NhYQR/ageQpaw==
+                  key:
+                    type: string
+                    example: 3f01e22b2099dbb7d0310c6be46d366053721549c4ef4c13a8b495c2abc3b8ef7f5bc92639f47eae5200ddbce952b22113863a6e064ac5e6ac593763112ee4c545b151e5374a24c357ec4fbed4fc1fa117a48b6d509741a38c4eddad4dbf40a953fab72a867995630003d383b340ccd80bda3c01a0210549586b7dd6105d170b903a80a5714a26cc2e20a53a5e9b27665a7c817be632a2b01e4a3618e49365206fb00462b578b4cdbbcc3c5d693d696587734d788feaaffb4f9023290803a9a761396b5c10aa3001658268e128576770aaec42c4994b3b95e2f1b4d12603bf0df7802e378b6c682fc318b510d804ad99e769bdee92c0be114ae85fc35a2517060de660df9a106f2635c4f89a05cfb8fe9f3e612c7ff143e0e8721ee367bb051a7569d5b52e15de37aaf72faaf0668182bb2255fa6f2c732d8daeac26badb4df611ad9ca482608df1bf86c43398509447f0c724755bcd2a8ac5fcf82231950bad7a652d489b7472520e9cebaa0171c7a0369f5817fe78c3cf8c0d470b5a9ce7d30d31da1edcf70860158496b4b56d025b4ee5e6baeb0e2d76f5d673d87bbc69357dfb3f770a0c025ca18712b24c8a6c8e394660b8d4839838394b56225fb95aeebe8010a25d2922af70e9795d81e341267bbe404b81f163f7b3ef617158ba1d228f08dd1ff49238f6ca94bb92d6a2d2b1000a9f12daa24fc1a203d7fb15fc09dc
+                  kid:
+                    type: string
+                    example: '"ABC001"'
+                  ivSpec:
+                    type: string
+                    example: 0bb3a62faaf7661055697f7225e934f43f36435d59466348b1127be39c35532b23abd921b00c07d03d2e8ae6a9b2dc4fb35fd3addc18b6c92df640ba4805e220eeceffd95c061305a8d1d0047729b1149b4c2a94882d46509833551740df57cd0dde34fe3eb5ecaf1a792123110a57de5932d80c8648f8e9dcc317873a5dc5eaf6ea5e950ce131f9dde8e6762d2aff09e3dcb2ca10d10e065df348e213b6ba4ddc9e943cc730466ed84ad212fb3095dbd382730951658a94c10e99fdf1c5f88ba54d9837c792e7e87e1fb30e42b5eb94e0d27b580e0295941a5d68b744b7a405ba3de3426af6248ca4999e10e3bdd43f6365dffc83f520fe281d91e39200e088b982d3b0c58f50e46766b9666955c249c35a8761053eebe7440b87ea3c036e5eccb321b34efd35cac9760f66eb6f4107395f52b12d8efe48d801eb8934ff6e881eb634b21fb2c7b7ca1267b8c60bc07aff8ae2135da2be8a8c12b6ed3a1054105898240eb121d993eb7e167860a32b4db312765a918c26b079d97163008939a38acc7c71c911c82c3e73c2642811892e7d06a0ffcf790e0a7759ee4e100e8ab967e4590bf6a758f3aebf648c723b4169e2970b1d813d9afa330ec0c3a1c3d88714169e987d2bebbfc0a0327bb65390b30279fed28dc98d480b677d46c029b6269607663801e6a35f6aacc8879ad57f8a543b6356f39f9ffc1ceb6746d24eded2
+        '422':
+          description: '422'
+          content:
+            application/json:
+              examples:
+                Internal Server Error - Format:
+                  value: "{\n    \"http_status\": 422,\n    \"error_code\": \"ERR_PAYLOAD_ENCRYPTION_ERROR\",\n    \"error_message\": \"Error Encountered. Expected: [encryptedText, key, kid, ivSpec].\"\n}"
+              schema:
+                type: object
+                properties:
+                  http_status:
+                    type: integer
+                    example: 422
+                    default: 0
+                  error_code:
+                    type: string
+                    example: ERR_PAYLOAD_ENCRYPTION_ERROR
+                  error_message:
+                    type: string
+                    example: 'Error Encountered. Expected: [encryptedText, key, kid, ivSpec].'
+        '500':
+          description: '500'
+          content:
+            application/json:
+              examples:
+                Internal Server Error - Encryption:
+                  value: "{\n    \"http_status\": 500,\n    \"error_code\": \"ERR_PAYLOAD_ENCRYPTION_ERROR\",\n    \"error_message\": \"Error Encountered While Encrypting Payload.\"\n}"
+              schema:
+                type: object
+                properties:
+                  http_status:
+                    type: integer
+                    example: 500
+                    default: 0
+                  error_code:
+                    type: string
+                    example: ERR_PAYLOAD_ENCRYPTION_ERROR
+                  error_message:
+                    type: string
+                    example: Error Encountered While Encrypting Payload.
+      deprecated: false
+      tags:
+      - Payload
+  /api/v2/{payer_id}/payload/encryption/test/end-to-end:
+    post:
+      summary: Post Payload Encryption Test End to End
+      description: Fully test payload encryption by sending an encrypted request and receiving an encrypted response with no business logic
+      operationId: post-payload-encryption-test-end-to-end
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer ID
+        schema:
+          type: string
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                RAW_BODY:
+                  type: string
+                  description: Encrypted Request Json format as defined in the Encrypted Payload Guide
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"encryptedText\": \"8Qklz3Ph30pORkQK4m+dZNSnsUyXU54ftrC5fFoWfrn4umDSEEscIJ0kYJBUYkaOoX/3UDexaMmJTanOpgOvU6xz5AI52aFgDo6GkVEXIPkHE4Ne6Fae3ai3JK5PhsSbmh1t7VLXmzshpofARAirorDc4x/+gTXntZFvYTL0jQfbTAYstoSLO3WrUGrg1NhYQR/ageQpaw==\",\n    \"key\": \"3f01e22b2099dbb7d0310c6be46d366053721549c4ef4c13a8b495c2abc3b8ef7f5bc92639f47eae5200ddbce952b22113863a6e064ac5e6ac593763112ee4c545b151e5374a24c357ec4fbed4fc1fa117a48b6d509741a38c4eddad4dbf40a953fab72a867995630003d383b340ccd80bda3c01a0210549586b7dd6105d170b903a80a5714a26cc2e20a53a5e9b27665a7c817be632a2b01e4a3618e49365206fb00462b578b4cdbbcc3c5d693d696587734d788feaaffb4f9023290803a9a761396b5c10aa3001658268e128576770aaec42c4994b3b95e2f1b4d12603bf0df7802e378b6c682fc318b510d804ad99e769bdee92c0be114ae85fc35a2517060de660df9a106f2635c4f89a05cfb8fe9f3e612c7ff143e0e8721ee367bb051a7569d5b52e15de37aaf72faaf0668182bb2255fa6f2c732d8daeac26badb4df611ad9ca482608df1bf86c43398509447f0c724755bcd2a8ac5fcf82231950bad7a652d489b7472520e9cebaa0171c7a0369f5817fe78c3cf8c0d470b5a9ce7d30d31da1edcf70860158496b4b56d025b4ee5e6baeb0e2d76f5d673d87bbc69357dfb3f770a0c025ca18712b24c8a6c8e394660b8d4839838394b56225fb95aeebe8010a25d2922af70e9795d81e341267bbe404b81f163f7b3ef617158ba1d228f08dd1ff49238f6ca94bb92d6a2d2b1000a9f12daa24fc1a203d7fb15fc09dc\",\n    \"kid\": \"\\\"CK001\\\"\",\n    \"ivSpec\": \"0bb3a62faaf7661055697f7225e934f43f36435d59466348b1127be39c35532b23abd921b00c07d03d2e8ae6a9b2dc4fb35fd3addc18b6c92df640ba4805e220eeceffd95c061305a8d1d0047729b1149b4c2a94882d46509833551740df57cd0dde34fe3eb5ecaf1a792123110a57de5932d80c8648f8e9dcc317873a5dc5eaf6ea5e950ce131f9dde8e6762d2aff09e3dcb2ca10d10e065df348e213b6ba4ddc9e943cc730466ed84ad212fb3095dbd382730951658a94c10e99fdf1c5f88ba54d9837c792e7e87e1fb30e42b5eb94e0d27b580e0295941a5d68b744b7a405ba3de3426af6248ca4999e10e3bdd43f6365dffc83f520fe281d91e39200e088b982d3b0c58f50e46766b9666955c249c35a8761053eebe7440b87ea3c036e5eccb321b34efd35cac9760f66eb6f4107395f52b12d8efe48d801eb8934ff6e881eb634b21fb2c7b7ca1267b8c60bc07aff8ae2135da2be8a8c12b6ed3a1054105898240eb121d993eb7e167860a32b4db312765a918c26b079d97163008939a38acc7c71c911c82c3e73c2642811892e7d06a0ffcf790e0a7759ee4e100e8ab967e4590bf6a758f3aebf648c723b4169e2970b1d813d9afa330ec0c3a1c3d88714169e987d2bebbfc0a0327bb65390b30279fed28dc98d480b677d46c029b6269607663801e6a35f6aacc8879ad57f8a543b6356f39f9ffc1ceb6746d24eded2\"\n}"
+              schema:
+                type: object
+                properties:
+                  encryptedText:
+                    type: string
+                    example: 8Qklz3Ph30pORkQK4m+dZNSnsUyXU54ftrC5fFoWfrn4umDSEEscIJ0kYJBUYkaOoX/3UDexaMmJTanOpgOvU6xz5AI52aFgDo6GkVEXIPkHE4Ne6Fae3ai3JK5PhsSbmh1t7VLXmzshpofARAirorDc4x/+gTXntZFvYTL0jQfbTAYstoSLO3WrUGrg1NhYQR/ageQpaw==
+                  key:
+                    type: string
+                    example: 3f01e22b2099dbb7d0310c6be46d366053721549c4ef4c13a8b495c2abc3b8ef7f5bc92639f47eae5200ddbce952b22113863a6e064ac5e6ac593763112ee4c545b151e5374a24c357ec4fbed4fc1fa117a48b6d509741a38c4eddad4dbf40a953fab72a867995630003d383b340ccd80bda3c01a0210549586b7dd6105d170b903a80a5714a26cc2e20a53a5e9b27665a7c817be632a2b01e4a3618e49365206fb00462b578b4cdbbcc3c5d693d696587734d788feaaffb4f9023290803a9a761396b5c10aa3001658268e128576770aaec42c4994b3b95e2f1b4d12603bf0df7802e378b6c682fc318b510d804ad99e769bdee92c0be114ae85fc35a2517060de660df9a106f2635c4f89a05cfb8fe9f3e612c7ff143e0e8721ee367bb051a7569d5b52e15de37aaf72faaf0668182bb2255fa6f2c732d8daeac26badb4df611ad9ca482608df1bf86c43398509447f0c724755bcd2a8ac5fcf82231950bad7a652d489b7472520e9cebaa0171c7a0369f5817fe78c3cf8c0d470b5a9ce7d30d31da1edcf70860158496b4b56d025b4ee5e6baeb0e2d76f5d673d87bbc69357dfb3f770a0c025ca18712b24c8a6c8e394660b8d4839838394b56225fb95aeebe8010a25d2922af70e9795d81e341267bbe404b81f163f7b3ef617158ba1d228f08dd1ff49238f6ca94bb92d6a2d2b1000a9f12daa24fc1a203d7fb15fc09dc
+                  kid:
+                    type: string
+                    example: '"CK001"'
+                  ivSpec:
+                    type: string
+                    example: 0bb3a62faaf7661055697f7225e934f43f36435d59466348b1127be39c35532b23abd921b00c07d03d2e8ae6a9b2dc4fb35fd3addc18b6c92df640ba4805e220eeceffd95c061305a8d1d0047729b1149b4c2a94882d46509833551740df57cd0dde34fe3eb5ecaf1a792123110a57de5932d80c8648f8e9dcc317873a5dc5eaf6ea5e950ce131f9dde8e6762d2aff09e3dcb2ca10d10e065df348e213b6ba4ddc9e943cc730466ed84ad212fb3095dbd382730951658a94c10e99fdf1c5f88ba54d9837c792e7e87e1fb30e42b5eb94e0d27b580e0295941a5d68b744b7a405ba3de3426af6248ca4999e10e3bdd43f6365dffc83f520fe281d91e39200e088b982d3b0c58f50e46766b9666955c249c35a8761053eebe7440b87ea3c036e5eccb321b34efd35cac9760f66eb6f4107395f52b12d8efe48d801eb8934ff6e881eb634b21fb2c7b7ca1267b8c60bc07aff8ae2135da2be8a8c12b6ed3a1054105898240eb121d993eb7e167860a32b4db312765a918c26b079d97163008939a38acc7c71c911c82c3e73c2642811892e7d06a0ffcf790e0a7759ee4e100e8ab967e4590bf6a758f3aebf648c723b4169e2970b1d813d9afa330ec0c3a1c3d88714169e987d2bebbfc0a0327bb65390b30279fed28dc98d480b677d46c029b6269607663801e6a35f6aacc8879ad57f8a543b6356f39f9ffc1ceb6746d24eded2
+        '422':
+          description: '422'
+          content:
+            application/json:
+              examples:
+                Internal Server Error - Format:
+                  value: "{\n    \"http_status\": 422,\n    \"error_code\": \"ERR_PAYLOAD_ENCRYPTION_ERROR\",\n    \"error_message\": \"Error Encountered. Expected: [encryptedText, key, kid, ivSpec].\"\n}"
+              schema:
+                type: object
+                properties:
+                  http_status:
+                    type: integer
+                    example: 422
+                    default: 0
+                  error_code:
+                    type: string
+                    example: ERR_PAYLOAD_ENCRYPTION_ERROR
+                  error_message:
+                    type: string
+                    example: 'Error Encountered. Expected: [encryptedText, key, kid, ivSpec].'
+        '500':
+          description: '500'
+          content:
+            application/json:
+              examples:
+                Internal Server Error - Decryption:
+                  value: "{\n    \"http_status\": 500,\n    \"error_code\": \"ERR_PAYLOAD_ENCRYPTION_ERROR\",\n    \"error_message\": \"Error Encountered While Decrypting Payload.\"\n}"
+                Internal Server Error - Encryption:
+                  value: "{\n    \"http_status\": 500,\n    \"error_code\": \"ERR_PAYLOAD_ENCRYPTION_ERROR\",\n    \"error_message\": \"Error Encountered While Encrypting Payload.\"\n}"
+              schema:
+                oneOf:
+                - title: Internal Server Error - Decryption
+                  type: object
+                  properties:
+                    http_status:
+                      type: integer
+                      example: 500
+                      default: 0
+                    error_code:
+                      type: string
+                      example: ERR_PAYLOAD_ENCRYPTION_ERROR
+                    error_message:
+                      type: string
+                      example: Error Encountered While Decrypting Payload.
+                - title: Internal Server Error - Encryption
+                  type: object
+                  properties:
+                    http_status:
+                      type: integer
+                      example: 500
+                      default: 0
+                    error_code:
+                      type: string
+                      example: ERR_PAYLOAD_ENCRYPTION_ERROR
+                    error_message:
+                      type: string
+                      example: Error Encountered While Encrypting Payload.
+      deprecated: false
+      tags:
+      - Payload
+  /api/v2/{payer_id}/payload/encryption/public-key/{format}:
+    get:
+      summary: Get Encryption Public Key
+      description: ''
+      operationId: get-encryption-public-key
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer Id
+        schema:
+          type: string
+        required: true
+      - name: format
+        in: path
+        description: Public Key Format. Both pem and jwk formats are supported.
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n  \"key\":\"-----BEGIN PUBLIC KEY-----\\rMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA8Jidkl06C2nepHPKEvzz\\rPoPfJRJfxCKuwnz6XIgHzZV9wWspMhrK4uHGFb5zHsjWNkf6/eySw58suDyMLRxp\\rydlAnDi8gMrnYaIPR1q4TA9teOV/5ygujR6dXlQAlq/n0cS1G/73zTER8Uw6pLHv\\r2XeGILEBL7kaga1kZRTRP7IBr7Ae6zaZ7Lg7qjZVcagdOen2Tavh63PdsglZsCoj\\r3NWeLGqqKvjJCZtgK//AdxuTK4V7lsHVDQ/Ry75XQY9UkJC5mAcfmlxV6BmJ3X4b\\rcH5VcwNrT/A8iiqJNhwfcBbWl8ISDH7uDW2iOKRnLCwLwpdozGMWey/2SHzOXBWF\\rpcXWyY1tLYO078FC4xHHWv94fSiyohUrEIQeHy02t5VuboUY4uOWWySmzmZngqaF\\rf0rlU9ePk58blOgaHMW0fySvkkKCeqnXNXDS8CUQB7Cp9e09OZ6via2ByteGabhh\\rgYyP4yQTGEtlgjv8Gr61zCBSBoEh1lWVJQWGUWubONpZEBgGg7BV88o8ZCREic0T\\r9ReIu16ptXZzUwFZp5+3AI1BywAUVXTs1UbXiXBj9V4CXmj9eTnVYON1x887MRsO\\rR+aJVO9xVK+jSvXnQ5dmeOIXEwtpkOhGC4ZNU+u3vo5nqTYUu/9x/KX70cZndr5G\\rYVsv5HIdh8aozj+WBnkEbkECAwEAAQ==\\r-----END PUBLIC KEY-----\",\n  \"versionId\":\"80b9761f-166d-4225-809f-d01d02cf5117\",\n  \"format\":\"pem\"\n}"
+              schema:
+                type: object
+                properties:
+                  key:
+                    type: string
+                    example: '-----BEGIN PUBLIC KEY-----MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA8Jidkl06C2nepHPKEvzzPoPfJRJfxCKuwnz6XIgHzZV9wWspMhrK4uHGFb5zHsjWNkf6/eySw58suDyMLRxpydlAnDi8gMrnYaIPR1q4TA9teOV/5ygujR6dXlQAlq/n0cS1G/73zTER8Uw6pLHv2XeGILEBL7kaga1kZRTRP7IBr7Ae6zaZ7Lg7qjZVcagdOen2Tavh63PdsglZsCoj3NWeLGqqKvjJCZtgK//AdxuTK4V7lsHVDQ/Ry75XQY9UkJC5mAcfmlxV6BmJ3X4bcH5VcwNrT/A8iiqJNhwfcBbWl8ISDH7uDW2iOKRnLCwLwpdozGMWey/2SHzOXBWFpcXWyY1tLYO078FC4xHHWv94fSiyohUrEIQeHy02t5VuboUY4uOWWySmzmZngqaFf0rlU9ePk58blOgaHMW0fySvkkKCeqnXNXDS8CUQB7Cp9e09OZ6via2ByteGabhhgYyP4yQTGEtlgjv8Gr61zCBSBoEh1lWVJQWGUWubONpZEBgGg7BV88o8ZCREic0T9ReIu16ptXZzUwFZp5+3AI1BywAUVXTs1UbXiXBj9V4CXmj9eTnVYON1x887MRsOR+aJVO9xVK+jSvXnQ5dmeOIXEwtpkOhGC4ZNU+u3vo5nqTYUu/9x/KX70cZndr5GYVsv5HIdh8aozj+WBnkEbkECAwEAAQ==-----END PUBLIC KEY-----'
+                  versionId:
+                    type: string
+                    example: 80b9761f-166d-4225-809f-d01d02cf5117
+                  format:
+                    type: string
+                    example: pem
+        '500':
+          description: '500'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"http_status\": 500,\n    \"error_code\": \"ERR_PAYLOAD_ENCRYPTION_ERROR\",\n    \"error_message\": \"Error Encountered Generating Public Key.\"\n}"
+              schema:
+                type: object
+                properties:
+                  http_status:
+                    type: integer
+                    example: 500
+                    default: 0
+                  error_code:
+                    type: string
+                    example: ERR_PAYLOAD_ENCRYPTION_ERROR
+                  error_message:
+                    type: string
+                    example: Error Encountered Generating Public Key.
+      deprecated: false
+      tags:
+      - Payload
+  /api/v2/{payer_id}/payload/encryption/health:
+    post:
+      summary: Encryption Health Check
+      description: Post a test payload to verify that your current Encryption Keys are working. Interchecks will decrypt and then encrypt the payload you send. There is no backing business logic.
+      operationId: encryption-health-check
+      parameters:
+      - name: payer_id
+        in: path
+        description: Payer Id
+        schema:
+          type: string
+        required: true
+      - name: X-ENCRYPTED
+        in: header
+        description: Payer Id
+        schema:
+          type: string
+      - name: X-AES-MODE
+        in: header
+        description: Optional. Accepts GCM_NOPADDING or CBC_PKCS5PADDING
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                RAW_BODY:
+                  type: string
+                  description: The payload you send will be returned with no processing.
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              examples:
+                Result:
+                  value: "{\n    \"encryptedText\": \"8Qklz3Ph30pORkQK4m+dZNSnsUyXU54ftrC5fFoWfrn4umDSEEscIJ0kYJBUYkaOoX/3UDexaMmJTanOpgOvU6xz5AI52aFgDo6GkVEXIPkHE4Ne6Fae3ai3JK5PhsSbmh1t7VLXmzshpofARAirorDc4x/+gTXntZFvYTL0jQfbTAYstoSLO3WrUGrg1NhYQR/ageQpaw==\",\n    \"key\": \"3f01e22b2099dbb7d0310c6be46d366053721549c4ef4c13a8b495c2abc3b8ef7f5bc92639f47eae5200ddbce952b22113863a6e064ac5e6ac593763112ee4c545b151e5374a24c357ec4fbed4fc1fa117a48b6d509741a38c4eddad4dbf40a953fab72a867995630003d383b340ccd80bda3c01a0210549586b7dd6105d170b903a80a5714a26cc2e20a53a5e9b27665a7c817be632a2b01e4a3618e49365206fb00462b578b4cdbbcc3c5d693d696587734d788feaaffb4f9023290803a9a761396b5c10aa3001658268e128576770aaec42c4994b3b95e2f1b4d12603bf0df7802e378b6c682fc318b510d804ad99e769bdee92c0be114ae85fc35a2517060de660df9a106f2635c4f89a05cfb8fe9f3e612c7ff143e0e8721ee367bb051a7569d5b52e15de37aaf72faaf0668182bb2255fa6f2c732d8daeac26badb4df611ad9ca482608df1bf86c43398509447f0c724755bcd2a8ac5fcf82231950bad7a652d489b7472520e9cebaa0171c7a0369f5817fe78c3cf8c0d470b5a9ce7d30d31da1edcf70860158496b4b56d025b4ee5e6baeb0e2d76f5d673d87bbc69357dfb3f770a0c025ca18712b24c8a6c8e394660b8d4839838394b56225fb95aeebe8010a25d2922af70e9795d81e341267bbe404b81f163f7b3ef617158ba1d228f08dd1ff49238f6ca94bb92d6a2d2b1000a9f12daa24fc1a203d7fb15fc09dc\",\n    \"kid\": \"\\\"CK001\\\"\",\n    \"ivSpec\": \"0bb3a62faaf7661055697f7225e934f43f36435d59466348b1127be39c35532b23abd921b00c07d03d2e8ae6a9b2dc4fb35fd3addc18b6c92df640ba4805e220eeceffd95c061305a8d1d0047729b1149b4c2a94882d46509833551740df57cd0dde34fe3eb5ecaf1a792123110a57de5932d80c8648f8e9dcc317873a5dc5eaf6ea5e950ce131f9dde8e6762d2aff09e3dcb2ca10d10e065df348e213b6ba4ddc9e943cc730466ed84ad212fb3095dbd382730951658a94c10e99fdf1c5f88ba54d9837c792e7e87e1fb30e42b5eb94e0d27b580e0295941a5d68b744b7a405ba3de3426af6248ca4999e10e3bdd43f6365dffc83f520fe281d91e39200e088b982d3b0c58f50e46766b9666955c249c35a8761053eebe7440b87ea3c036e5eccb321b34efd35cac9760f66eb6f4107395f52b12d8efe48d801eb8934ff6e881eb634b21fb2c7b7ca1267b8c60bc07aff8ae2135da2be8a8c12b6ed3a1054105898240eb121d993eb7e167860a32b4db312765a918c26b079d97163008939a38acc7c71c911c82c3e73c2642811892e7d06a0ffcf790e0a7759ee4e100e8ab967e4590bf6a758f3aebf648c723b4169e2970b1d813d9afa330ec0c3a1c3d88714169e987d2bebbfc0a0327bb65390b30279fed28dc98d480b677d46c029b6269607663801e6a35f6aacc8879ad57f8a543b6356f39f9ffc1ceb6746d24eded2\"\n}"
+              schema:
+                type: object
+                properties:
+                  encryptedText:
+                    type: string
+                    example: 8Qklz3Ph30pORkQK4m+dZNSnsUyXU54ftrC5fFoWfrn4umDSEEscIJ0kYJBUYkaOoX/3UDexaMmJTanOpgOvU6xz5AI52aFgDo6GkVEXIPkHE4Ne6Fae3ai3JK5PhsSbmh1t7VLXmzshpofARAirorDc4x/+gTXntZFvYTL0jQfbTAYstoSLO3WrUGrg1NhYQR/ageQpaw==
+                  key:
+                    type: string
+                    example: 3f01e22b2099dbb7d0310c6be46d366053721549c4ef4c13a8b495c2abc3b8ef7f5bc92639f47eae5200ddbce952b22113863a6e064ac5e6ac593763112ee4c545b151e5374a24c357ec4fbed4fc1fa117a48b6d509741a38c4eddad4dbf40a953fab72a867995630003d383b340ccd80bda3c01a0210549586b7dd6105d170b903a80a5714a26cc2e20a53a5e9b27665a7c817be632a2b01e4a3618e49365206fb00462b578b4cdbbcc3c5d693d696587734d788feaaffb4f9023290803a9a761396b5c10aa3001658268e128576770aaec42c4994b3b95e2f1b4d12603bf0df7802e378b6c682fc318b510d804ad99e769bdee92c0be114ae85fc35a2517060de660df9a106f2635c4f89a05cfb8fe9f3e612c7ff143e0e8721ee367bb051a7569d5b52e15de37aaf72faaf0668182bb2255fa6f2c732d8daeac26badb4df611ad9ca482608df1bf86c43398509447f0c724755bcd2a8ac5fcf82231950bad7a652d489b7472520e9cebaa0171c7a0369f5817fe78c3cf8c0d470b5a9ce7d30d31da1edcf70860158496b4b56d025b4ee5e6baeb0e2d76f5d673d87bbc69357dfb3f770a0c025ca18712b24c8a6c8e394660b8d4839838394b56225fb95aeebe8010a25d2922af70e9795d81e341267bbe404b81f163f7b3ef617158ba1d228f08dd1ff49238f6ca94bb92d6a2d2b1000a9f12daa24fc1a203d7fb15fc09dc
+                  kid:
+                    type: string
+                    example: '"CK001"'
+                  ivSpec:
+                    type: string
+                    example: 0bb3a62faaf7661055697f7225e934f43f36435d59466348b1127be39c35532b23abd921b00c07d03d2e8ae6a9b2dc4fb35fd3addc18b6c92df640ba4805e220eeceffd95c061305a8d1d0047729b1149b4c2a94882d46509833551740df57cd0dde34fe3eb5ecaf1a792123110a57de5932d80c8648f8e9dcc317873a5dc5eaf6ea5e950ce131f9dde8e6762d2aff09e3dcb2ca10d10e065df348e213b6ba4ddc9e943cc730466ed84ad212fb3095dbd382730951658a94c10e99fdf1c5f88ba54d9837c792e7e87e1fb30e42b5eb94e0d27b580e0295941a5d68b744b7a405ba3de3426af6248ca4999e10e3bdd43f6365dffc83f520fe281d91e39200e088b982d3b0c58f50e46766b9666955c249c35a8761053eebe7440b87ea3c036e5eccb321b34efd35cac9760f66eb6f4107395f52b12d8efe48d801eb8934ff6e881eb634b21fb2c7b7ca1267b8c60bc07aff8ae2135da2be8a8c12b6ed3a1054105898240eb121d993eb7e167860a32b4db312765a918c26b079d97163008939a38acc7c71c911c82c3e73c2642811892e7d06a0ffcf790e0a7759ee4e100e8ab967e4590bf6a758f3aebf648c723b4169e2970b1d813d9afa330ec0c3a1c3d88714169e987d2bebbfc0a0327bb65390b30279fed28dc98d480b677d46c029b6269607663801e6a35f6aacc8879ad57f8a543b6356f39f9ffc1ceb6746d24eded2
+        '422':
+          description: '422'
+          content:
+            application/json:
+              examples:
+                Internal Server Error - Format:
+                  value: "{\n    \"http_status\": 422,\n    \"error_code\": \"ERR_PAYLOAD_ENCRYPTION_ERROR\",\n    \"error_message\": \"Error Encountered. Expected: [encryptedText, key, kid, ivSpec].\"\n}"
+              schema:
+                type: object
+                properties:
+                  http_status:
+                    type: integer
+                    example: 422
+                    default: 0
+                  error_code:
+                    type: string
+                    example: ERR_PAYLOAD_ENCRYPTION_ERROR
+                  error_message:
+                    type: string
+                    example: 'Error Encountered. Expected: [encryptedText, key, kid, ivSpec].'
+        '500':
+          description: '500'
+          content:
+            application/json:
+              examples:
+                Internal Server Error - Decryption:
+                  value: "{\n    \"http_status\": 500,\n    \"error_code\": \"ERR_PAYLOAD_ENCRYPTION_ERROR\",\n    \"error_message\": \"Error Encountered While Decrypting Payload.\"\n}"
+                Internal Server Error - Encryption:
+                  value: "{\n    \"http_status\": 500,\n    \"error_code\": \"ERR_PAYLOAD_ENCRYPTION_ERROR\",\n    \"error_message\": \"Error Encountered While Encrypting Payload.\"\n}"
+              schema:
+                oneOf:
+                - title: Internal Server Error - Decryption
+                  type: object
+                  properties:
+                    http_status:
+                      type: integer
+                      example: 500
+                      default: 0
+                    error_code:
+                      type: string
+                      example: ERR_PAYLOAD_ENCRYPTION_ERROR
+                    error_message:
+                      type: string
+                      example: Error Encountered While Decrypting Payload.
+                - title: Internal Server Error - Encryption
+                  type: object
+                  properties:
+                    http_status:
+                      type: integer
+                      example: 500
+                      default: 0
+                    error_code:
+                      type: string
+                      example: ERR_PAYLOAD_ENCRYPTION_ERROR
+                    error_message:
+                      type: string
+                      example: Error Encountered While Encrypting Payload.
+      deprecated: false
+      tags:
+      - Payload
+components:
+  securitySchemes:
+    sec0:
+      type: oauth2
+      flows: {}
+x-readme:
+  headers: []
+  explorer-enabled: false
+  proxy-enabled: true
+x-readme-fauxas: true
