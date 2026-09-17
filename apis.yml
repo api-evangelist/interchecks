@@ -109,24 +109,6 @@ apis:
     url: https://docs-v2.interchecks.com/reference/about-recipients
   - type: Webhooks
     url: asyncapi/interchecks-webhooks.yml
-- aid: interchecks:interchecks-oauth2-api
-  name: Interchecks Oauth2 API
-  description: The Oauth2 API from Interchecks — 1 operation(s) for oauth2.
-  humanURL: https://docs-v2.interchecks.com/docs/getting-started
-  baseURL: https://prod.api.interchecks.io
-  tags:
-  - Authentication
-  tags_raw:
-  - Oauth2
-  properties:
-  - type: OpenAPI
-    url: openapi/interchecks-oauth2-api-openapi.yml
-  - type: Documentation
-    url: https://docs-v2.interchecks.com/docs/getting-started
-  - type: APIReference
-    url: https://docs-v2.interchecks.com/reference/about-recipients
-  - type: Webhooks
-    url: asyncapi/interchecks-webhooks.yml
 - aid: interchecks:interchecks-payers-api
   name: Interchecks Payers API
   description: >-
@@ -337,6 +319,22 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/interchecks-widgets-api-openapi.yml
+  - type: Documentation
+    url: https://docs-v2.interchecks.com/docs/getting-started
+  - type: APIReference
+    url: https://docs-v2.interchecks.com/reference/about-recipients
+  - type: Webhooks
+    url: asyncapi/interchecks-webhooks.yml
+- aid: interchecks:interchecks-oauth2-api
+  name: Interchecks Oauth2 API
+  description: The Oauth2 API from Interchecks — 1 operation(s) for oauth2.
+  humanURL: https://docs-v2.interchecks.com/docs/getting-started
+  baseURL: https://prod.api.interchecks.io
+  tags:
+  - Oauth2
+  properties:
+  - type: OpenAPI
+    url: openapi/interchecks-oauth2-api-openapi.yml
   - type: Documentation
     url: https://docs-v2.interchecks.com/docs/getting-started
   - type: APIReference
