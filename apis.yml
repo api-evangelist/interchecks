@@ -331,6 +331,8 @@ apis:
   humanURL: https://docs-v2.interchecks.com/docs/getting-started
   baseURL: https://prod.api.interchecks.io
   tags:
+  - Authentication
+  tags_raw:
   - Oauth2
   properties:
   - type: OpenAPI
