@@ -12,10 +12,16 @@ paths:
   /api/v2/{payer_id}/widgets/accounts/bank:
     post:
       summary: Create Bank Widget
-      description: 'Create a Widget URL to add a Bank Account using Plaid Link.  <br>View the [About Widgets](ref:about-widgets) page to learn about optional `widget_params`.<br>`201` - Created<br>`400` - Bad Request, missing or invalid parameters.
+      description: 'Create a Widget URL to add a Bank Account using Plaid Link.
+
+        View the About Widgets page to learn about optional `widget_params`.
+
+        `201` - Created
+
+        `400` - Bad Request, missing or invalid parameters.
 
 
-        Upon completion of bank account link, Interchecks will utilize the `redirect_url` parameter in the `widget_params` to redirect control back to the client''s browser.  The completion page should provide the appropriate messaging to the user to indicate next steps or action required.'
+        Upon completion of bank account link, Interchecks will utilize the `redirect_url` parameter in the `widget_params` to redirect control back to the client''s browser. The completion page should provide the appropriate messaging to the user to indicate next steps or action required.'
       operationId: create-bank-widget
       parameters:
       - name: payer_id
@@ -123,7 +129,7 @@ paths:
   /api/v2/{payer_id}/widgets/accounts/card:
     post:
       summary: Create Card Widget
-      description: Create a Widget URL to add a Debit Card.  View the [About Widgets](ref:about-widgets) page to learn about optional `widget_params`.`201` - Created`400` - Bad Request, missing or invalid parameters
+      description: Create a Widget URL to add a Debit Card. View the About Widgets page to learn about optional `widget_params`.`201` - Created`400` - Bad Request, missing or invalid parameters
       operationId: create-card-widget
       parameters:
       - name: payer_id
@@ -191,7 +197,7 @@ paths:
   /api/v2/{payer_id}/widgets/payments:
     post:
       summary: Create Payment Widget
-      description: Create a Widget URL for a Recipient to accept Payment.  View the  [About Widgets](ref:about-widgets) page to learn about optional `widget_params`.`201` - Created`400` - Bad Request, missing or invalid parameters`422` - Payment not in a `PENDING` status
+      description: Create a Widget URL for a Recipient to accept Payment. View the About Widgets page to learn about optional `widget_params`.`201` - Created`400` - Bad Request, missing or invalid parameters`422` - Payment not in a `PENDING` status
       operationId: create-payment-widget
       parameters:
       - name: payer_id
@@ -283,7 +289,7 @@ paths:
   /api/v2/{payer_id}/widgets/accounts/prepaid:
     post:
       summary: Create Prepaid Dashboard Widget
-      description: Create a Widget URL for a Recipient view and manage their Prepaid Card account.  View the  [About Widgets](ref:about-widgets) page to learn about optional `widget_params`.`201` - Created`400` - Bad Request, missing or invalid parameters
+      description: Create a Widget URL for a Recipient view and manage their Prepaid Card account. View the About Widgets page to learn about optional `widget_params`.`201` - Created`400` - Bad Request, missing or invalid parameters
       operationId: create-prepaid-dashboard-widget
       parameters:
       - name: payer_id

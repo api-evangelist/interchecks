@@ -120,7 +120,7 @@ paths:
   /api/v2/{payer_id}/test-harness/payments:
     post:
       summary: Update Payment Status
-      description: 'Update Payment Status.  Payment can only be updated if in a non terminal status: PAID, PENDING_KYC, APPROVAL_REQUIRED, PENDING
+      description: 'Update Payment Status. Payment can only be updated if in a non terminal status: PAID, PENDING_KYC, APPROVAL_REQUIRED, PENDING
 
 
         `200` - Request Succeeded
@@ -193,7 +193,7 @@ paths:
   /api/v2/{payer_id}/test-harness/transactions:
     post:
       summary: Update Transaction Status
-      description: Update Transaction Status.  `200` - Request Succeeded`400` - Bad Request, missing or invalid parameters`422` - Transaction not undateable
+      description: Update Transaction Status. `200` - Request Succeeded`400` - Bad Request, missing or invalid parameters`422` - Transaction not undateable
       operationId: update-transaction-status
       requestBody:
         content:

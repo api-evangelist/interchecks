@@ -7,12 +7,12 @@ servers:
 security:
 - sec0: []
 tags:
-- name: Oauth2
+- name: OAuth2
 paths:
   /api/v2/oauth2/token:
     post:
       summary: Get Access Token
-      description: Generate an OAuth 2.0 access token in the form of a JWT.  The `access_token` returned in the response is to be used when authenticating API calls as the Authentication `Bearer` value.
+      description: Generate an OAuth 2.0 access token in the form of a JWT. The `access_token` returned in the response is to be used when authenticating API calls as the Authentication `Bearer` value.
       operationId: get-access-token
       parameters:
       - name: Authorization
@@ -80,7 +80,7 @@ paths:
         samples-languages:
         - curl
       tags:
-      - Oauth2
+      - OAuth2
 components:
   securitySchemes:
     sec0:

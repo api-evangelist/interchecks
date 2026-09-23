@@ -1049,7 +1049,7 @@ paths:
   /api/v2/{payer_id}/recipients/{recipient_id}/address:
     post:
       summary: Add Address
-      description: 'Set address for Recipient.  If Recipient already has an address, the POST method will overwrite.
+      description: 'Set address for Recipient. If Recipient already has an address, the POST method will overwrite.
 
 
         `200` - Request Succeeded
@@ -1189,7 +1189,7 @@ paths:
   /api/v2/{payer_id}/recipients/{recipient_id}/emails:
     post:
       summary: Add Email
-      description: 'Add an email as primary/non-primary for Recipient.  Adding a primary email address will demote the current primary to a secondary address.  Recipients can receive payments at any active email address on record, but will only receive notifications to their primary email address.
+      description: 'Add an email as primary/non-primary for Recipient. Adding a primary email address will demote the current primary to a secondary address. Recipients can receive payments at any active email address on record, but will only receive notifications to their primary email address.
 
 
         `200` - Request Succeeded
@@ -1446,8 +1446,34 @@ paths:
     - url: https://test.api.interchecks.io
 components:
   schemas:
-    CreateRecipient:
-      title: CreateRecipient
+    GetRecipientbyID:
+      title: GetRecipientbyID
+      required:
+      - recipient_id
+      - reference_id
+      - email
+      - first_name
+      - last_name
+      type: object
+      properties:
+        recipient_id:
+          type: string
+        reference_id:
+          type: string
+        email:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+      example:
+        recipient_id: REPg25ZBRVQ2qBEqbF_2HItg==
+        reference_id: payee-123456
+        email: payee-123456@mailpoof.com
+        first_name: James
+        last_name: Smith
+    GetRecipientbyEmail:
+      title: GetRecipientbyEmail
       required:
       - recipient_id
       - reference_id
@@ -1494,34 +1520,8 @@ components:
         first_name: James
         last_name: Smith
         reference_id: payee-123456
-    GetRecipientbyID:
-      title: GetRecipientbyID
-      required:
-      - recipient_id
-      - reference_id
-      - email
-      - first_name
-      - last_name
-      type: object
-      properties:
-        recipient_id:
-          type: string
-        reference_id:
-          type: string
-        email:
-          type: string
-        first_name:
-          type: string
-        last_name:
-          type: string
-      example:
-        recipient_id: REPg25ZBRVQ2qBEqbF_2HItg==
-        reference_id: payee-123456
-        email: payee-123456@mailpoof.com
-        first_name: James
-        last_name: Smith
-    GetRecipientbyEmail:
-      title: GetRecipientbyEmail
+    CreateRecipient:
+      title: CreateRecipient
       required:
       - recipient_id
       - reference_id

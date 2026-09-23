@@ -60,7 +60,7 @@ paths:
   /api/v2/{payer_id}/reports/oct/transactions:
     get:
       summary: Get OCT Transactions Report
-      description: 'Get Aggregator or Payer OCT Transactions Report for a date range.  The `payer_id` value passed in should reflect the requested Aggregator or Payer.  There is a maximum date range of 31 days enforced.
+      description: 'Get Aggregator or Payer OCT Transactions Report for a date range. The `payer_id` value passed in should reflect the requested Aggregator or Payer. There is a maximum date range of 31 days enforced.
 
 
         ** Report returns a `Content-Type` of `application/csv`
@@ -103,7 +103,7 @@ paths:
   /api/v2/{payer_id}/reports/oct/settlement:
     get:
       summary: Get OCT Settlement Report
-      description: 'Get Aggregator or Payer OCT Settlement Report for a specific Settle Date.  The `payer_id` value passed in should reflect the requested Aggregator or Payer.
+      description: 'Get Aggregator or Payer OCT Settlement Report for a specific Settle Date. The `payer_id` value passed in should reflect the requested Aggregator or Payer.
 
 
         ** Report returns a `Content-Type` of `application/csv`
@@ -163,7 +163,7 @@ paths:
   /api/v2/{payer_id}/reports/user-tracking:
     get:
       summary: Get User Activity Report
-      description: Get Payer user activity Report for a date range.  The `payer_id` value passed in should reflect the requested Aggregator or Payer.  There is a maximum date range of 31 days enforced.** Report returns a `Content-Type` of `application/csv``200` - Request succeeded`400` - Bad Request, missing or invalid parameters
+      description: Get Payer user activity Report for a date range. The `payer_id` value passed in should reflect the requested Aggregator or Payer. There is a maximum date range of 31 days enforced.** Report returns a `Content-Type` of `application/csv``200` - Request succeeded`400` - Bad Request, missing or invalid parameters
       operationId: get-user-activity-report
       parameters:
       - name: payer_id

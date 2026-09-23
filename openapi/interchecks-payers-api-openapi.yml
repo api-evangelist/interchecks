@@ -16,7 +16,7 @@ paths:
       tags:
       - Payers
       summary: Get Payer Bank Accounts
-      description: Retrieves an array of connected accounts for a Payer.  If we are unable to pull account information an `error_message` field will be present in the account response.
+      description: Retrieves an array of connected accounts for a Payer. If we are unable to pull account information an `error_message` field will be present in the account response.
       operationId: GetPayerBankAccounts
       parameters:
       - name: payer_id
