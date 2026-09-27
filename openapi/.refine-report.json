@@ -22,9 +22,7 @@
     "interchecks-test-harness-api-openapi.yml",
     "interchecks-widgets-api-openapi.yml"
   ],
-  "archived": [
-    "deleted 1 superseded output(s) from the previous generation"
-  ],
+  "archived": [],
   "errors": [],
   "warnings": [],
   "notes": [
@@ -113,13 +111,12 @@
     "tag 'Payments' spans 2 source specs (interchecks-payments-api-v2-registry.json, interchecks-payments-api-v2.json): per-path servers applied",
     "tag 'Recipients' spans 2 source specs (interchecks-payments-api-v2-registry.json, interchecks-payments-api-v2.json): per-path servers applied",
     "tag 'Transactions' spans 2 source specs (interchecks-payments-api-v2-registry.json, interchecks-payments-api-v2.json): per-path servers applied",
-    "superseded outputs removed: interchecks-o-auth2-api-openapi.yml",
-    "apis.yml register: written (+1 apis, 16 total)"
+    "apis.yml register: already-registered"
   ],
   "skipped": [
     "interchecks-accounts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "interchecks-authentication-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "interchecks-o-auth2-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "interchecks-oauth2-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "interchecks-payers-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "interchecks-payload-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "interchecks-payment-accounts-bank-api-openapi.yml: previously refined output, superseded by openapi/_original/",

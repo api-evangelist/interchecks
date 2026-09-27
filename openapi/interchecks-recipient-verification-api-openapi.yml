@@ -95,28 +95,6 @@ paths:
       deprecated: false
 components:
   schemas:
-    Address:
-      title: Address
-      required:
-      - address_1
-      - city
-      - state
-      - zip
-      type: object
-      properties:
-        address_1:
-          type: string
-        city:
-          type: string
-        state:
-          type: string
-        zip:
-          type: string
-      example:
-        address_1: 134 N 4th St
-        city: Brooklyn
-        state: NY
-        zip: '11249'
     VerifyRecipientTINRequest:
       title: VerifyRecipientTINRequest
       required:
@@ -139,6 +117,28 @@ components:
           state: NY
           zip: '11249'
         legal_entity_type: INDIVIDUAL
+    Address:
+      title: Address
+      required:
+      - address_1
+      - city
+      - state
+      - zip
+      type: object
+      properties:
+        address_1:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        zip:
+          type: string
+      example:
+        address_1: 134 N 4th St
+        city: Brooklyn
+        state: NY
+        zip: '11249'
   securitySchemes:
     httpBearer:
       type: http

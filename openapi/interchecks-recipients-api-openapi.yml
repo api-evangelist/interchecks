@@ -1446,6 +1446,32 @@ paths:
     - url: https://test.api.interchecks.io
 components:
   schemas:
+    GetRecipientbyReferenceID:
+      title: GetRecipientbyReferenceID
+      required:
+      - recipient_id
+      - reference_id
+      - email
+      - first_name
+      - last_name
+      type: object
+      properties:
+        recipient_id:
+          type: string
+        reference_id:
+          type: string
+        email:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+      example:
+        recipient_id: REPg25ZBRVQ2qBEqbF_2HItg==
+        reference_id: payee-123456
+        email: payee-123456@mailpoof.com
+        first_name: James
+        last_name: Smith
     GetRecipientbyID:
       title: GetRecipientbyID
       required:
@@ -1498,28 +1524,6 @@ components:
         email: payee-123456@mailpoof.com
         first_name: James
         last_name: Smith
-    CreateRecipientRequest:
-      title: CreateRecipientRequest
-      required:
-      - email
-      - first_name
-      - last_name
-      - reference_id
-      type: object
-      properties:
-        email:
-          type: string
-        first_name:
-          type: string
-        last_name:
-          type: string
-        reference_id:
-          type: string
-      example:
-        email: payee-123456@mailpoof.com
-        first_name: James
-        last_name: Smith
-        reference_id: payee-123456
     CreateRecipient:
       title: CreateRecipient
       required:
@@ -1546,32 +1550,28 @@ components:
         email: payee-123456@mailpoof.com
         first_name: James
         last_name: Smith
-    GetRecipientbyReferenceID:
-      title: GetRecipientbyReferenceID
+    CreateRecipientRequest:
+      title: CreateRecipientRequest
       required:
-      - recipient_id
-      - reference_id
       - email
       - first_name
       - last_name
+      - reference_id
       type: object
       properties:
-        recipient_id:
-          type: string
-        reference_id:
-          type: string
         email:
           type: string
         first_name:
           type: string
         last_name:
           type: string
+        reference_id:
+          type: string
       example:
-        recipient_id: REPg25ZBRVQ2qBEqbF_2HItg==
-        reference_id: payee-123456
         email: payee-123456@mailpoof.com
         first_name: James
         last_name: Smith
+        reference_id: payee-123456
   securitySchemes:
     httpBearer:
       type: http

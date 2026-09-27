@@ -53,7 +53,7 @@ tags:
 - Instant Payments
 - Disbursements
 - Cards
-- Financial-Services
+- Financial Services
 - Fintech
 - Webhook
 tags_raw:
@@ -67,6 +67,7 @@ tags_raw:
 - Financial Services
 - Fintech
 - Webhooks
+- Financial-Services
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
