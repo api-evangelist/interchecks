@@ -1446,8 +1446,8 @@ paths:
     - url: https://test.api.interchecks.io
 components:
   schemas:
-    GetRecipientbyReferenceID:
-      title: GetRecipientbyReferenceID
+    GetRecipientbyEmail:
+      title: GetRecipientbyEmail
       required:
       - recipient_id
       - reference_id
@@ -1498,8 +1498,8 @@ components:
         email: payee-123456@mailpoof.com
         first_name: James
         last_name: Smith
-    GetRecipientbyEmail:
-      title: GetRecipientbyEmail
+    GetRecipientbyReferenceID:
+      title: GetRecipientbyReferenceID
       required:
       - recipient_id
       - reference_id

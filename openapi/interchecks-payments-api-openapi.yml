@@ -361,16 +361,6 @@ paths:
     - url: https://test.api.interchecks.io
 components:
   schemas:
-    UpdatePaymentRequest:
-      title: UpdatePaymentRequest
-      required:
-      - status
-      type: object
-      properties:
-        status:
-          type: string
-      example:
-        status: CANCELLED
     CreatePaymentRequest:
       title: CreatePaymentRequest
       required:
@@ -385,6 +375,16 @@ components:
       example:
         recipient_id: '{{recipient_id}}'
         amount: 25
+    UpdatePaymentRequest:
+      title: UpdatePaymentRequest
+      required:
+      - status
+      type: object
+      properties:
+        status:
+          type: string
+      example:
+        status: CANCELLED
   securitySchemes:
     httpBearer:
       type: http
