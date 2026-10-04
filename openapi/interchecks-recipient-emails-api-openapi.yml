@@ -266,6 +266,20 @@ paths:
       deprecated: false
 components:
   schemas:
+    AddRecipientEmailRequest:
+      title: AddRecipientEmailRequest
+      required:
+      - email
+      - primary
+      type: object
+      properties:
+        email:
+          type: string
+        primary:
+          type: boolean
+      example:
+        email: payee-123456@mailinator.com
+        primary: false
     GetRecipientEmail:
       title: GetRecipientEmail
       required:
@@ -284,20 +298,6 @@ components:
         email: payee-123456@mailpoof.com
         primary: true
         invalid: false
-    AddRecipientEmailRequest:
-      title: AddRecipientEmailRequest
-      required:
-      - email
-      - primary
-      type: object
-      properties:
-        email:
-          type: string
-        primary:
-          type: boolean
-      example:
-        email: payee-123456@mailinator.com
-        primary: false
   securitySchemes:
     httpBearer:
       type: http

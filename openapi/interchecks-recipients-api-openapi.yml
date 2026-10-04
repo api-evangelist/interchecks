@@ -1472,8 +1472,8 @@ components:
         email: payee-123456@mailpoof.com
         first_name: James
         last_name: Smith
-    GetRecipientbyID:
-      title: GetRecipientbyID
+    GetRecipientbyReferenceID:
+      title: GetRecipientbyReferenceID
       required:
       - recipient_id
       - reference_id
@@ -1498,8 +1498,30 @@ components:
         email: payee-123456@mailpoof.com
         first_name: James
         last_name: Smith
-    GetRecipientbyReferenceID:
-      title: GetRecipientbyReferenceID
+    CreateRecipientRequest:
+      title: CreateRecipientRequest
+      required:
+      - email
+      - first_name
+      - last_name
+      - reference_id
+      type: object
+      properties:
+        email:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        reference_id:
+          type: string
+      example:
+        email: payee-123456@mailpoof.com
+        first_name: James
+        last_name: Smith
+        reference_id: payee-123456
+    GetRecipientbyID:
+      title: GetRecipientbyID
       required:
       - recipient_id
       - reference_id
@@ -1550,28 +1572,6 @@ components:
         email: payee-123456@mailpoof.com
         first_name: James
         last_name: Smith
-    CreateRecipientRequest:
-      title: CreateRecipientRequest
-      required:
-      - email
-      - first_name
-      - last_name
-      - reference_id
-      type: object
-      properties:
-        email:
-          type: string
-        first_name:
-          type: string
-        last_name:
-          type: string
-        reference_id:
-          type: string
-      example:
-        email: payee-123456@mailpoof.com
-        first_name: James
-        last_name: Smith
-        reference_id: payee-123456
   securitySchemes:
     httpBearer:
       type: http
