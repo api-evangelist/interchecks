@@ -64,9 +64,136 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Interchecks Technologies, Inc. is a US instant-payments platform that moves money in both directions for payers who need to fund accounts and pay out to consumers at scale. Its Payments API v2 is a REST contract covering recipient onboarding and TIN verification, destination account management across bank (Plaid-linked), debit card, PayPal, Venmo and prepaid rails, immediate disbursement transactions across ACH standard/same-day, ACH Funding Plus, RTP, Instant Deposit (Visa/Mastercard OCT), Instant Funding (AFT), paper check, eCheck and prepaid, plus embeddable widgets, settlement and activity reporting, envelope-encrypted payloads and signed webhooks.
+Interchecks Technologies, Inc. is a US instant-payments platform that moves money in both directions for payers who need to fund accounts and pay out to consumers at scale. Its Payments API v2 is a REST contract covering recipient onboarding and TIN verification, destination account management across bank (Plaid-linked), debit card, PayPal, Venmo and prepaid rails, immediate disbursement transactions across ACH standard/same-day, ACH Funding Plus, RTP, Instant Deposit (Visa/Mastercard OCT), Instant Funding (AFT), paper check, eCheck and prepaid, plus embeddable widgets, settlement and activity reporting, envelope-encrypted payloads and signed webhooks. The company reports more than $50 billion processed over ten years for online gaming and prediction markets, on-demand payroll, lending and digital banking clients, and publishes PCI DSS Level 1 Service Provider and SOC 2 Type 2 attestations.
 
-- Website: https://home.interchecks.com/
-- Developers: https://home.interchecks.com/developers
-- Documentation: https://docs-v2.interchecks.com/docs/getting-started
-- API base: https://prod.api.interchecks.io (sandbox https://test.api.interchecks.io)
+**Areas:** Payments · Payouts · ACH · Real-Time Payments · Instant Payments · Disbursements · Cards · Financial Services · Fintech · Webhook
+
+## Interchecks on APIs.io
+
+Everything profiled for Interchecks is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/interchecks/](https://apis.io/providers/interchecks/)** — or go straight to one of the APIs or properties below.
+
+### APIs (16)
+
+- [Interchecks Accounts API](https://apis.io/apis/interchecks/interchecks-accounts-api/) — The Accounts API from Interchecks — 16 operation(s) for accounts.
+- [Interchecks Authentication API](https://apis.io/apis/interchecks/interchecks-authentication-api/) — OAuth 2.0 is used for authentication and authorization to the API. Client ID and Secret Key can be generated in the Developer Portal.
+- [Interchecks Payers API](https://apis.io/apis/interchecks/interchecks-payers-api/) — Endpoints to retrieve a payer's connected accounts (aka good funds accounts) and payout method configuration for the `payer_id` designated in the URL.
+- [Interchecks Payload API](https://apis.io/apis/interchecks/interchecks-payload-api/) — The Payload API from Interchecks — 5 operation(s) for payload.
+- [Interchecks Payment Accounts - Bank API](https://apis.io/apis/interchecks/interchecks-payment-accounts-bank-api/) — The Payment Accounts - Bank API from Interchecks — 2 operation(s) for payment accounts - bank.
+- [Interchecks Payment Accounts - Card API](https://apis.io/apis/interchecks/interchecks-payment-accounts-card-api/) — The Payment Accounts - Card API from Interchecks — 3 operation(s) for payment accounts - card.
+- [Interchecks Payment Accounts - PayPal API](https://apis.io/apis/interchecks/interchecks-payment-accounts-paypal-api/) — The Payment Accounts - PayPal API from Interchecks — 3 operation(s) for payment accounts - paypal.
+- [Interchecks Payments API](https://apis.io/apis/interchecks/interchecks-payments-api/) — The Payments API from Interchecks — 7 operation(s) for payments.
+- [Interchecks Recipient Emails API](https://apis.io/apis/interchecks/interchecks-recipient-emails-api/) — The Recipient Emails API from Interchecks — 1 operation(s) for recipient emails.
+- [Interchecks Recipient Verification API](https://apis.io/apis/interchecks/interchecks-recipient-verification-api/) — The Recipient Verification API from Interchecks — 1 operation(s) for recipient verification.
+- [Interchecks Recipients API](https://apis.io/apis/interchecks/interchecks-recipients-api/) — The Recipients API from Interchecks — 9 operation(s) for recipients.
+- [Interchecks Reports API](https://apis.io/apis/interchecks/interchecks-reports-api/) — The Reports API from Interchecks — 5 operation(s) for reports.
+- [Interchecks Test Harness API](https://apis.io/apis/interchecks/interchecks-test-harness-api/) — The Test Harness API from Interchecks — 4 operation(s) for test harness.
+- [Interchecks Transactions API](https://apis.io/apis/interchecks/interchecks-transactions-api/) — The Transactions API from Interchecks — 4 operation(s) for transactions.
+- [Interchecks Widgets API](https://apis.io/apis/interchecks/interchecks-widgets-api/) — The Widgets API from Interchecks — 4 operation(s) for widgets.
+- [Interchecks Oauth2 API](https://apis.io/apis/interchecks/interchecks-oauth2-api/) — The Oauth2 API from Interchecks — 1 operation(s) for oauth2.
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### AsyncAPI (1)
+
+Event-driven and webhook contracts.
+
+- [Interchecks Webhooks](https://apis.io/asyncapis/interchecks/interchecks-webhooks/)
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [interchecks-mcp.yml](https://apis.io/servers/interchecks/interchecks-mcp-yml/)
+
+#### Overlays (1)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Interchecks Payments Api V2 Overlay](https://apis.io/overlays/interchecks/interchecks-payments-api-v2-overlay/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Interchecks Authentication](https://apis.io/security/interchecks/interchecks-authentication/)
+- [Interchecks Domain Security](https://apis.io/security/interchecks/interchecks-domain-security/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Interchecks Plans Pricing](https://apis.io/plans/interchecks/interchecks-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Interchecks Rate Limits](https://apis.io/rate-limits/interchecks/interchecks-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://home.interchecks.com/)
+- [Documentation](https://docs-v2.interchecks.com/docs/getting-started)
+- [Getting started](https://docs-v2.interchecks.com/docs/getting-started)
+- [API reference](https://docs-v2.interchecks.com/reference/about-recipients)
+- [Sign up](https://interchecks.com/login)
+- [GitHub](https://github.com/interchecks)
+
+## API Evangelist rating
+
+**Kin Score 43.4** — developing · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 73.2 |
+| Contract quality | 53.4 |
+| Contract governance | 18.2 |
+| Operational transparency | 26.3 |
+| Developer ergonomics | 63.7 |
+| Access clarity | 21.1 |
+
+**Agent readiness 35.5** — agent-ready
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | verified |
+| Error Semantics | documented (partial credit) |
+| OpenAPI Examples | verified |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | yes |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | — |
+| Operation Distinctiveness | — |
+
+**Regulatory alignment 25.0** — Payments
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/interchecks/](https://apis.io/providers/interchecks/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Interchecks: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/interchecks/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
